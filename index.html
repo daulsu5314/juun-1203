@@ -215,6 +215,7 @@ img{max-width:100%}
 .ad-item .ad-th{width:56px;height:74px;object-fit:cover;border-radius:6px}
 .ad-mv{display:flex;gap:6px;justify-content:flex-end;grid-column:1/-1}
 .ad-mv button{font-size:13px;padding:6px 10px;background:#efe6f5;color:var(--ink)}
+.ad-vid{grid-column:1/-1;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:#5c4f73}.ad-vid img{width:72px;height:44px;object-fit:cover;border-radius:6px}.ad-vid button{font-size:12px;padding:6px 9px;background:#efe6f5;color:var(--ink)}
 .ad-add{align-self:flex-start;background:#efe6f5;color:var(--ink);font-size:14px}
 .ad-save{position:sticky;bottom:0;background:#fff7f0;padding:12px 0;display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-top:1.5px solid #ece2f2;margin-top:10px}
 .ad-save span{font-size:13px;color:#5c4f73}
@@ -285,16 +286,16 @@ img{max-width:100%}
 
 /* ③ 아카이브 (OTT) */
 .rp-arc{font-family:"Gothic A1",var(--body);padding-bottom:env(safe-area-inset-bottom,0px)}
-.rp-hero{position:relative;height:620px;background:#3a2c63 center top/cover no-repeat}
-.rp-hph{position:absolute;top:150px;left:0;right:0;text-align:center;font-size:13px;line-height:1.7;color:#d9cdf5}
+.rp-hero{position:relative;height:clamp(440px,118vw,520px);background:#3a2c63 center top/cover no-repeat}
+.rp-hph{position:absolute;top:110px;left:0;right:0;text-align:center;font-size:13px;line-height:1.7;color:#d9cdf5}
 .rp-nav{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:flex-start;padding:calc(14px + env(safe-area-inset-top,0px)) 12px 30px 18px;background:linear-gradient(rgba(13,8,32,.7),rgba(13,8,32,0));z-index:3}
 .rp-logo{font-family:"Anton",sans-serif;font-size:22px;letter-spacing:1px}.rp-logo span{color:var(--berry)}
 .rp-navr{display:flex;gap:6px}.rp-navr button{background:rgba(13,8,32,.5);color:#fff;font-size:13px;font-weight:600;min-width:40px;height:36px;padding:0 10px;border-radius:6px!important}
-.rp-float{position:absolute;right:10px;top:236px;width:150px;z-index:2;filter:drop-shadow(0 8px 14px rgba(13,8,32,.55));animation:rpFloat 3s ease-in-out infinite}
+.rp-float{position:absolute;right:10px;top:auto;bottom:210px;width:clamp(110px,30vw,140px);z-index:2;filter:drop-shadow(0 8px 14px rgba(13,8,32,.55));animation:rpFloat 3s ease-in-out infinite}
 .rp-fade{position:absolute;left:0;right:0;bottom:0;height:380px;background:linear-gradient(rgba(13,8,32,0) 0%,rgba(13,8,32,.2) 45%,rgba(13,8,32,.92) 82%,#0d0820)}
 .rp-hin{position:absolute;left:18px;right:18px;bottom:20px;display:flex;flex-direction:column;gap:10px;z-index:2}
 .rp-kick{font-size:11px;font-weight:800;letter-spacing:3px;color:var(--berry)}
-.rp-hin h1{margin:0;font-family:"Anton",sans-serif;font-weight:400;font-size:76px;line-height:.92;letter-spacing:1px}
+.rp-hin h1{margin:0;font-family:"Anton",sans-serif;font-weight:400;font-size:clamp(54px,16vw,68px);line-height:.92;letter-spacing:1px}
 .rp-ht{font-size:16px;font-weight:800;overflow-wrap:anywhere}.rp-ht span{font-weight:400;color:#cfc4ea}
 .rp-meta{display:flex;gap:10px;align-items:center;font-size:12px;color:#cfc4ea;flex-wrap:wrap}.rp-meta .g{color:#7ee07e;font-weight:800}.rp-meta .b{border:1px solid #8f84ad;padding:1px 5px}
 .rp-credit{font-size:10px;color:#8f84ad}
@@ -1157,7 +1158,7 @@ async function sbInit(){if(!SB_URL||!SB_KEY||!window.supabase)return;
 const sbReady=sbInit();
 
 /* 서버에서 목록 불러오기 (공개된 것 + 내가 올린 것) + 운영진이 저장한 생카 설정 */
-async function pull(force){if(!sb)return;const now=Date.now();if(!force&&now-R.at<15000)return;R.at=now;
+async function pull(force){if(!sb)return;const now=Date.now();if(!force&&now-R.at<30000)return;R.at=now;
   const sel=(t,c)=>sb.from(t).select(c).order('created_at',{ascending:false}).limit(300);
   const[n,g,m,p,l,st]=await Promise.all([
     sel('notes','id,user_id,name,message,approved,created_at'),
@@ -1174,7 +1175,7 @@ async function pull(force){if(!sb)return;const now=Date.now();if(!force&&now-R.a
   if(!m.error)R.montages=m.data.map(x=>({...base(x),t:x.title,img:pubUrl(x.image_path),path:x.image_path}));
   if(!p.error)R.photos=p.data.map(x=>({...base(x),t:x.caption,img:pubUrl(x.image_path),path:x.image_path}));
   if(!l.error)R.liked=new Set(l.data.map(x=>x.item_type+':'+x.item_id))}
-setInterval(()=>{if(sb)pull()},45000);
+setInterval(()=>{if(sb&&document.visibilityState==='visible'&&(rpOpen||modalOpen))pull()},60000);
 
 /* 목록 = 서버가 있으면 서버, 없으면 이 기기 + 예시 */
 const LS={notes:'jc_notes',gallery:'jc_gallery',montages:'jc_montages',photos:'jc_photos'};
@@ -1325,7 +1326,7 @@ function vCover(){const s=myStats(),mon=s.mon?s.mon.img:zzuImg();
     <div><div class="rp-hand rp-ctitle">${escH(s.name)} 대원의 탐사 일지</div><div class="rp-cmeta">대원 번호 1203-${s.no} · ${s.landStr} 착륙</div></div>
     <div class="rp-cmid">
       <div class="rp-pola"><span class="rp-tp" style="top:-9px;left:38px;width:54px;background:#f7a8c4;transform:rotate(-6deg)"></span>
-        <img class="im" src="${mon}" alt="내가 그린 쭈일리언"><span class="rp-hand cap">${s.mon?escH(s.mon.t):'내 몽타주'}</span><img class="rp-pstk" src="${ART.ap}" alt=""></div>
+        <img class="im" src="${mon}" alt="내가 그린 쭈일리언"><span class="rp-hand cap">쭈일리언 몽타주</span><img class="rp-pstk" src="${ART.ap}" alt=""></div>
       <div class="rp-hand rp-stats"><div><b>${doneCount()}/5</b> 교신 해독</div><div><b>${s.best}점</b> 외계인 수색</div><div><b>${s.mins?s.mins+'분':'—'}</b> 탐사</div></div></div>
     <div class="rp-note"><small>내가 남긴 교신</small><div class="rp-hand">${s.note?escH(s.note):'아직 남긴 교신이 없어요'}</div></div>
     ${s.gal?`<div class="rp-gline"><img src="${s.gal.img}" alt=""><div>사진관에 <b>「${escH(s.gal.t)}」</b> 사진을 걸었어요</div></div>`:''}
@@ -1336,24 +1337,24 @@ function vCover(){const s=myStats(),mon=s.mon?s.mon.img:zzuImg();
 function vArchive(){
   const E=ARCHIVE.edits,h=E[0]||{title:'',by:'',len:''},notes=rpNotes(),tops=rpTop(),gal=rpGallery(),mons=rpMons(),shots=rpShots();
   if(!goodsImgs)goodsImgs=GOODS.map(g=>goodsIcon(g.a));
-  const th=e=>ytOk(e.yt)?`<img src="https://i.ytimg.com/vi/${e.yt}/hqdefault.jpg" alt="" loading="lazy">`:'[에딧 썸네일]';
+  const th=e=>e.thumb?`<img src="${escH(e.thumb)}" alt="" loading="lazy">`:ytOk(e.yt)?`<img src="https://i.ytimg.com/vi/${e.yt}/hqdefault.jpg" alt="" loading="lazy">`:'[에딧 썸네일]';
   const tk=notes.slice(0,8).map(n=>`<span>${escH(n.m.length>28?n.m.slice(0,28)+'…':n.m)}<em>✦</em></span>`).join('');
   const hero=ARCHIVE.heroImg?` style="background-image:url('${String(ARCHIVE.heroImg).replace(/'/g,'%27')}')"`:'';
   return`<div class="rpv rp-arc">
   <div class="rp-hero"${hero}>
     ${ARCHIVE.heroImg?'':'<div class="rp-hph">[주은이 사진]<br>세로 사진 · 얼굴이 위쪽 1/3에 오게</div>'}
     <div class="rp-nav"><div class="rp-logo">PLANET <span>1203</span></div>
-      <div class="rp-navr"><button data-go="cover">내 일지</button></div></div>
+      </div>
     <img class="rp-float" src="${ART.ufo}" alt="">
     <div class="rp-fade"></div>
     <div class="rp-hin"><div class="rp-kick">JOONI EDIT · 오늘의 에딧</div><h1>HAPPY<br>JUUN DAY</h1>
-      <div class="rp-ht">${escH(h.title)} <span>· edit by ${escH(h.by)}</span></div>
+      ${h.title||h.by?`<div class="rp-ht">${escH(h.title||'')}${h.by?` <span>· edit by ${escH(h.by)}</span>`:''}</div>`:''}
       <div class="rp-meta"><span class="g">탐사 성공률 100%</span><span>2026</span><span class="b">ALL</span>${h.len?`<span>${escH(h.len)}</span>`:''}</div>
       <div class="rp-hbtn"><button class="rp-play" data-act="play" data-i="0">${SVG.play}재생</button><button class="rp-ghost" data-go="cover">${SVG.info}내 탐사 일지</button></div>
       ${ARCHIVE.heroCredit?`<div class="rp-credit">${escH(ARCHIVE.heroCredit)}</div>`:''}</div></div>
 
   <section class="rp-sec"><div class="rp-sh"><h2>쭈니 에딧</h2><small>대원들이 만든 팬 편집 영상</small></div>
-    <div class="rp-row">${E.map((e,i)=>`<button class="rp-card" style="width:220px" data-act="play" data-i="${i}"><span class="rp-th" style="height:124px">${th(e)}${e.len?`<span class="rp-dur">${escH(e.len)}</span>`:''}</span><span class="rp-ct">${escH(e.title)}</span><span class="rp-cs">edit by ${escH(e.by)}</span></button>`).join('')}</div></section>
+    <div class="rp-row">${E.map((e,i)=>`<button class="rp-card" style="width:220px" data-act="play" data-i="${i}"><span class="rp-th" style="height:124px">${th(e)}${e.len?`<span class="rp-dur">${escH(e.len)}</span>`:''}</span><span class="rp-ct">${escH(e.title)}</span>${e.by?`<span class="rp-cs">edit by ${escH(e.by)}</span>`:''}</button>`).join('')}</div></section>
 
   <section class="rp-sec" style="padding-top:38px"><div class="rp-big"><div><div class="rp-kick">COMMISSION</div><h2>JOONI GALLERY</h2><p>작가님들께 맡긴 쭈니 커미션</p></div></div>
     <div class="rp-row" style="gap:10px">${ARCHIVE.commissions.map((c,i)=>`<button class="rp-card" style="width:176px" data-act="comm" data-i="${i}"><span class="rp-th" style="height:252px;border-radius:8px;background:#f6f1fb;color:#5a4d80">${c.img?`<img src="${escH(c.img)}" alt="${escH(c.title)}" loading="lazy">`:'[커미션 작품]'}<span class="rp-no">No.${p2(i+1)}</span></span><span class="rp-ct" style="font-weight:800">${escH(c.title)}</span><span class="rp-cs">illust. ${escH(c.artist)}</span></button>`).join('')}</div></section>
@@ -1366,18 +1367,18 @@ function vArchive(){
     <div class="rp-row">${GOODS.map((g,i)=>`<button class="rp-card" style="width:132px" data-act="shop"><span class="rp-th rp-gimg" style="height:132px"><img src="${goodsImgs[i]}" alt="${escH(g.n)}"></span><span class="rp-ct">${escH(g.n)}</span><span class="rp-cs">${escH(g.p)}</span></button>`).join('')}</div></section>
 
   <section class="rp-sec" style="padding-top:36px"><div class="rp-sh"><h2>대원들이 그린 쭈일리언</h2><small>${mons.length}점</small></div>
-    <div class="rp-row">${mons.map((m,i)=>`<button class="rp-card" style="width:112px" data-act="mon" data-i="${i}"><span class="rp-th px" style="height:112px;background:#fff">${`<img src="${m.img}" alt="${escH(m.t)}">`}</span><span class="rp-ct">${escH(m.t)}</span><span class="rp-cs">by ${escH(m.n)}${m.pending?' · 숨김':''}</span></button>`).join('')}</div></section>
+    <div class="rp-row">${mons.slice(0,40).map((m,i)=>`<button class="rp-card" style="width:112px" data-act="mon" data-i="${i}"><span class="rp-th px" style="height:112px;background:#fff">${`<img loading="lazy" src="${m.img}" alt="${escH(m.t)}">`}</span><span class="rp-ct">${escH(m.t)}</span><span class="rp-cs">by ${escH(m.n)}${m.pending?' · 숨김':''}</span></button>`).join('')}</div></section>
 
-  <section class="rp-sec"><div class="rp-sh"><h2>오늘의 주니 TOP 10</h2><small>사진관 공감 순위</small></div>
-    <div class="rp-row" style="gap:0">${tops.map((e,i)=>`<button class="rp-top" data-act="top" data-i="${i}" aria-label="${i+1}위 ${escH(e.t)}"><span class="n">${i+1}</span><span class="rp-th"><img src="${e.img}" alt=""></span></button>`).join('')}</div></section>
+  <section class="rp-sec"><div class="rp-sh"><h2>오늘의 쭈니 TOP 10</h2><small>사진관 공감 순위</small></div>
+    <div class="rp-row" style="gap:0">${tops.map((e,i)=>`<button class="rp-top" data-act="top" data-i="${i}" aria-label="${i+1}위 ${escH(e.t)}"><span class="n">${i+1}</span><span class="rp-th"><img loading="lazy" src="${e.img}" alt=""></span></button>`).join('')}</div></section>
 
-  <button class="rp-files" data-act="scroll"><img src="${ART.ufo}" alt=""><span class="in"><span class="rp-kick">특집</span><b>ZZUALIEN<br>FILES</b><small>대원들이 자랑하는 주니 사진 ${gal.length}장</small></span></button>
+  <button class="rp-files" data-act="scroll"><img src="${ART.ufo}" alt=""><span class="in"><span class="rp-kick">특집</span><b>ZZUALIEN<br>FILES</b><small>대원들이 자랑하는 쭈니 사진 ${gal.length}장</small></span></button>
 
-  <section class="rp-sec" id="rpFan"><div class="rp-sh"><h2>대원들이 자랑하는 주니</h2><small>사진관 · 최신순</small></div>
-    <div class="rp-row">${gal.map((e,i)=>`<button class="rp-card" style="width:132px" data-act="gal" data-i="${i}"><span class="rp-th" style="height:190px"><img src="${e.img}" alt="${escH(e.t)}"></span><span class="rp-ct">「${escH(e.t)}」</span><span class="rp-cs">${escH(e.n)}${e.pending?' · 숨김':''}</span></button>`).join('')}</div></section>
+  <section class="rp-sec" id="rpFan"><div class="rp-sh"><h2>대원들이 자랑하는 쭈니</h2><small>사진관 · 최신순</small></div>
+    <div class="rp-row">${gal.slice(0,40).map((e,i)=>`<button class="rp-card" style="width:132px" data-act="gal" data-i="${i}"><span class="rp-th" style="height:190px"><img loading="lazy" src="${e.img}" alt="${escH(e.t)}"></span><span class="rp-ct">「${escH(e.t)}」</span><span class="rp-cs">${escH(e.n)}${e.pending?' · 숨김':''}</span></button>`).join('')}</div></section>
 
   <section class="rp-sec"><div class="rp-sh"><h2>착륙 인증샷</h2><small>${shots.length}장</small></div>
-    <div class="rp-row">${shots.map((p,i)=>`<button class="rp-card" style="width:120px" data-act="shot" data-i="${i}"><span class="rp-th" style="height:213px"><img src="${p.img}" alt="${escH(p.t)}"></span><span class="rp-cs" style="margin:0">${escH(p.n)} 대원${p.pending?' · 숨김':''}</span></button>`).join('')}</div></section>
+    <div class="rp-row">${shots.slice(0,40).map((p,i)=>`<button class="rp-card" style="width:120px" data-act="shot" data-i="${i}"><span class="rp-th" style="height:213px"><img loading="lazy" src="${p.img}" alt="${escH(p.t)}"></span><span class="rp-cs" style="margin:0">${escH(p.n)} 대원${p.pending?' · 숨김':''}</span></button>`).join('')}</div></section>
 
   <div class="rp-last" id="rpLast"></div>
   <div class="rp-foot"><div>쭈일리언 생일 탐사대 · 비영리 팬 이벤트<br>영상·사진 출처는 각 작품에 표기<br><button class="adminLink" type="button">운영진</button></div><div style="display:flex;gap:4px"><img src="${ART.ag}" alt=""><img src="${ART.ap}" alt=""></div></div></div>`}
@@ -1410,10 +1411,12 @@ function galView(items,i){openViewer({items,index:i,ratio:'9/16',title:e=>e.t,im
   body:e=>`<div class="whyh">이 사진을 고른 이유</div><blockquote class="why">${escH(e.w)}</blockquote><p class="by">고른 대원 · ${escH(e.n)}${e.ex?' · 예시 작품':''}</p>`,
   extra:e=>{const on=isLiked('gallery',e.id);return`<button class="${on?'primary':'soft'}" id="gaLike">${on?'💜 좋아요 했어요':'💜 좋아요'}</button>`},
   mount:(e,show)=>{$('#gaLike').onclick=()=>toggleLike('gallery',e).then(()=>{show();rpRefresh()},err=>{$('#vmsg').textContent=errMsg(err)})}})}
-function playEdit(i){const e=ARCHIVE.edits[i];if(!e)return;
-  openSheet(e.title,ytOk(e.yt)?`<div style="position:relative;aspect-ratio:16/9;border-radius:8px;overflow:hidden;background:#000"><iframe src="https://www.youtube-nocookie.com/embed/${e.yt}?autoplay=1&playsinline=1&rel=0" title="${escH(e.title)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe></div>
-    <p class="by">edit by ${escH(e.by)}</p><a href="https://youtu.be/${e.yt}" target="_blank" rel="noopener" style="font-family:var(--display);color:var(--berry-deep)">유튜브에서 보기 →</a>`
-    :`<p>영상 링크를 준비하고 있어요.</p>`)}
+function playEdit(i){const e=ARCHIVE.edits[i];if(!e)return;const by=e.by?`<p class="by">edit by ${escH(e.by)}</p>`:'';
+  openSheet(e.title||'쭈니 에딧',e.video?`<video src="${escH(e.video)}"${e.thumb?` poster="${escH(e.thumb)}"`:''} controls playsinline autoplay style="display:block;width:100%;max-height:70vh;border-radius:8px;background:#000"></video>${by}`
+    :ytOk(e.yt)?`<div style="position:relative;aspect-ratio:16/9;border-radius:8px;overflow:hidden;background:#000"><iframe src="https://www.youtube-nocookie.com/embed/${e.yt}?autoplay=1&playsinline=1&rel=0" title="${escH(e.title||'쭈니 에딧')}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe></div>
+    ${by}<a href="https://youtu.be/${e.yt}" target="_blank" rel="noopener" style="font-family:var(--display);color:var(--berry-deep)">유튜브에서 보기 →</a>`
+    :`<p>영상을 준비하고 있어요.</p>`);
+  onClose=()=>{$('#sheetBody').innerHTML=''}}
 
 /* 일지 이미지 (저장·공유용 1080×1350) */
 const loadImg=src=>new Promise(r=>{const im=new Image();if(/^https?:/.test(src))im.crossOrigin='anonymous';im.onload=()=>r(im);im.onerror=()=>r(null);im.src=src});
@@ -1440,7 +1443,7 @@ async function coverCard(){
   x.save();x.translate(330,620);x.rotate(-.07);x.shadowColor='rgba(42,29,77,.18)';x.shadowBlur=24;x.shadowOffsetY=6;x.fillStyle='#fff';x.fillRect(-190,-210,380,450);x.restore();
   x.save();x.translate(330,620);x.rotate(-.07);x.fillStyle='#f4effc';x.fillRect(-170,-190,340,340);
   if(mon){x.imageSmoothingEnabled=false;const k=Math.min(340/mon.width,340/mon.height),w=mon.width*k,h=mon.height*k;x.drawImage(mon,-w/2,-20-h/2,w,h)}
-  x.fillStyle='#2a1d4d';x.font=HAND(700,36);x.textAlign='center';x.fillText(s.mon?s.mon.t:'내 몽타주',0,205);x.restore();x.textAlign='left';
+  x.fillStyle='#2a1d4d';x.font=HAND(700,36);x.textAlign='center';x.fillText('쭈일리언 몽타주',0,205);x.restore();x.textAlign='left';
   tape(320,400,130,-.12,'#f7a8c4');
   if(ap){x.save();x.imageSmoothingEnabled=false;x.translate(505,830);x.rotate(.17);const w=110;x.drawImage(ap,-w/2,-w/2,w,w*ap.height/ap.width);x.restore()}
   [[`${doneCount()}/5`,' 교신 해독'],[`${s.best}점`,' 외계인 수색'],[s.mins?`${s.mins}분`:'—',' 탐사']].forEach(([a,b],i)=>{const y=500+i*90;x.font=HAND(700,52);x.fillStyle='#ff6f91';x.fillText(a,600,y);const w=x.measureText(a).width;x.font=HAND(400,48);x.fillStyle='#2a1d4d';x.fillText(b,600+w,y)});
@@ -1564,7 +1567,8 @@ function adSiteRender(upd){const S=AD.site,lk=S.lastAt?kst(S.lastAt):null,lv=lk?
     <input data-f="heroImg" value="${escH(S.heroImg)}" placeholder="또는 이미지 주소"><input data-f="heroCredit" value="${escH(S.heroCredit)}" placeholder="사진 출처 표기 (예: ⓒ 출처)"></div></div>
   <h3>쭈니 에딧 <small>첫 번째가 맨 위 배너</small></h3>
   ${S.edits.map((e,i)=>`<div class="ad-item"><input data-l="edits" data-i="${i}" data-k="title" value="${escH(e.title||'')}" placeholder="에딧 제목"><input data-l="edits" data-i="${i}" data-k="by" value="${escH(e.by||'')}" placeholder="만든 사람">
-    <input data-l="edits" data-i="${i}" data-k="yt" value="${escH(e.yt||'')}" placeholder="유튜브 주소 또는 ID"><input data-l="edits" data-i="${i}" data-k="len" value="${escH(e.len||'')}" placeholder="길이 (예: 2:31)" class="sm">
+    <input data-l="edits" data-i="${i}" data-k="yt" value="${escH(e.yt||'')}" placeholder="유튜브 주소 (영상 파일을 올리면 없어도 돼요)"><input data-l="edits" data-i="${i}" data-k="len" value="${escH(e.len||'')}" placeholder="길이 (예: 2:31)" class="sm">
+    <div class="ad-vid">${e.thumb?`<img src="${escH(e.thumb)}" alt="">`:''}<label class="ad-file sm">${e.video?'영상 바꾸기':'영상 파일 올리기'}<input type="file" accept="video/mp4,video/webm,video/quicktime" data-up="vid" data-i="${i}" hidden></label>${e.video?`<span>영상 파일이 연결됐어요 (유튜브보다 먼저 재생돼요)</span><button type="button" data-ad="rmvid" data-i="${i}">영상 빼기</button>`:'<span>mp4 · 50MB까지</span>'}</div>
     <div class="ad-mv"><button type="button" data-ad="up" data-l="edits" data-i="${i}" aria-label="위로">↑</button><button type="button" data-ad="rm" data-l="edits" data-i="${i}">빼기</button></div></div>`).join('')}
   <button type="button" class="ad-add" data-ad="add" data-l="edits">+ 에딧 추가</button>
   <h3>커미션 (JOONI GALLERY) <small>작가님 웹 게시 허락 필수</small></h3>
@@ -1582,11 +1586,12 @@ function adSiteRender(upd){const S=AD.site,lk=S.lastAt?kst(S.lastAt):null,lv=lk?
     else if(el.dataset.f==='lastAtLocal'){const v=el.value;if(v){const[dt,tm]=v.split('T'),[y,mo,d]=dt.split('-').map(Number),[h,mi]=tm.split(':').map(Number);S.lastAt=Date.UTC(y,mo-1,d,h-9,mi)}}
     else if(el.dataset.f)S[el.dataset.f]=el.value});
   f.addEventListener('change',async e=>{const el=e.target;if(!el.dataset.up||!el.files[0])return;const lab=el.parentElement;lab.firstChild.textContent='올리는 중…';
-    try{const url=await adUpload(el.files[0]);if(el.dataset.up==='hero')S.heroImg=url;else S.commissions[+el.dataset.i].img=url;adSiteRender(upd)}
+    try{if(el.dataset.up==='vid'){lab.firstChild.textContent='올리는 중… 용량에 따라 1~2분';const v=await adUploadVideo(el.files[0]);Object.assign(S.edits[+el.dataset.i],v);adSiteRender(upd);return}
+      const url=await adUpload(el.files[0]);if(el.dataset.up==='hero')S.heroImg=url;else S.commissions[+el.dataset.i].img=url;adSiteRender(upd)}
     catch(err){lab.firstChild.textContent='실패, 다시 시도';alert('사진을 올리지 못했어요: '+(err.message||err))}});
   f.onsubmit=async e=>{e.preventDefault();const b=f.querySelector('.ad-pri');b.disabled=true;$('#adSaveMsg').textContent='저장 중…';
     const data={heroImg:S.heroImg||null,heroCredit:S.heroCredit,tag:S.tag,lastAt:S.lastAt,lastMsg:S.lastMsg,
-      edits:S.edits.map(x=>({title:x.title||'',by:x.by||'',yt:ytId(x.yt),len:x.len||''})),
+      edits:S.edits.map(x=>({title:x.title||'',by:x.by||'',yt:ytId(x.yt),len:x.len||'',video:x.video||null,thumb:x.thumb||null})),
       commissions:S.commissions.map(x=>({img:x.img||null,title:x.title||'',artist:x.artist||''}))};
     const r=await sb.from('site_settings').update({data,updated_at:new Date().toISOString()}).eq('id',1);b.disabled=false;
     if(r.error){$('#adSaveMsg').textContent='저장하지 못했어요: '+r.error.message;return}
@@ -1595,6 +1600,22 @@ async function adUpload(file){const im=await new Promise((res,rej)=>{const fr=ne
   const k=Math.min(1,1600/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);
   const blob=dataBlob(c.toDataURL('image/jpeg',.86)),path=`site/${Date.now()}-${Math.random().toString(36).slice(2,7)}.jpg`;
   const up=await sb.storage.from(BUCKET).upload(path,blob,{contentType:'image/jpeg',cacheControl:'31536000'});if(up.error)throw up.error;return pubUrl(path)}
+
+/* 에딧 영상 파일 → media 버킷 (썸네일·길이는 자동으로 뽑아요) */
+const mediaUrl=p=>`${SB_URL}/storage/v1/object/public/media/${p}`;
+async function vidMeta(file){const url=URL.createObjectURL(file),v=document.createElement('video');v.muted=true;v.playsInline=true;v.preload='auto';v.src=url;
+  try{await new Promise((res,rej)=>{v.onloadeddata=res;v.onerror=rej;setTimeout(res,8000)});const dur=v.duration||0;
+    v.currentTime=Math.min(1.5,dur/3||0);await new Promise(r=>{v.onseeked=r;setTimeout(r,4000)});
+    let thumb=null;if(v.videoWidth){const k=Math.min(1,720/Math.max(v.videoWidth,v.videoHeight)),c=document.createElement('canvas');c.width=Math.round(v.videoWidth*k);c.height=Math.round(v.videoHeight*k);
+      c.getContext('2d').drawImage(v,0,0,c.width,c.height);thumb=c.toDataURL('image/jpeg',.82)}
+    return{dur,thumb}}catch(e){return{dur:0,thumb:null}}finally{URL.revokeObjectURL(url)}}
+async function adUploadVideo(file){if(!/^video\//.test(file.type))throw new Error('영상 파일(mp4)만 올릴 수 있어요');
+  if(file.size>50*1024*1024)throw new Error(`50MB까지 올릴 수 있어요 (지금 ${Math.round(file.size/1048576)}MB). 해상도를 720p로 줄여서 다시 올려 주세요`);
+  const m=await vidMeta(file),stem=`edits/${Date.now()}-${Math.random().toString(36).slice(2,7)}`,ext=(file.name.split('.').pop()||'mp4').toLowerCase().replace(/[^a-z0-9]/g,'')||'mp4';
+  const up=await sb.storage.from('media').upload(`${stem}.${ext}`,file,{contentType:file.type,cacheControl:'31536000'});if(up.error)throw up.error;
+  let thumb=null;if(m.thumb){const t=await sb.storage.from('media').upload(`${stem}.jpg`,dataBlob(m.thumb),{contentType:'image/jpeg',cacheControl:'31536000'});if(!t.error)thumb=mediaUrl(`${stem}.jpg`)}
+  const len=m.dur?`${Math.floor(m.dur/60)}:${p2(Math.round(m.dur%60))}`:'';
+  return{video:mediaUrl(`${stem}.${ext}`),thumb,...(len?{len}:{})}}
 
 /* 현황 */
 async function adStats(){const d=new Date(Date.now()+9*36e5);const today=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate())-9*36e5).toISOString();
@@ -1611,6 +1632,7 @@ adm.addEventListener('click',e=>{const b=e.target.closest('[data-ad]');if(!b)ret
   else if(a==='filter'){AD.filter=b.dataset.k;adList()}else if(a==='toggle')adToggle(b.dataset.id);else if(a==='del')adDel(b.dataset.id,b);
   else if(a==='add'){AD.site[b.dataset.l].push(b.dataset.l==='edits'?{title:'',by:'',yt:'',len:''}:{img:null,title:'',artist:''});adSiteRender()}
   else if(a==='rm'){AD.site[b.dataset.l].splice(+b.dataset.i,1);adSiteRender()}
+  else if(a==='rmvid'){const e=AD.site.edits[+b.dataset.i];e.video=null;e.thumb=null;adSiteRender()}
   else if(a==='up'){const L=AD.site[b.dataset.l],i=+b.dataset.i;if(i>0){[L[i-1],L[i]]=[L[i],L[i-1]];adSiteRender()}}});
 document.querySelectorAll('.adminLink').forEach(b=>b.addEventListener('click',openAdmin));
 rp.addEventListener('click',e=>{if(e.target.closest('.adminLink'))openAdmin()});
