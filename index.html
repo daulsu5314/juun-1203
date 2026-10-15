@@ -190,6 +190,7 @@ img{max-width:100%}
 .gate-bub:before{content:"";position:absolute;top:-10px;left:50%;margin-left:-10px;border:10px solid transparent;border-top:0;border-bottom-color:#fff7f0}
 .gate-skip{margin-top:12px;background:#e6dcfa;color:var(--ink);font-family:"Jua",sans-serif;font-size:16px;padding:12px 18px;border-radius:999px;box-shadow:0 4px 0 #8f7cc8}
 .gate-reset{margin-top:4px;background:none;color:#c4b0ff;font-size:13px;padding:8px;text-decoration:underline;text-underline-offset:3px}
+.gate-snd{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:14px;z-index:3;width:44px;height:44px;border-radius:50%;background:rgba(23,13,51,.6);color:#fff;padding:0;display:flex;align-items:center;justify-content:center;border:1.5px solid rgba(255,255,255,.35)}
 .gate-bub b{color:var(--berry-deep);font-weight:400}
 .gate-mach{position:relative;margin-top:18px;width:min(330px,88vw);height:64px;background:#2b1d55;border:3px solid #6b55b8;border-radius:12px;box-shadow:0 5px 0 #0c0719;display:flex;align-items:center;justify-content:center;flex:none}
 .gate-mach small{position:absolute;top:6px;left:12px;font-family:"Anton",sans-serif;font-size:11px;letter-spacing:2px;color:#c4b0ff}
@@ -464,13 +465,14 @@ img{max-width:100%}
 
 <div class="gate" id="gate" hidden role="dialog" aria-modal="true" aria-label="탑승 게이트">
   <div class="gate-stars" id="gateStars" aria-hidden="true"></div>
+  <button type="button" class="gate-snd" id="gateSnd" aria-label="소리 끄기"></button>
   <div class="gate-top"><img class="gate-ufo" id="gateUfo" alt="파일럿 쭈일리언"><div class="gate-bub" id="gateBub" aria-live="polite"></div><button type="button" class="gate-skip" id="gateSkip" hidden>바로 생일파티 참여하기 →</button><button type="button" class="gate-reset" id="gateReset" hidden>내 탐사 기록 지우고 처음부터 하기</button></div>
   <div class="gate-mach" aria-hidden="true"><small>TICKET IN</small><span class="gate-led" id="gateLed"></span><span class="gate-slot"></span></div>
   <div class="gate-zone" id="gateZone"><div class="gate-hint">▲ 티켓을 위로 쭈욱 밀어 넣어요 ▲</div>
     <div class="tk" id="tk" aria-label="탑승권"><div class="tk-main">
-      <div class="tk-head"><b>BOARDING PASS</b><span>FLIGHT ZZ1203</span></div>
+      <div class="tk-head"><b>BOARDING PASS</b><span>FLIGHT ZZUKONGHO</span></div>
       <div class="tk-route"><div><small>FROM</small>EARTH</div><i></i><div><small>TO</small>#1203</div></div>
-      <div class="tk-grid"><div>대원 번호<b id="tkNo">1203-0000</b></div><div>DATE<b>12.03</b></div><div>SEAT<b id="tkSeat">12A</b></div></div>
+      <div class="tk-grid"><div>대원 번호<b id="tkNo">1203-0000</b></div><div>DATE<b>12.03</b></div><div>SEAT<b id="tkSeat">19A</b></div></div>
     </div><div class="tk-stub"><img id="tkUfo" alt=""><div class="tk-bar"></div><span>하츄</span></div></div>
   </div>
   <div class="gate-btns"><button type="button" id="gateBtn">티켓 받기</button></div>
@@ -1927,26 +1929,40 @@ if(/[?&#]admin\b/.test(location.search+location.hash))openAdmin();
    탑승 게이트 : 파일럿 쭈일리언에게 티켓을 받아서 슬롯에 넣으면 착륙 준비 화면으로
    ===================================================================== */
 const gate=$('#gate');let gateOpen=false;
-function openGate(){gateOpen=true;gate.hidden=false;
+/* 효과음: 첫 터치 뒤부터 나요 (브라우저 정책). 끄면 기억해요 */
+const SFX={ctx:null,mute:store.get('jc_mute',false),
+  on(){if(this.mute)return null;try{if(!this.ctx)this.ctx=new(window.AudioContext||window.webkitAudioContext)();if(this.ctx.state==='suspended')this.ctx.resume();return this.ctx.state==='running'?this.ctx:null}catch(e){return null}},
+  tone(f,d,t=0,type='square',v=.05,f2){const c=this.on();if(!c)return;const o=c.createOscillator(),g=c.createGain(),s=c.currentTime+t;o.type=type;o.frequency.setValueAtTime(f,s);if(f2)o.frequency.exponentialRampToValueAtTime(f2,s+d);
+    g.gain.setValueAtTime(0,s);g.gain.linearRampToValueAtTime(v,s+.005);g.gain.exponentialRampToValueAtTime(.0001,s+d);o.connect(g).connect(c.destination);o.start(s);o.stop(s+d+.02)},
+  chirp(){this.tone(700+Math.random()*700,.045,0,'square',.025)},                         // 삐릿삐릿 말소리
+  print(){for(let i=0;i<7;i++)this.tone(180+i*12,.03,i*.06,'square',.03);this.tone(500,.18,.45,'triangle',.05,1100)},  // 티켓 출력
+  near(){this.tone(1400,.05,0,'sine',.03)},
+  insert(){const c=this.on();if(!c)return;const n=c.createBufferSource(),b=c.createBuffer(1,c.sampleRate*.35,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length);
+    const fl=c.createBiquadFilter(),g=c.createGain();fl.type='bandpass';fl.frequency.setValueAtTime(600,c.currentTime);fl.frequency.exponentialRampToValueAtTime(3000,c.currentTime+.3);g.gain.value=.12;n.buffer=b;n.connect(fl).connect(g).connect(c.destination);n.start()},
+  ok(){this.tone(1200,.08,0,'square',.05);this.tone(1600,.12,.11,'square',.05);[523,659,784,1047].forEach((f,i)=>this.tone(f,.22,.32+i*.09,'triangle',.06))}};
+const sndIcon=()=>SFX.mute?'<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>':'<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 8.5a5 5 0 0 1 0 7M19.5 6a8.5 8.5 0 0 1 0 12"/></svg>';
+gate.addEventListener('pointerdown',()=>SFX.on(),{capture:true});
+function openGate(){gateOpen=true;gate.hidden=false;const sb2=$('#gateSnd');sb2.innerHTML=sndIcon();sb2.setAttribute('aria-label',SFX.mute?'소리 켜기':'소리 끄기');
+  sb2.onclick=e=>{e.stopPropagation();SFX.mute=!SFX.mute;store.set('jc_mute',SFX.mute);sb2.innerHTML=sndIcon();sb2.setAttribute('aria-label',SFX.mute?'소리 켜기':'소리 끄기');if(!SFX.mute)SFX.chirp()};
   $('#gateUfo').src=ART.ufo;$('#tkUfo').src=ART.ufo;$('#tkNo').textContent='1203-'+store.get('jc_no','0000');
   $('#tkSeat').textContent=(1+Math.floor(Math.random()*24))+'ABCDEF'[Math.floor(Math.random()*6)];
   let sd=11;const r=()=>(sd=(sd*16807)%2147483647)/2147483647;
   $('#gateStars').innerHTML=Array.from({length:40},()=>`<i style="left:${(r()*100).toFixed(1)}%;top:${(r()*100).toFixed(1)}%;opacity:${(.3+r()*.7).toFixed(2)}"></i>`).join('');
   let typing=null;const say=(t,done)=>{clearInterval(typing);const el=$('#gateBub');let i=0;const chars=[...t];el.textContent='';
-    typing=setInterval(()=>{i++;el.textContent=chars.slice(0,i).join('');if(i>=chars.length){clearInterval(typing);typing=null;done&&done()}},38);
+    typing=setInterval(()=>{i++;el.textContent=chars.slice(0,i).join('');if(i%2&&chars[i-1]&&chars[i-1].trim())SFX.chirp();if(i>=chars.length){clearInterval(typing);typing=null;done&&done()}},38);
     el.onclick=()=>{if(typing){clearInterval(typing);typing=null;el.textContent=t;done&&done()}}};
   const btn=$('#gateBtn'),tk=$('#tk'),zone=$('#gateZone');let step=0;
   if(isBack()){$('#gateReset').hidden=false;$('#gateReset').onclick=askReset;$('#gateSkip').hidden=false;$('#gateSkip').onclick=()=>{gate.classList.add('bye');openReport('archive');setTimeout(()=>{gate.hidden=true;gateOpen=false},700)};
     say(`쭈삣쭈삣! 다시 오셨군요, ${me.name} 대원!\n탐험을 다시 하려면 티켓을 넣고, 파티로 가려면 아래 버튼을 눌러 주세요`)}
   else say('쭈삣쭈삣! 파일럿 쭈일리언입니다!!\n외계행성 탐험에 참여하실 하츄대원은 티켓을 넣어 주세요');
-  const insert=()=>{if(step!==1)return;step=2;btn.disabled=true;gate.classList.remove('near');
+  const insert=()=>{if(step!==1)return;SFX.insert();step=2;btn.disabled=true;gate.classList.remove('near');
     const dy=-(tk.offsetTop+tk.offsetHeight+16);tk.classList.remove('drag');tk.classList.add('in');tk.style.transform=`translateY(${dy}px)`;
-    setTimeout(()=>{$('#gateLed').classList.add('ok');gate.classList.remove('got');
+    setTimeout(()=>{SFX.ok();$('#gateLed').classList.add('ok');gate.classList.remove('got');
       say('삐빅! 탑승 확인 완료!\n곧 행성 #1203으로 출발합니다',()=>setTimeout(closeGate,700))},650)};
-  btn.onclick=()=>{if(step===0){step=1;gate.classList.add('got');btn.textContent='티켓 넣기';say('티켓을 위로 쭈욱 밀어서 슬롯에 넣어 주세요!')}else insert()};
+  btn.onclick=()=>{if(step===0){step=1;SFX.print();gate.classList.add('got');btn.textContent='티켓 넣기';say('티켓을 위로 쭈욱 밀어서 슬롯에 넣어 주세요!')}else insert()};
   let st=null;
   tk.addEventListener('pointerdown',e=>{if(step!==1)return;tk.setPointerCapture(e.pointerId);st={y:e.clientY};tk.classList.add('drag')});
-  tk.addEventListener('pointermove',e=>{if(!st)return;const dy=Math.min(0,e.clientY-st.y);tk.style.transform=`translateY(${dy}px)`;gate.classList.toggle('near',tk.offsetTop+dy<60)});
+  tk.addEventListener('pointermove',e=>{if(!st)return;const dy=Math.min(0,e.clientY-st.y);tk.style.transform=`translateY(${dy}px)`;const nr=tk.offsetTop+dy<60;if(nr&&!gate.classList.contains('near'))SFX.near();gate.classList.toggle('near',nr)});
   const end=e=>{if(!st)return;const dy=Math.min(0,e.clientY-st.y);st=null;if(tk.offsetTop+dy<60)insert();else{tk.classList.remove('drag');tk.style.transform='';gate.classList.remove('near')}};
   tk.addEventListener('pointerup',end);tk.addEventListener('pointercancel',end)}
 function askReset(){openSheet('처음부터 새로 탐사하기',`<p>이 기기에 남은 <b>탐사 기록</b>(미션 진행, 대원 이름·번호, 점수, 탐사 일지)을 지우고 처음부터 다시 시작해요.</p>
