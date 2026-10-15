@@ -189,6 +189,7 @@ img{max-width:100%}
 .gate-bub{position:relative;background:#fff7f0;color:var(--ink);border-radius:16px;padding:14px 16px;min-height:78px;width:100%;font-family:"Jua",sans-serif;font-size:17px;line-height:1.5;white-space:pre-line;box-shadow:0 6px 0 rgba(10,4,30,.35)}
 .gate-bub:before{content:"";position:absolute;top:-10px;left:50%;margin-left:-10px;border:10px solid transparent;border-top:0;border-bottom-color:#fff7f0}
 .gate-skip{margin-top:12px;background:#e6dcfa;color:var(--ink);font-family:"Jua",sans-serif;font-size:16px;padding:12px 18px;border-radius:999px;box-shadow:0 4px 0 #8f7cc8}
+.gate-reset{margin-top:4px;background:none;color:#c4b0ff;font-size:13px;padding:8px;text-decoration:underline;text-underline-offset:3px}
 .gate-bub b{color:var(--berry-deep);font-weight:400}
 .gate-mach{position:relative;margin-top:18px;width:min(330px,88vw);height:64px;background:#2b1d55;border:3px solid #6b55b8;border-radius:12px;box-shadow:0 5px 0 #0c0719;display:flex;align-items:center;justify-content:center;flex:none}
 .gate-mach small{position:absolute;top:6px;left:12px;font-family:"Anton",sans-serif;font-size:11px;letter-spacing:2px;color:#c4b0ff}
@@ -215,7 +216,7 @@ img{max-width:100%}
 .tk-stub{width:74px;border-left:2px dashed #d9c9f3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:8px 6px;background:#f4effc}
 .tk-stub img{width:46px}
 .tk-bar{width:56px;height:30px;background:repeating-linear-gradient(90deg,#2a1d4d 0 2px,transparent 2px 4px,#2a1d4d 4px 5px,transparent 5px 8px)}
-.tk-stub span{font-family:"Anton",sans-serif;font-size:10px;color:#6a5d8f;letter-spacing:1px}
+.tk-stub span{font-family:"Jua",sans-serif;font-size:14px;color:#6a5d8f;letter-spacing:2px}
 .gate-btns{position:absolute;left:0;right:0;bottom:calc(22px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;padding:0 20px;z-index:2}
 .gate-btns button{width:100%;max-width:400px;height:56px;border-radius:14px;background:var(--berry);color:#fff;box-shadow:0 5px 0 var(--berry-deep);font-family:"Jua",sans-serif;font-size:19px}
 .gate-btns button:disabled{opacity:.5}
@@ -372,7 +373,7 @@ img{max-width:100%}
 .rp-big{padding:0 18px;margin-bottom:12px;display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
 .rp-big h2{margin:2px 0;font-family:"Anton",sans-serif;font-weight:400;font-size:34px;line-height:1;letter-spacing:.5px}
 .rp-big p{margin:0;font-size:12px;color:#cfc4ea}
-.rp-row{display:flex;gap:8px;padding:0 18px;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x proximity;scroll-padding:0 18px}
+.rp-row{display:flex;gap:8px;padding:0 18px;overflow-x:auto;scrollbar-width:none;scroll-snap-type:none;overscroll-behavior-x:contain}
 .rp-row::-webkit-scrollbar{display:none}
 .rp-row{cursor:grab;-webkit-user-select:none;user-select:none}.rp-row.drag{cursor:grabbing}.rp-row img{-webkit-user-drag:none}
 .rp-card{flex:none;display:flex;flex-direction:column;gap:6px;background:none;color:#fff;padding:0;text-align:left;scroll-snap-align:start}
@@ -385,7 +386,8 @@ img{max-width:100%}
 .rp-new{background:var(--berry);font-size:10px;font-weight:800;padding:2px 6px;border-radius:3px;color:#fff;letter-spacing:0}
 .rp-top{flex:none;display:flex;align-items:flex-end;width:176px;background:none;padding:0;color:#fff;scroll-snap-align:start}
 .rp-top .n{font-family:"Anton",sans-serif;font-size:150px;line-height:.78;color:#0d0820;-webkit-text-stroke:3px #9d8ad6;width:86px;text-align:right;margin-right:-14px}
-.rp-top .rp-th{width:104px;height:150px;z-index:1;flex:none}
+.rp-top .rp-th{width:104px;height:150px;z-index:1;flex:none;position:relative}.rp-top .n{flex:none}
+.rp-top .rp-th img{transform:translateZ(0)}
 .rp-live{font-size:10px;font-weight:800;letter-spacing:3px;color:#7ee07e;display:flex;align-items:center;gap:6px}
 .rp-live i{width:7px;height:7px;border-radius:50%;background:#7ee07e;animation:rpPulse 1.4s ease-in-out infinite}
 .rp-link{background:none;color:#fff;font-size:13px;font-weight:800;padding:6px 0;flex:none}
@@ -435,6 +437,24 @@ img{max-width:100%}
 .rp-camrow .rp-th{width:128px;height:72px;flex:none}.rp-camrow .tx{display:flex;flex-direction:column;gap:5px;min-width:0}
 .rp-camrow .m{font-size:15px;font-weight:600;line-height:1.5;overflow-wrap:anywhere}.rp-camrow .h{font-size:12px;color:#8f84ad;display:flex;align-items:center;gap:4px}.rp-camrow .h b{color:#fff}
 .cm-del{float:right;background:none;color:#9a8db0;font-size:12px;padding:2px 4px}
+.rp-lgcard{display:flex;flex-direction:column;gap:8px;width:calc(100% - 36px);margin:0 18px;background:#1b1238;border:1px solid #2f2452;border-radius:10px!important;padding:16px;color:#fff;text-align:left}
+.lg-pv{font-size:14px;line-height:1.5;color:#e6dcfa;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.lg-pv b{color:#7ee07e;font-weight:800;margin-right:4px}.lg-go{font-size:13px;font-weight:800;color:#fff;margin-top:4px}
+.rp-lounge{display:flex;flex-direction:column;height:100vh;height:100dvh;font-family:"Gothic A1",var(--body)}
+.lg-sub{font-size:11px;color:#8f84ad;margin-top:2px}
+.lg-list{flex:1;overflow-y:auto;padding:10px 14px;display:flex;flex-direction:column;gap:10px;overscroll-behavior:contain}
+.lg-m{display:flex;gap:8px;align-items:flex-start;max-width:86%}.lg-m.me{align-self:flex-end;flex-direction:row-reverse}
+.lg-dot{width:22px;height:22px;border-radius:50%;flex:none;margin-top:16px;border:2px solid rgba(255,255,255,.6)}
+.lg-b{display:flex;flex-direction:column;gap:3px;min-width:0}.lg-m.me .lg-b{align-items:flex-end}
+.lg-h{display:flex;gap:6px;align-items:baseline;font-size:11px;color:#8f84ad}.lg-h b{color:#fff;font-size:12px}
+.lg-t{background:#2a1d4d;color:#fff;border-radius:14px 14px 14px 4px;padding:9px 12px;font-size:15px;line-height:1.45;overflow-wrap:anywhere;white-space:pre-wrap}
+.lg-m.me .lg-t{background:var(--berry);border-radius:14px 14px 4px 14px}
+.lg-del{background:none;color:#8f84ad;font-size:11px;padding:0 2px}
+.lg-in{display:flex;gap:8px;padding:10px 14px 4px;border-top:1px solid #2f2452}
+.lg-in input{flex:1;min-width:0;font-size:16px;padding:12px 14px;border-radius:999px;border:1px solid #3a2f60;background:#1b1238;color:#fff}
+.lg-in button{background:var(--berry);color:#fff;font-weight:800;border-radius:999px!important;padding:0 18px;font-size:15px}
+.lg-quick{display:flex;gap:6px;overflow-x:auto;padding:6px 14px;scrollbar-width:none}.lg-quick::-webkit-scrollbar{display:none}
+.lg-quick button{flex:none;background:#1b1238;border:1px solid #3a2f60;color:#cfc4ea;font-size:12px;padding:7px 11px;border-radius:999px!important}
+.lg-note{margin:0;padding:2px 14px calc(10px + env(safe-area-inset-bottom,0px));font-size:11px;color:#8f84ad}
 .rp-mfoot{margin-top:auto;padding:24px 18px 30px;display:flex;flex-direction:column;gap:10px;align-items:center}
 .rp-mfoot small{font-size:11px;color:#8f84ad}
 .rp-mfoot .rp-cta{border-radius:6px!important;box-shadow:none;font-family:"Gothic A1",var(--body)!important;font-weight:800;font-size:16px;height:52px}
@@ -444,14 +464,14 @@ img{max-width:100%}
 
 <div class="gate" id="gate" hidden role="dialog" aria-modal="true" aria-label="탑승 게이트">
   <div class="gate-stars" id="gateStars" aria-hidden="true"></div>
-  <div class="gate-top"><img class="gate-ufo" id="gateUfo" alt="파일럿 쭈일리언"><div class="gate-bub" id="gateBub" aria-live="polite"></div><button type="button" class="gate-skip" id="gateSkip" hidden>바로 생일파티 참여하기 →</button></div>
+  <div class="gate-top"><img class="gate-ufo" id="gateUfo" alt="파일럿 쭈일리언"><div class="gate-bub" id="gateBub" aria-live="polite"></div><button type="button" class="gate-skip" id="gateSkip" hidden>바로 생일파티 참여하기 →</button><button type="button" class="gate-reset" id="gateReset" hidden>내 탐사 기록 지우고 처음부터 하기</button></div>
   <div class="gate-mach" aria-hidden="true"><small>TICKET IN</small><span class="gate-led" id="gateLed"></span><span class="gate-slot"></span></div>
   <div class="gate-zone" id="gateZone"><div class="gate-hint">▲ 티켓을 위로 쭈욱 밀어 넣어요 ▲</div>
     <div class="tk" id="tk" aria-label="탑승권"><div class="tk-main">
       <div class="tk-head"><b>BOARDING PASS</b><span>FLIGHT ZZ1203</span></div>
       <div class="tk-route"><div><small>FROM</small>EARTH</div><i></i><div><small>TO</small>#1203</div></div>
       <div class="tk-grid"><div>대원 번호<b id="tkNo">1203-0000</b></div><div>DATE<b>12.03</b></div><div>SEAT<b id="tkSeat">12A</b></div></div>
-    </div><div class="tk-stub"><img id="tkUfo" alt=""><div class="tk-bar"></div><span>HACHU</span></div></div>
+    </div><div class="tk-stub"><img id="tkUfo" alt=""><div class="tk-bar"></div><span>하츄</span></div></div>
   </div>
   <div class="gate-btns"><button type="button" id="gateBtn">티켓 받기</button></div>
 </div>
@@ -1094,7 +1114,8 @@ function openDraw(){
 const sampleNotes=[{n:'예시대원_별딸기',m:'주은아 생일 진심으로 축하해! 행성 #1203에서 영원히 행복하길 🍓',ex:1},{n:'예시대원_1203',m:'신호 잡혔다! 12월 3일은 우리 행성 최대 명절이에요.',ex:1}];
 function openGuest(){
   const esc=s=>s.replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-  const render=()=>{$('#gl').innerHTML=itemsOf('notes').map(x=>`<div class="note"><span class="who">${esc(x.n)}</span>${x.ex?'<span class="tag">예시</span>':x.pending?'<span class="tag">운영진이 숨긴 글이에요</span>':''}<div class="msg">${esc(x.m)}</div></div>`).join('')};
+  const render=()=>{const L=itemsOf('notes');$('#gl').innerHTML=L.map(x=>`<div class="note"><span class="who">${esc(x.n)}</span>${x.ex?'<span class="tag">예시</span>':x.pending?'<span class="tag">운영진이 숨긴 글이에요</span>':''}${x.mine?`<button class="cm-del" data-nid="${esc(String(x.id))}">지우기</button>`:''}<div class="msg">${esc(x.m)}</div></div>`).join('');
+    $('#gl').querySelectorAll('[data-nid]').forEach(b=>b.onclick=()=>{if(!b.dataset.sure){b.dataset.sure=1;b.textContent='한 번 더 누르면 지워져요';return}const x=L.find(y=>String(y.id)===b.dataset.nid);if(x)removeItem('notes',x).then(render,()=>{})})};
   openSheet('교신 해독실',`${mTag('guest')}<p>행성에서 잡힌 교신 기록이에요. 주은이에게 보낼 생일 메시지를 남기면 신호가 더 강해져요.</p>
   <form id="gf" class="gb"><label class="f" for="gn">대원 이름<input id="gn" maxlength="16"></label>
   <label class="f" for="gm">교신 메시지<textarea id="gm" maxlength="200" placeholder="생일 축하해 주은아!"></textarea></label>
@@ -1313,6 +1334,24 @@ async function toggleLike(k,e){const on=isLiked(k,e.id);
   if(on)R.liked.delete(k+':'+e.id);else R.liked.add(k+':'+e.id);
   const it=R[k].find(x=>x.id===e.id);if(it&&typeof it.likes==='number')it.likes=Math.max(0,it.likes+(on?-1:1))}
 
+/* 파티 라운지: 열어 둔 사람만 몇 초마다 새 글을 가져와요 (실시간 한도 걱정 없음) */
+const LG={list:[],last:null,timer:null,loading:false};
+const lgMap=x=>({id:x.id,n:x.name,col:x.color,m:x.message,at:Date.parse(x.created_at),mine:x.user_id===uid,pending:!x.approved});
+async function loungeLoad(){if(!sb){LG.list=store.get('jc_lounge',[]).slice(-150);return}
+  const r=await sb.from('lounge').select('id,user_id,name,color,message,approved,created_at').order('created_at',{ascending:false}).limit(80);
+  if(r.error)return;LG.list=r.data.filter(x=>x.approved||x.user_id===uid).reverse().map(lgMap);LG.last=r.data.length?r.data[0].created_at:null}
+async function loungePoll(){if(!sb||LG.loading)return 0;LG.loading=true;
+  try{let q=sb.from('lounge').select('id,user_id,name,color,message,approved,created_at').order('created_at',{ascending:true}).limit(100);if(LG.last)q=q.gt('created_at',LG.last);
+    const r=await q;if(r.error||!r.data.length)return 0;LG.last=r.data[r.data.length-1].created_at;
+    const have=new Set(LG.list.map(x=>x.id)),add=r.data.filter(x=>(x.approved||x.user_id===uid)&&!have.has(x.id)).map(lgMap);LG.list=LG.list.concat(add).slice(-300);return add.length}
+  finally{LG.loading=false}}
+async function loungeSend(m){
+  if(!sb){const a=store.get('jc_lounge',[]);const x={id:'lg'+Date.now(),n:me.name,col:me.color,m,at:Date.now(),mine:1};a.push(x);store.set('jc_lounge',a.slice(-150));LG.list.push(x);return}
+  const r=await sb.from('lounge').insert({name:me.name.slice(0,16)||'대원',color:/^#[0-9a-f]{6}$/i.test(me.color)?me.color:'#ff6f91',message:m}).select().single();
+  if(r.error)throw r.error;if(!LG.list.some(x=>x.id===r.data.id))LG.list.push(lgMap(r.data))}
+async function loungeDel(x){if(!sb){store.set('jc_lounge',store.get('jc_lounge',[]).filter(y=>y.id!==x.id));LG.list=LG.list.filter(y=>y.id!==x.id);return}
+  const r=await sb.from('lounge').delete().eq('id',x.id);if(r.error)throw r.error;LG.list=LG.list.filter(y=>y.id!==x.id)}
+
 /* 직캠 댓글 */
 async function loadComments(pid){if(!sb)return store.get('jc_comments',[]).filter(c=>c.p===pid);
   const r=await sb.from('comments').select('id,user_id,name,message,approved,created_at').eq('item_id',pid).order('created_at',{ascending:true}).limit(300);
@@ -1478,6 +1517,9 @@ function vArchive(){
   <section class="rp-sec" style="padding-top:40px"><div class="rp-big"><div><div class="rp-kick">FANCAM</div><h2>MY BEST FANCAM</h2><p>하츄대원들의 최애 직캠 자랑</p></div><button class="rp-link" data-go="cams">전체 보기 &gt;</button></div>
     <div class="rp-row" style="gap:10px"><button class="rp-card rp-cpost" style="width:150px;height:124px" data-act="campost"><b>+</b>내 최애 직캠<br>자랑하기</button>${itemsOf('fancams').slice(0,20).map(c=>`<button class="rp-card" style="width:220px" data-act="cam" data-id="${c.id}"><span class="rp-th" style="height:124px">${camThumb(c)}</span><span class="rp-ct rp-clamp">${escH(c.c)}</span><span class="rp-cs">${escH(c.n)} · ♥ ${camLikes(c)} · 댓글 ${c.cc||0}</span></button>`).join('')}</div></section>
 
+  <section class="rp-sec" style="padding-top:40px"><div class="rp-big"><div><div class="rp-kick" style="color:#7ee07e">CHAT</div><h2>PARTY LOUNGE</h2><p>하츄대원들끼리 수다 떠는 곳</p></div></div>
+    <button class="rp-lgcard" data-go="lounge">${LG.list.length?LG.list.slice(-3).map(x=>`<span class="lg-pv"><b>${escH(x.n)}</b> ${escH(x.m)}</span>`).join(''):'<span class="lg-pv">아직 조용해요. 첫 인사를 남겨 볼까요?</span>'}<span class="lg-go">라운지 입장 →</span></button></section>
+
   <section class="rp-sec" style="padding-top:36px"><div class="rp-sh"><h2>대원들이 그린 쭈일리언</h2><small>${mons.length}점</small></div>
     <div class="rp-row">${mons.slice(0,40).map((m,i)=>`<button class="rp-card" style="width:112px" data-act="mon" data-i="${i}"><span class="rp-th px" style="height:112px;background:#fff">${`<img loading="lazy" src="${m.img}" alt="${escH(m.t)}">`}</span><span class="rp-ct">${escH(m.t)}</span><span class="rp-cs">by ${escH(m.n)}${m.pending?' · 숨김':''}</span></button>`).join('')}</div></section>
 
@@ -1560,10 +1602,28 @@ async function openCam(id){const c=itemsOf('fancams').find(x=>x.id===id);if(!c)r
     try{await addComment(c.id,me.name,m);$('#ckm').value='';draw()}catch(err){$('#ckmsg').textContent=errMsg(err)}b.disabled=false}}
 const heroTag=(src,pos,type,poster,id)=>{const st=heroCss(pos),ia=id?` id="${id}"`:'',v=type==='video'||/\.(mp4|webm|mov)(\?|$)/i.test(src||'');
   return v?`<video class="rp-himg"${ia} src="${escH(src)}"${poster?` poster="${escH(poster)}"`:''} muted autoplay loop playsinline style="${st}"></video>`:`<img class="rp-himg"${ia} src="${escH(src)}" alt="" style="${st}">`};
-const VIEWS={cams:vCams,print:vPrint,cover:vCover,archive:vArchive,msgs:vMsgs};
-function rpShow(v){rpView=v;rp.innerHTML=VIEWS[v]();rp.scrollTop=0;if(v==='cams')pull().then(()=>{if(rpView==='cams')rpRefresh()});if(v==='archive')updLast()}
-function rpRefresh(){if(!rpOpen)return;const st=rp.scrollTop;rp.innerHTML=VIEWS[rpView]();rp.scrollTop=st;if(rpView==='archive')updLast()}
-function openReport(v){if(netCh){sb.removeChannel(netCh);netCh=null;netSend=null;remotes.clear();online=1}rpOpen=true;held.length=0;me.tgt=null;$('#enterBtn').hidden=true;$('#rpBtn').hidden=false;$('#startRp').hidden=false;rp.hidden=false;rpShow(v||'archive');pull().then(()=>{if(rpView==='archive'||rpView==='msgs')rpRefresh()})}
+function lgRow(x){const k=kst(x.at);return`<div class="lg-m${x.mine?' me':''}"><span class="lg-dot" style="background:${/^#[0-9a-f]{6}$/i.test(x.col||'')?x.col:'#ff6f91'}"></span><div class="lg-b"><div class="lg-h"><b>${escH(x.n)}</b><span>${p2(k.h)}:${p2(k.mi)}${x.pending?' · 숨김':''}</span>${x.mine?`<button class="lg-del" data-lgdel="${escH(String(x.id))}">지우기</button>`:''}</div><div class="lg-t">${escH(x.m)}</div></div></div>`}
+function vLounge(){return`<div class="rpv rp-lounge">
+  <div class="rp-mtop"><button class="rp-ib" data-act="lgback" aria-label="뒤로">${SVG.back}</button><div><div class="rp-logo" style="font-size:20px">PARTY LOUNGE</div><div class="lg-sub">대원들끼리 수다 떠는 곳 · 주은이에게 보내는 교신은 TRANSMISSIONS로</div></div></div>
+  <div class="lg-list" id="lgList">${LG.list.length?LG.list.map(lgRow).join(''):'<p class="rp-empty">첫 인사를 남겨 주세요!</p>'}</div>
+  <form class="lg-in" id="lgForm"><input id="lgText" maxlength="100" placeholder="${escH(me.name)} 대원으로 말하기" autocomplete="off" aria-label="라운지 메시지"><button type="submit">보내기</button></form>
+  <div class="lg-quick">${['생일 축하해!!','어디서 왔어요?','직캠 추천해 주세요','하츄 반가워요'].map(t=>`<button type="button" data-lgq="${t}">${t}</button>`).join('')}</div>
+  <p class="lg-note" id="lgNote">서로를 배려해 주세요. 부적절한 글은 운영진이 내릴 수 있어요.</p></div>`}
+function lgScroll(){const L=$('#lgList');if(L)L.scrollTop=L.scrollHeight}
+function lgRender(keep){const L=$('#lgList');if(!L)return;const atEnd=L.scrollHeight-L.scrollTop-L.clientHeight<80;
+  L.innerHTML=LG.list.length?LG.list.map(lgRow).join(''):'<p class="rp-empty">첫 인사를 남겨 주세요!</p>';if(!keep||atEnd)lgScroll()}
+async function openLounge(){rpView='lounge';rp.innerHTML=vLounge();rp.scrollTop=0;await loungeLoad();if(rpView!=='lounge')return;lgRender();
+  clearInterval(LG.timer);LG.timer=setInterval(async()=>{if(rpView!=='lounge'||!rpOpen){clearInterval(LG.timer);return}if(document.visibilityState!=='visible')return;
+    const n=await loungePoll();if(n)lgRender(true)},6000);
+  const f=$('#lgForm');f.onsubmit=async e=>{e.preventDefault();const i=$('#lgText'),m=i.value.trim();if(!m)return;i.disabled=true;
+    try{await loungeSend(m);i.value='';await loungePoll();lgRender()}catch(err){$('#lgNote').textContent=errMsg(err)}i.disabled=false;i.focus()};
+  rp.querySelectorAll('[data-lgq]').forEach(b=>b.onclick=()=>{$('#lgText').value=b.dataset.lgq;$('#lgText').focus()});
+  $('#lgList').onclick=async e=>{const b=e.target.closest('[data-lgdel]');if(!b)return;if(!b.dataset.sure){b.dataset.sure=1;b.textContent='한 번 더';return}
+    const x=LG.list.find(y=>String(y.id)===b.dataset.lgdel);if(x){try{await loungeDel(x);lgRender(true)}catch(err){}}}}
+const VIEWS={lounge:vLounge,cams:vCams,print:vPrint,cover:vCover,archive:vArchive,msgs:vMsgs};
+function rpShow(v){if(v==='lounge')return openLounge();rpView=v;rp.innerHTML=VIEWS[v]();rp.scrollTop=0;if(v==='cams')pull().then(()=>{if(rpView==='cams')rpRefresh()});if(v==='archive')updLast()}
+function rpRefresh(){if(!rpOpen||rpView==='lounge')return;const st=rp.scrollTop;rp.innerHTML=VIEWS[rpView]();rp.scrollTop=st;if(rpView==='archive')updLast()}
+function openReport(v){if(netCh){sb.removeChannel(netCh);netCh=null;netSend=null;remotes.clear();online=1}rpOpen=true;held.length=0;me.tgt=null;$('#enterBtn').hidden=true;$('#rpBtn').hidden=false;$('#startRp').hidden=false;rp.hidden=false;rpShow(v||'archive');loungeLoad().then(()=>{if(rpView==='archive')rpRefresh()});pull().then(()=>{if(rpView==='archive'||rpView==='msgs')rpRefresh()})}
 function closeReport(){rpOpen=false;rp.hidden=true;rp.innerHTML='';$('#enterBtn').hidden=!near||modalOpen}
 
 function updLast(){const el=$('#rpLast');if(!el)return;const n=Date.now(),left=ARCHIVE.lastAt-n;
@@ -1655,6 +1715,7 @@ rp.addEventListener('click',async e=>{const b=e.target.closest('[data-go],[data-
   else if(a==='shop')openShop();
   else if(a==='good')openGoods(i,false);
   else if(a==='campost')openCamPost();
+  else if(a==='lgback'){clearInterval(LG.timer);rpShow('archive')}
   else if(a==='cam')openCam(b.dataset.id);
   else if(a==='camtab'){camTab=b.dataset.k;rpRefresh()}
   else if(a==='scroll'){const t=$('#rpFan');if(t)t.scrollIntoView({behavior:'smooth',block:'start'})}
@@ -1686,8 +1747,8 @@ if(isBack()){$('#startRp').hidden=false}
    ===================================================================== */
 const AD={open:false,tab:'notes',filter:'all',rows:[],msg:'',busy:false,stats:null};
 const adm=$('#adm');
-const AD_TABS=[['notes','교신'],['gallery','사진관'],['montages','몽타주'],['photos','인증샷'],['fancams','직캠'],['comments','댓글'],['site','생카 설정'],['stats','현황']];
-const AD_COLS={fancams:'id,user_id,name,url,comment,approved,created_at,like_count,comment_count',comments:'id,user_id,name,message,item_id,approved,created_at',notes:'id,user_id,name,message,approved,created_at',gallery:'id,user_id,name,title,reason,image_path,approved,created_at,like_count',
+const AD_TABS=[['notes','교신'],['gallery','사진관'],['montages','몽타주'],['photos','인증샷'],['fancams','직캠'],['comments','댓글'],['lounge','라운지'],['site','생카 설정'],['stats','현황']];
+const AD_COLS={lounge:'id,user_id,name,message,approved,created_at',fancams:'id,user_id,name,url,comment,approved,created_at,like_count,comment_count',comments:'id,user_id,name,message,item_id,approved,created_at',notes:'id,user_id,name,message,approved,created_at',gallery:'id,user_id,name,title,reason,image_path,approved,created_at,like_count',
   montages:'id,user_id,name,title,image_path,approved,created_at',photos:'id,user_id,name,caption,image_path,approved,created_at'};
 const ytId=v=>{v=String(v||'').trim();if(/^[\w-]{11}$/.test(v))return v;const m=v.match(/(?:v=|youtu\.be\/|shorts\/|embed\/|live\/)([\w-]{11})/);return m?m[1]:''};
 const kstStr=t=>{const k=kst(Date.parse(t));return`${k.mo}.${k.d} ${p2(k.h)}:${p2(k.mi)}`};
@@ -1725,7 +1786,7 @@ function adList(){const t=AD.tab,rows=AD.filter==='hidden'?AD.rows.filter(x=>!x.
   $('#adBody').innerHTML=`<div class="ad-bar"><span>전체 ${AD.rows.length} · 숨김 ${hid}</span>
     <div class="ad-chips"><button class="${AD.filter==='all'?'on':''}" data-ad="filter" data-k="all">전체</button><button class="${AD.filter==='hidden'?'on':''}" data-ad="filter" data-k="hidden">숨긴 것만</button></div></div>
   ${rows.length?`<div class="ad-list">${rows.map(x=>{const img=x.image_path?pubUrl(x.image_path):'';
-    const text=t==='fancams'?`<a href="${escH(x.url)}" target="_blank" rel="noopener">${escH(x.url)}</a><br>${escH(x.comment)}<br><small>공감 ${x.like_count||0} · 댓글 ${x.comment_count||0}</small>`:t==='comments'?escH(x.message):t==='notes'?escH(x.message):t==='gallery'?`<b>「${escH(x.title)}」</b> ${escH(x.reason)}<br><small>공감 ${x.like_count||0}</small>`:t==='montages'?`<b>${escH(x.title)}</b>`:`<b>${escH(x.caption)}</b>`;
+    const text=t==='fancams'?`<a href="${escH(x.url)}" target="_blank" rel="noopener">${escH(x.url)}</a><br>${escH(x.comment)}<br><small>공감 ${x.like_count||0} · 댓글 ${x.comment_count||0}</small>`:t==='comments'||t==='lounge'?escH(x.message):t==='notes'?escH(x.message):t==='gallery'?`<b>「${escH(x.title)}」</b> ${escH(x.reason)}<br><small>공감 ${x.like_count||0}</small>`:t==='montages'?`<b>${escH(x.title)}</b>`:`<b>${escH(x.caption)}</b>`;
     return`<div class="ad-row${x.approved?'':' off'}">${img?`<a href="${img}" target="_blank" rel="noopener" class="ad-im${t==='montages'?' px':''}"><img src="${img}" alt="" loading="lazy"></a>`:''}
       <div class="ad-tx"><div class="ad-meta"><b>${escH(x.name)}</b> · ${kstStr(x.created_at)}${x.approved?'':' · <em>숨김</em>'}</div><div>${text}</div></div>
       <div class="ad-act"><button data-ad="toggle" data-id="${x.id}">${x.approved?'숨기기':'다시 공개'}</button><button class="ad-del" data-ad="del" data-id="${x.id}">삭제</button></div></div>`}).join('')}</div>`:'<p class="ad-empty">아직 없어요</p>'}`}
@@ -1837,7 +1898,7 @@ async function adUploadRaw(file){if(file.size>50*1024*1024)throw new Error('50MB
 
 /* 현황 */
 async function adStats(){const d=new Date(Date.now()+9*36e5);const today=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate())-9*36e5).toISOString();
-  const T=[['notes','교신'],['gallery','사진관'],['montages','몽타주'],['photos','인증샷'],['fancams','직캠'],['comments','댓글']];
+  const T=[['notes','교신'],['gallery','사진관'],['montages','몽타주'],['photos','인증샷'],['fancams','직캠'],['comments','댓글'],['lounge','라운지']];
   const res=await Promise.all(T.flatMap(([t])=>[sb.from(t).select('id',{count:'exact',head:true}),sb.from(t).select('id',{count:'exact',head:true}).gte('created_at',today)]));
   const lk=await sb.from('likes').select('item_id',{count:'exact',head:true});
   $('#adBody').innerHTML=`<div class="ad-stats">${T.map(([t,l],i)=>`<div><small>${l}</small><b>${res[i*2].count??'-'}</b><span>오늘 +${res[i*2+1].count??'-'}</span></div>`).join('')}
@@ -1875,7 +1936,7 @@ function openGate(){gateOpen=true;gate.hidden=false;
     typing=setInterval(()=>{i++;el.textContent=chars.slice(0,i).join('');if(i>=chars.length){clearInterval(typing);typing=null;done&&done()}},38);
     el.onclick=()=>{if(typing){clearInterval(typing);typing=null;el.textContent=t;done&&done()}}};
   const btn=$('#gateBtn'),tk=$('#tk'),zone=$('#gateZone');let step=0;
-  if(isBack()){$('#gateSkip').hidden=false;$('#gateSkip').onclick=()=>{gate.classList.add('bye');openReport('archive');setTimeout(()=>{gate.hidden=true;gateOpen=false},700)};
+  if(isBack()){$('#gateReset').hidden=false;$('#gateReset').onclick=askReset;$('#gateSkip').hidden=false;$('#gateSkip').onclick=()=>{gate.classList.add('bye');openReport('archive');setTimeout(()=>{gate.hidden=true;gateOpen=false},700)};
     say(`쭈삣쭈삣! 다시 오셨군요, ${me.name} 대원!\n탐험을 다시 하려면 티켓을 넣고, 파티로 가려면 아래 버튼을 눌러 주세요`)}
   else say('쭈삣쭈삣! 파일럿 쭈일리언입니다!!\n외계행성 탐험에 참여하실 하츄대원은 티켓을 넣어 주세요');
   const insert=()=>{if(step!==1)return;step=2;btn.disabled=true;gate.classList.remove('near');
@@ -1888,6 +1949,20 @@ function openGate(){gateOpen=true;gate.hidden=false;
   tk.addEventListener('pointermove',e=>{if(!st)return;const dy=Math.min(0,e.clientY-st.y);tk.style.transform=`translateY(${dy}px)`;gate.classList.toggle('near',tk.offsetTop+dy<60)});
   const end=e=>{if(!st)return;const dy=Math.min(0,e.clientY-st.y);st=null;if(tk.offsetTop+dy<60)insert();else{tk.classList.remove('drag');tk.style.transform='';gate.classList.remove('near')}};
   tk.addEventListener('pointerup',end);tk.addEventListener('pointercancel',end)}
+function askReset(){openSheet('처음부터 새로 탐사하기',`<p>이 기기에 남은 <b>탐사 기록</b>(미션 진행, 대원 이름·번호, 점수, 탐사 일지)을 지우고 처음부터 다시 시작해요.</p>
+  <p>이미 올린 교신, 사진, 몽타주, 직캠 글은 축하파티에 그대로 남아요.</p>
+  <label class="f" style="flex-direction:row;align-items:center;gap:8px;font-size:14px"><input type="checkbox" id="rsAll" style="width:20px;height:20px">내가 올린 교신·사진·몽타주·직캠·댓글·라운지 글도 모두 지우기</label>
+  <div class="row"><button class="soft" id="rsNo">그만두기</button><button class="primary" id="rsYes">지우고 처음부터</button></div><p id="rsMsg" class="save"></p>`);
+  $('#rsNo').onclick=closeSheet;$('#rsYes').onclick=async()=>{const b=$('#rsYes');b.disabled=true;
+    if($('#rsAll').checked){$('#rsMsg').textContent='올린 것들을 지우는 중…';try{await deleteAllMine()}catch(e){b.disabled=false;$('#rsMsg').textContent='일부를 지우지 못했어요. 잠시 뒤에 다시 해 주세요';return}}
+    resetMe()}}
+async function deleteAllMine(){
+  if(!sb){['jc_lounge','jc_notes','jc_gallery','jc_montages','jc_photos','jc_fancams','jc_comments','jc_likes','jc_nlikes','jc_flikes'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});return}
+  await pull(true);const paths=['gallery','montages','photos'].flatMap(k=>R[k].filter(x=>x.mine&&x.path).map(x=>x.path));
+  for(const t of ['lounge','comments','fancams','notes','gallery','montages','photos']){const r=await sb.from(t).delete().eq('user_id',uid);if(r.error)throw r.error}
+  await sb.from('likes').delete().eq('user_id',uid);
+  for(let i=0;i<paths.length;i+=50)await sb.storage.from(BUCKET).remove(paths.slice(i,i+50))}
+function resetMe(){['jc_done','jc_end','jc_fin','jc_land','jc_myshot','jc_best2','jc_no','jc_me','jc_ticket'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});location.reload()}
 function closeGate(){store.set('jc_ticket',true);gate.classList.add('bye');setTimeout(()=>{gate.hidden=true;gateOpen=false;try{$('#nameIn').focus()}catch(e){}},700)}
 if(!/[?&#]admin\b/.test(location.search+location.hash))openGate();
 
