@@ -188,6 +188,7 @@ img{max-width:100%}
 .gate-ufo{width:150px;animation:rpBob 2.4s ease-in-out infinite;filter:drop-shadow(0 8px 16px rgba(10,4,30,.5))}
 .gate-bub{position:relative;background:#fff7f0;color:var(--ink);border-radius:16px;padding:14px 16px;min-height:78px;width:100%;font-family:"Jua",sans-serif;font-size:17px;line-height:1.5;white-space:pre-line;box-shadow:0 6px 0 rgba(10,4,30,.35)}
 .gate-bub:before{content:"";position:absolute;top:-10px;left:50%;margin-left:-10px;border:10px solid transparent;border-top:0;border-bottom-color:#fff7f0}
+.gate-skip{margin-top:12px;background:#e6dcfa;color:var(--ink);font-family:"Jua",sans-serif;font-size:16px;padding:12px 18px;border-radius:999px;box-shadow:0 4px 0 #8f7cc8}
 .gate-bub b{color:var(--berry-deep);font-weight:400}
 .gate-mach{position:relative;margin-top:18px;width:min(330px,88vw);height:64px;background:#2b1d55;border:3px solid #6b55b8;border-radius:12px;box-shadow:0 5px 0 #0c0719;display:flex;align-items:center;justify-content:center;flex:none}
 .gate-mach small{position:absolute;top:6px;left:12px;font-family:"Anton",sans-serif;font-size:11px;letter-spacing:2px;color:#c4b0ff}
@@ -443,7 +444,7 @@ img{max-width:100%}
 
 <div class="gate" id="gate" hidden role="dialog" aria-modal="true" aria-label="탑승 게이트">
   <div class="gate-stars" id="gateStars" aria-hidden="true"></div>
-  <div class="gate-top"><img class="gate-ufo" id="gateUfo" alt="파일럿 쭈일리언"><div class="gate-bub" id="gateBub" aria-live="polite"></div></div>
+  <div class="gate-top"><img class="gate-ufo" id="gateUfo" alt="파일럿 쭈일리언"><div class="gate-bub" id="gateBub" aria-live="polite"></div><button type="button" class="gate-skip" id="gateSkip" hidden>바로 생일파티 참여하기 →</button></div>
   <div class="gate-mach" aria-hidden="true"><small>TICKET IN</small><span class="gate-led" id="gateLed"></span><span class="gate-slot"></span></div>
   <div class="gate-zone" id="gateZone"><div class="gate-hint">▲ 티켓을 위로 쭈욱 밀어 넣어요 ▲</div>
     <div class="tk" id="tk" aria-label="탑승권"><div class="tk-main">
@@ -477,7 +478,7 @@ img{max-width:100%}
       <input id="nameIn" maxlength="10" placeholder="대원 이름" aria-label="대원 이름" autocomplete="off">
       <div class="sws" id="startSw"></div>
       <button class="go" type="submit">착륙하기</button>
-      <button type="button" class="ghost" id="startRp" hidden>탐사 보고서 바로 보기</button>
+      <button type="button" class="ghost" id="startRp" hidden>바로 생일파티 참여하기</button>
     </form>
   </div>
 </div>
@@ -901,6 +902,7 @@ function openPhoto(){
   <div class="row" style="justify-content:center"><label class="filebtn" id="pfileL" hidden>휴대폰 카메라로 찍기<input type="file" id="pfile" accept="image/*" capture="user" hidden></label></div>
   <p id="pmsg"></p>
   <div id="pafter" hidden><img class="out" id="pimg" alt="행성 #1203 착륙 기록 사진">${saveUI('pimg','1203-착륙기록.png')}
+  <p class="zhint">이 사진은 내 탐사 일지에 자동으로 들어가요. <b>전시하기</b>를 누르면 다른 대원들도 볼 수 있어요.</p>
   <div class="row" style="justify-content:center"><button class="soft" id="pre">다시 찍기</button><button class="primary" id="pexh">전시하기</button></div></div>`);
   const my=token,pv=$('#pv'),pc=$('#pchar'),ov=$('#pov'),oc=ov.getContext('2d');
   let fi=0,stream=null,raw=null,busy=false,mode='cam',facing='user',seed=(Date.now()%2147483646)+1;
@@ -918,7 +920,8 @@ function openPhoto(){
   const nextSeed=()=>{seed=(seed*16807)%2147483647};
   function compose(){if(!raw)return;const c=document.createElement('canvas');c.width=PW;c.height=PH;const x=c.getContext('2d');drawFrame(x,FRAMES[fi],me.name,false);
     const r=Math.max(HOLE.w/raw.width,HOLE.h/raw.height),w=raw.width*r,h=raw.height*r;x.save();x.beginPath();x.rect(HOLE.x,HOLE.y,HOLE.w,HOLE.h);x.clip();x.imageSmoothingEnabled=!raw.px;x.drawImage(raw,HOLE.x+(HOLE.w-w)/2,HOLE.y+(HOLE.h-h)/2,w,h);x.restore();
-    $('#pimg').src=c.toDataURL('image/jpeg',.88);$('#pshot').src=$('#pimg').src;$('#pafter').hidden=false;markDone('photo')}
+    $('#pimg').src=c.toDataURL('image/jpeg',.88);$('#pshot').src=$('#pimg').src;$('#pafter').hidden=false;markDone('photo');
+    try{const sm=document.createElement('canvas');sm.width=360;sm.height=640;sm.getContext('2d').drawImage(c,0,0,360,640);store.set('jc_myshot',{img:sm.toDataURL('image/jpeg',.82),at:Date.now()})}catch(e){}}
   function takeFrom(src,sw,sh,mirror,px){const c=document.createElement('canvas');c.width=sw;c.height=sh;const x=c.getContext('2d');x.imageSmoothingEnabled=!px;if(mirror){x.translate(sw,0);x.scale(-1,1)}x.drawImage(src,0,0,sw,sh);
     raw=c;raw.px=!!px;compose();$('#pshot').hidden=false;ui();$('#pafter').scrollIntoView({behavior:'smooth',block:'nearest'})}
   const toBooth=()=>$('#bth').scrollIntoView({behavior:'smooth',block:'center'});
@@ -1397,7 +1400,7 @@ function myStats(){
   return{name:me.name,no:store.get('jc_no','0000'),
     landStr:k?`${k.mo}월 ${k.d}일 ${p2(k.h)}:${p2(k.mi)}`:'—',dateStr:k?`${k.y}.${p2(k.mo)}.${p2(k.d)}`:'2026.12.03',
     mins:land&&fin?Math.max(1,Math.round((fin-land)/6e4)):null,best:store.get('jc_best2',0),
-    note:notes.length?notes[0].m:'',mon:mons[0]||null,gal:gal[0]||null,shot:mineOf('photos')[0]||null}}
+    note:notes.length?notes[0].m:'',mon:mons[0]||null,gal:gal[0]||null,shot:mineOf('photos')[0]||(store.get('jc_myshot',null)?{img:store.get('jc_myshot').img,t:'착륙 인증샷'}:null)}}
 
 /* ---- 모두의 기록 (서버가 연결되면 전체 대원 기록, 아니면 이 기기 + 예시) ---- */
 const rpNotes=()=>itemsOf('notes');
@@ -1672,7 +1675,8 @@ rp.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'||e.button!==0)r
     if(moved){const kill=ev=>{ev.stopPropagation();ev.preventDefault()};row.addEventListener('click',kill,{capture:true,once:true});setTimeout(()=>row.removeEventListener('click',kill,{capture:true}),0)}};
   addEventListener('pointermove',mv);addEventListener('pointerup',up)});
 $('#startRp').addEventListener('click',()=>openReport('archive'));
-if(endingSeen){$('#rpBtn').hidden=false;$('#startRp').hidden=false}
+const isBack=()=>endingSeen||!!store.get('jc_fin',null);
+if(isBack()){$('#startRp').hidden=false}
 
 
 
@@ -1871,7 +1875,9 @@ function openGate(){gateOpen=true;gate.hidden=false;
     typing=setInterval(()=>{i++;el.textContent=chars.slice(0,i).join('');if(i>=chars.length){clearInterval(typing);typing=null;done&&done()}},38);
     el.onclick=()=>{if(typing){clearInterval(typing);typing=null;el.textContent=t;done&&done()}}};
   const btn=$('#gateBtn'),tk=$('#tk'),zone=$('#gateZone');let step=0;
-  say('쭈삣쭈삣! 파일럿 쭈일리언입니다!!\n외계행성 탐험에 참여하실 하츄대원은 티켓을 넣어 주세요');
+  if(isBack()){$('#gateSkip').hidden=false;$('#gateSkip').onclick=()=>{gate.classList.add('bye');openReport('archive');setTimeout(()=>{gate.hidden=true;gateOpen=false},700)};
+    say(`쭈삣쭈삣! 다시 오셨군요, ${me.name} 대원!\n탐험을 다시 하려면 티켓을 넣고, 파티로 가려면 아래 버튼을 눌러 주세요`)}
+  else say('쭈삣쭈삣! 파일럿 쭈일리언입니다!!\n외계행성 탐험에 참여하실 하츄대원은 티켓을 넣어 주세요');
   const insert=()=>{if(step!==1)return;step=2;btn.disabled=true;gate.classList.remove('near');
     const dy=-(tk.offsetTop+tk.offsetHeight+16);tk.classList.remove('drag');tk.classList.add('in');tk.style.transform=`translateY(${dy}px)`;
     setTimeout(()=>{$('#gateLed').classList.add('ok');gate.classList.remove('got');
@@ -1883,7 +1889,7 @@ function openGate(){gateOpen=true;gate.hidden=false;
   const end=e=>{if(!st)return;const dy=Math.min(0,e.clientY-st.y);st=null;if(tk.offsetTop+dy<60)insert();else{tk.classList.remove('drag');tk.style.transform='';gate.classList.remove('near')}};
   tk.addEventListener('pointerup',end);tk.addEventListener('pointercancel',end)}
 function closeGate(){store.set('jc_ticket',true);gate.classList.add('bye');setTimeout(()=>{gate.hidden=true;gateOpen=false;try{$('#nameIn').focus()}catch(e){}},700)}
-if(!store.get('jc_ticket',false)&&!/[?&#]admin\b/.test(location.search+location.hash))openGate();
+if(!/[?&#]admin\b/.test(location.search+location.hash))openGate();
 
 /* 디데이 */
 const OPEN=Date.UTC(2026,11,3,3,3),CLOSE=Date.UTC(2026,11,17,15,0);
