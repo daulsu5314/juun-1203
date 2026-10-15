@@ -759,7 +759,7 @@ function seek(e,sp){const dx=e.tgt.x-e.x,dy=e.tgt.y-e.y;if(Math.abs(dx)<1.2&&Mat
   if(step(e,first,sp))return true;
   const alt=Math.abs(dy)>=1.2?(dy>0?'down':'up'):null;if(alt&&alt!==first&&step(e,alt,sp))return true;e.tgt=null;return false}
 function update(dt,t){
-  if(state==='play'&&!netStarted)startNet();
+  if(state==='play'&&!netStarted&&!rpOpen&&document.visibilityState==='visible')startNet();
   if(state==='start'){ufoAlt=110}
   else if(state==='landing'){introT+=dt*16.67;const k=Math.min(1,introT/2400);ufoAlt=Math.round(110*(1-(1-(1-k)**3)));if(k>=1){state='beam';introT=0;me.alpha=0}}
   else if(state==='beam'){introT+=dt*16.67;ufoAlt=0;me.alpha=Math.min(1,introT/900)*(Math.floor(introT/80)%2?1:.6);if(introT>1100){me.alpha=1;state='play';$('#skipBtn').hidden=true;catSay='#1203 도착! 나한테 와 봐';catSayT=260}}
@@ -1353,6 +1353,14 @@ async function loungeSend(m){
   if(r.error)throw r.error;if(!LG.list.some(x=>x.id===r.data.id))LG.list.push(lgMap(r.data))}
 async function loungeDel(x){if(!sb){store.set('jc_lounge',store.get('jc_lounge',[]).filter(y=>y.id!==x.id));LG.list=LG.list.filter(y=>y.id!==x.id);return}
   const r=await sb.from('lounge').delete().eq('id',x.id);if(r.error)throw r.error;LG.list=LG.list.filter(y=>y.id!==x.id)}
+
+/* 화면을 떠나면 맵 연결 끊기: 다른 앱으로 가서 20초가 지나면 끊고, 돌아오면 다시 연결. 창을 닫으면 바로 끊어요 */
+let netHideT=null;
+function netDrop(){if(netCh&&sb){sb.removeChannel(netCh)}netCh=null;netSend=null;remotes.clear();online=1;try{$('#online').textContent=1}catch(e){}}
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='hidden'){clearTimeout(netHideT);netHideT=setTimeout(()=>{if(netCh){netDrop();if(!rpOpen)netStarted=false}},20000)}
+  else clearTimeout(netHideT)});
+addEventListener('pagehide',()=>{clearTimeout(netHideT);netDrop()});
 
 /* 직캠 댓글 */
 async function loadComments(pid){if(!sb)return store.get('jc_comments',[]).filter(c=>c.p===pid);
