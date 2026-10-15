@@ -218,10 +218,10 @@ img{max-width:100%}
 .ad-vid{grid-column:1/-1;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:#5c4f73}.ad-vid img{width:72px;height:44px;object-fit:cover;border-radius:6px}.ad-vid button{font-size:12px;padding:6px 9px;background:#efe6f5;color:var(--ink)}
 .ad-hp{display:flex;flex-direction:column;gap:8px;background:#fff;border:1.5px solid #ece2f2;border-radius:10px;padding:12px}
 .ad-hpm{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.ad-hpm button{font-size:13px;padding:6px 10px;background:#efe6f5;color:var(--ink)}.ad-hpm button.on{background:var(--ink);color:#fff}
-.ad-hpf{position:relative;width:260px;aspect-ratio:390/460;overflow:hidden;border-radius:10px;background:#3a2c63;cursor:grab;touch-action:none;align-self:center}
-.ad-hpf.pc{width:min(100%,360px);aspect-ratio:560/520}
+.ad-hpf{position:relative;width:240px;aspect-ratio:390/620;overflow:hidden;border-radius:10px;background:#3a2c63;cursor:grab;touch-action:none;align-self:center}
+.ad-hpf.pc{width:min(100%,330px);aspect-ratio:560/620}
 .ad-hpfade{position:absolute;left:0;right:0;bottom:0;height:62%;background:linear-gradient(rgba(13,8,32,0),rgba(13,8,32,.2) 45%,rgba(13,8,32,.92) 82%,#0d0820);pointer-events:none}
-.ad-hpufo{position:absolute;right:6px;bottom:44%;width:28%;pointer-events:none}
+.ad-hpufo{position:absolute;right:6px;top:38%;width:30%;pointer-events:none}
 .ad-hptx{position:absolute;left:12px;bottom:16%;color:#fff;pointer-events:none;display:flex;flex-direction:column;gap:4px}.ad-hptx small{font-size:8px;letter-spacing:2px;color:var(--berry);font-weight:800}
 .ad-hptx b{font-family:"Anton",sans-serif;font-weight:400;font-size:36px;line-height:.92}
 .adm input[type=range]{padding:0;border:0;accent-color:var(--berry)}
@@ -287,6 +287,10 @@ img{max-width:100%}
 .rp-note{background:#f4effc;border-radius:14px;padding:12px 14px}
 .rp-note small{font-size:12px;color:#6a5d8f;display:block}
 .rp-note div{font-size:19px;margin-top:4px;line-height:1.35;overflow-wrap:anywhere}
+.rp-cbot{display:flex;gap:22px;align-items:flex-start;padding:6px 4px 0}
+.rp-pola2{transform:rotate(3deg)}.rp-pola2 .im{width:132px;height:235px;object-fit:cover;image-rendering:auto;background:#2b1d55}
+.rp-gcard{display:flex;flex-direction:column;gap:6px;padding-top:10px;min-width:0}.rp-gcard small{font-size:12px;color:#6a5d8f}.rp-gcard b{font-size:17px;overflow-wrap:anywhere}
+.rp-gcard img{width:100px;height:178px;object-fit:cover;border-radius:10px;box-shadow:0 3px 10px rgba(42,29,77,.16);transform:rotate(-2deg)}
 .rp-gline{display:flex;align-items:center;gap:10px;font-size:13px;line-height:1.5}
 .rp-gline img{width:46px;height:46px;border-radius:10px;object-fit:cover;flex:none}
 .rp-sign{margin-top:auto;align-self:flex-end;color:#6a4fc0;font-size:18px;transform:rotate(-2deg)}
@@ -295,17 +299,17 @@ img{max-width:100%}
 
 /* ③ 아카이브 (OTT) */
 .rp-arc{font-family:"Gothic A1",var(--body);padding-bottom:env(safe-area-inset-bottom,0px)}
-.rp-hero{position:relative;height:clamp(440px,118vw,520px);background:#3a2c63;overflow:hidden}
+.rp-hero{position:relative;height:620px;background:#3a2c63;overflow:hidden}
 .rp-himg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;-webkit-user-drag:none}
-.rp-hph{position:absolute;top:110px;left:0;right:0;text-align:center;font-size:13px;line-height:1.7;color:#d9cdf5}
+.rp-hph{position:absolute;top:150px;left:0;right:0;text-align:center;font-size:13px;line-height:1.7;color:#d9cdf5}
 .rp-nav{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:flex-start;padding:calc(14px + env(safe-area-inset-top,0px)) 12px 30px 18px;background:linear-gradient(rgba(13,8,32,.7),rgba(13,8,32,0));z-index:3}
 .rp-logo{font-family:"Anton",sans-serif;font-size:22px;letter-spacing:1px}.rp-logo span{color:var(--berry)}
 .rp-navr{display:flex;gap:6px}.rp-navr button{background:rgba(13,8,32,.5);color:#fff;font-size:13px;font-weight:600;min-width:40px;height:36px;padding:0 10px;border-radius:6px!important}
-.rp-float{position:absolute;right:10px;top:auto;bottom:210px;width:clamp(110px,30vw,140px);z-index:2;filter:drop-shadow(0 8px 14px rgba(13,8,32,.55));animation:rpFloat 3s ease-in-out infinite}
+.rp-float{position:absolute;right:10px;top:236px;width:150px;z-index:2;filter:drop-shadow(0 8px 14px rgba(13,8,32,.55));animation:rpFloat 3s ease-in-out infinite}
 .rp-fade{position:absolute;left:0;right:0;bottom:0;height:380px;background:linear-gradient(rgba(13,8,32,0) 0%,rgba(13,8,32,.2) 45%,rgba(13,8,32,.92) 82%,#0d0820)}
 .rp-hin{position:absolute;left:18px;right:18px;bottom:20px;display:flex;flex-direction:column;gap:10px;z-index:2}
 .rp-kick{font-size:11px;font-weight:800;letter-spacing:3px;color:var(--berry)}
-.rp-hin h1{margin:0;font-family:"Anton",sans-serif;font-weight:400;font-size:clamp(54px,16vw,68px);line-height:.92;letter-spacing:1px}
+.rp-hin h1{margin:0;font-family:"Anton",sans-serif;font-weight:400;font-size:76px;line-height:.92;letter-spacing:1px}
 .rp-ht{font-size:16px;font-weight:800;overflow-wrap:anywhere}.rp-ht span{font-weight:400;color:#cfc4ea}
 .rp-meta{display:flex;gap:10px;align-items:center;font-size:12px;color:#cfc4ea;flex-wrap:wrap}.rp-meta .g{color:#7ee07e;font-weight:800}.rp-meta .b{border:1px solid #8f84ad;padding:1px 5px}
 .rp-credit{font-size:10px;color:#8f84ad}
@@ -1302,7 +1306,7 @@ function myStats(){
   return{name:me.name,no:store.get('jc_no','0000'),
     landStr:k?`${k.mo}월 ${k.d}일 ${p2(k.h)}:${p2(k.mi)}`:'—',dateStr:k?`${k.y}.${p2(k.mo)}.${p2(k.d)}`:'2026.12.03',
     mins:land&&fin?Math.max(1,Math.round((fin-land)/6e4)):null,best:store.get('jc_best2',0),
-    note:notes.length?notes[0].m:'',mon:mons[0]||null,gal:gal[0]||null}}
+    note:notes.length?notes[0].m:'',mon:mons[0]||null,gal:gal[0]||null,shot:mineOf('photos')[0]||null}}
 
 /* ---- 모두의 기록 (서버가 연결되면 전체 대원 기록, 아니면 이 기기 + 예시) ---- */
 const rpNotes=()=>itemsOf('notes');
@@ -1339,7 +1343,8 @@ function vCover(){const s=myStats(),mon=s.mon?s.mon.img:zzuImg();
         <img class="im" src="${mon}" alt="내가 그린 쭈일리언"><span class="rp-hand cap">쭈일리언 몽타주</span><img class="rp-pstk" src="${ART.ap}" alt=""></div>
       <div class="rp-hand rp-stats"><div><b>${doneCount()}/5</b> 교신 해독</div><div><b>${s.best}점</b> 외계인 수색</div><div><b>${s.mins?s.mins+'분':'—'}</b> 탐사</div></div></div>
     <div class="rp-note"><small>내가 남긴 교신</small><div class="rp-hand">${s.note?escH(s.note):'아직 남긴 교신이 없어요'}</div></div>
-    ${s.gal?`<div class="rp-gline"><img src="${s.gal.img}" alt=""><div>사진관에 <b>「${escH(s.gal.t)}」</b> 사진을 걸었어요</div></div>`:''}
+    ${s.shot||s.gal?`<div class="rp-cbot">${s.shot?`<div class="rp-pola rp-pola2"><span class="rp-tp" style="top:-9px;left:44px;width:54px;background:#ffd98a;transform:rotate(5deg)"></span><img class="im" src="${s.shot.img}" alt="착륙 인증샷"><span class="rp-hand cap">착륙 인증샷</span></div>`:''}
+      ${s.gal?`<div class="rp-gcard"><small>사진관에 건 사진</small><img src="${s.gal.img}" alt=""><b class="rp-hand">「${escH(s.gal.t)}」</b></div>`:''}</div>`:''}
     <div class="rp-hand rp-sign">주은아 생일 축하해!</div></div>
   <div class="rp-crow"><button data-act="save">이미지로 저장</button><button data-act="share">공유하기</button></div>
   <button class="rp-cta" data-go="archive">${doneCount()===5?'탐사 성공 기념 · 쭈니 생일 축하파티':'쭈니 생일 축하파티'}</button></div>`}
@@ -1353,7 +1358,7 @@ function vArchive(){
   return`<div class="rpv rp-arc">
   <div class="rp-hero"${hero}>
     ${ARCHIVE.heroImg?`<img class="rp-himg" src="${escH(ARCHIVE.heroImg)}" alt="" style="${heroCss(ARCHIVE.heroPos)}">`:'<div class="rp-hph">[주은이 사진]<br>세로 사진 · 얼굴이 위쪽 1/3에 오게</div>'}
-    <div class="rp-nav"><div class="rp-logo">PLANET <span>1203</span></div>
+    <div class="rp-nav"><div class="rp-logo">#PLANET<span>1203</span></div>
       </div>
     <img class="rp-float" src="${ART.ufo}" alt="">
     <div class="rp-fade"></div>
@@ -1366,7 +1371,7 @@ function vArchive(){
   <section class="rp-sec"><div class="rp-sh"><h2>쭈니 에딧</h2><small>대원들이 만든 팬 편집 영상</small></div>
     <div class="rp-row">${E.map((e,i)=>`<button class="rp-card" style="width:220px" data-act="play" data-i="${i}"><span class="rp-th" style="height:124px">${th(e)}${e.len?`<span class="rp-dur">${escH(e.len)}</span>`:''}</span><span class="rp-ct">${escH(e.title)}</span>${e.by?`<span class="rp-cs">edit by ${escH(e.by)}</span>`:''}</button>`).join('')}</div></section>
 
-  <section class="rp-sec" style="padding-top:38px"><div class="rp-big"><div><div class="rp-kick">COMMISSION</div><h2>JOONI GALLERY</h2><p>작가님들께 맡긴 쭈니 커미션</p></div></div>
+  <section class="rp-sec" style="padding-top:38px"><div class="rp-big"><div><div class="rp-kick">COMMISSION</div><h2>JUUN GALLERY</h2><p>작가님들께 맡긴 쭈니 커미션</p></div></div>
     <div class="rp-row" style="gap:10px">${ARCHIVE.commissions.map((c,i)=>`<button class="rp-card" style="width:176px" data-act="comm" data-i="${i}"><span class="rp-th" style="height:252px;border-radius:8px;background:#f6f1fb;color:#5a4d80">${c.img?`<img src="${escH(c.img)}" alt="${escH(c.title)}" loading="lazy">`:'[커미션 작품]'}<span class="rp-no">No.${p2(i+1)}</span></span><span class="rp-ct" style="font-weight:800">${escH(c.title)}</span><span class="rp-cs">illust. ${escH(c.artist)}</span></button>`).join('')}</div></section>
 
   <section class="rp-sec" style="padding-top:40px"><div class="rp-big"><div><div class="rp-live"><i></i>LIVE · ${notes.length}개 수신</div><h2>TRANSMISSIONS</h2><p>하츄대원들이 주은이에게 보낸 교신</p></div><button class="rp-link" data-go="msgs">전체 보기 &gt;</button></div>
@@ -1396,7 +1401,7 @@ function vArchive(){
 function vMsgs(){const all=rpNotes(),lk={};all.forEach(n=>{if(isLiked('notes',n.id))lk[n.id]=1});
   const list=rpTab==='mine'?all.filter(n=>n.mine):rpTab==='liked'?all.filter(n=>lk[n.id]):all;
   return`<div class="rpv rp-msgs">
-  <div class="rp-mtop"><button class="rp-ib" data-go="archive" aria-label="뒤로">${SVG.back}</button><div class="rp-logo" style="font-size:20px">PLANET <span>1203</span></div></div>
+  <div class="rp-mtop"><button class="rp-ib" data-go="archive" aria-label="뒤로">${SVG.back}</button><div class="rp-logo" style="font-size:20px">#PLANET<span>1203</span></div></div>
   <div class="rp-mhead"><div class="rp-live"><i></i>LIVE · 지금도 수신 중</div><h1>TRANSMISSIONS</h1><p>하츄대원 교신 <b>${all.length}개</b>가 도착했어요</p></div>
   <div class="rp-tabs">${[['new','최신순'],['mine','내 교신'],['liked','공감한 교신']].map(([k,l])=>`<button class="${rpTab===k?'on':''}" data-act="tab" data-k="${k}" aria-pressed="${rpTab===k}">${l}</button>`).join('')}</div>
   <div class="rp-mlist">${list.length?list.map((n,i)=>`<div class="rp-mi"><img src="${i%2?ART.ap:ART.ag}" alt=""><div>
@@ -1439,13 +1444,13 @@ function wrapLines(x,text,maxW,max){const L=[];let line='';for(const ch of[...te
   if(L.length>max){L.length=max;L[max-1]=L[max-1].slice(0,-1)+'…'}return L}
 async function coverCard(){
   try{await Promise.all(['700 60px Gaegu','40px Jua','30px "Gowun Dodum"'].map(f=>document.fonts.load(f)))}catch(e){}
-  const s=myStats(),W=1080,H=1350,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
-  const[ufo,mon,ap]=await Promise.all([loadImg(ART.ufo),loadImg(s.mon?s.mon.img:zzuImg()),loadImg(ART.ap)]);
+  const s=myStats(),W=1080,H=1920,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+  const[ufo,mon,ap,shot,gim]=await Promise.all([loadImg(ART.ufo),loadImg(s.mon?s.mon.img:zzuImg()),loadImg(ART.ap),s.shot?loadImg(s.shot.img):null,s.gal?loadImg(s.gal.img):null]);
   const HAND=(w,sz)=>`${w} ${sz}px Gaegu, cursive`,BODY=sz=>`${sz}px "Gowun Dodum", sans-serif`;
   x.fillStyle='#fdf7f1';x.fillRect(0,0,W,H);x.textAlign='left';x.textBaseline='alphabetic';
   x.fillStyle='#6a4fc0';x.font='38px Jua, sans-serif';x.fillText('행성 #1203',70,92);
   x.fillStyle='#6a5d8f';x.font=BODY(26);x.fillText('쭈일리언 생일 탐사 · 주은 생일카페',70,134);
-  const px=60,py=180,pw=W-120,ph=1090;
+  const px=60,py=180,pw=W-120,ph=1700;
   rr(x,px,py,pw,ph,36);x.fillStyle='#fff';x.fill();
   x.save();rr(x,px,py,pw,ph,36);x.clip();x.fillStyle='#ece4fa';for(let i=px;i<px+pw;i+=40)x.fillRect(i,py,2,ph);for(let j=py;j<py+ph;j+=40)x.fillRect(px,j,pw,2);x.restore();
   x.strokeStyle='#d9c9f3';x.lineWidth=4;rr(x,px,py,pw,ph,36);x.stroke();
@@ -1465,9 +1470,18 @@ async function coverCard(){
   rr(x,110,890,860,190,28);x.fillStyle='#f4effc';x.fill();
   x.fillStyle='#6a5d8f';x.font=BODY(26);x.fillText('내가 남긴 교신',145,940);
   x.fillStyle='#2a1d4d';x.font=HAND(700,40);wrapLines(x,s.note||'아직 남긴 교신이 없어요',790,2).forEach((l,i)=>x.fillText(l,145,998+i*50));
-  if(s.gal){x.fillStyle='#2a1d4d';x.font=BODY(30);const t=wrapLines(x,`사진관에 「${s.gal.t}」 사진을 걸었어요`,860,1)[0];x.fillText(t,110,1145)}
-  x.save();x.translate(W-110,1225);x.rotate(-.03);x.fillStyle='#6a4fc0';x.font=HAND(700,46);x.textAlign='right';x.fillText('주은아 생일 축하해!',0,0);x.restore();
-  x.fillStyle='#9a8db0';x.font=BODY(22);x.textAlign='center';x.fillText(`PLANET #1203 · ${ARCHIVE.tag}`,W/2,1322);
+  const cover=(im,dx,dy,dw,dh)=>{const r=Math.max(dw/im.width,dh/im.height),w=im.width*r,h=im.height*r;x.save();x.beginPath();x.rect(dx,dy,dw,dh);x.clip();x.drawImage(im,dx+(dw-w)/2,dy+(dh-h)/2,w,h);x.restore()};
+  const sx=shot?330:540;
+  if(shot){x.save();x.translate(sx,1460);x.rotate(.05);x.shadowColor='rgba(42,29,77,.18)';x.shadowBlur=24;x.shadowOffsetY=6;x.fillStyle='#fff';x.fillRect(-185,-345,370,700);x.restore();
+    x.save();x.translate(sx,1460);x.rotate(.05);x.imageSmoothingEnabled=true;cover(shot,-165,-325,330,587);x.fillStyle='#2a1d4d';x.font=HAND(700,36);x.textAlign='center';x.fillText('착륙 인증샷',0,322);x.restore();
+    tape(sx+10,1118,130,.09,'#ffd98a')}
+  if(gim){const gx=shot?620:380,gy=1150;x.textAlign='left';x.fillStyle='#6a5d8f';x.font=BODY(26);x.fillText('사진관에 건 사진',gx,gy-24);
+    x.save();x.translate(gx+150,gy+267);x.rotate(-.035);x.shadowColor='rgba(42,29,77,.18)';x.shadowBlur=20;x.shadowOffsetY=5;x.fillStyle='#fff';x.fillRect(-150,-267,300,534);x.restore();
+    x.save();x.translate(gx+150,gy+267);x.rotate(-.035);x.beginPath();x.rect(-150,-267,300,534);x.clip();cover(gim,-150,-267,300,534);x.restore();
+    x.fillStyle='#2a1d4d';x.font=HAND(700,38);x.fillText(wrapLines(x,`「${s.gal.t}」`,300,1)[0],gx,gy+600)}
+  x.textAlign='left';
+  x.save();x.translate(W-110,1835);x.rotate(-.03);x.fillStyle='#6a4fc0';x.font=HAND(700,46);x.textAlign='right';x.fillText('주은아 생일 축하해!',0,0);x.restore();
+  x.fillStyle='#9a8db0';x.font=BODY(22);x.textAlign='center';x.fillText(`PLANET #1203 · ${ARCHIVE.tag}`,W/2,1905);
   return c.toDataURL('image/png')}
 function showCard(u,msg){openSheet('내 탐사 일지',`<img class="out" id="rpCard" src="${u}" alt="탐사 일지 이미지" style="image-rendering:auto">${msg?`<p>${msg}</p>`:''}${saveUI('rpCard','1203-탐사일지.png')}`)}
 async function shareCard(){const u=await coverCard();
@@ -1486,7 +1500,7 @@ rp.addEventListener('click',async e=>{const b=e.target.closest('[data-go],[data-
   else if(a==='save'){b.disabled=true;try{showCard(await coverCard())}finally{b.disabled=false}}
   else if(a==='share'){b.disabled=true;try{await shareCard()}finally{b.disabled=false}}
   else if(a==='comm'){const list=ARCHIVE.commissions.filter(c=>c.img),c=ARCHIVE.commissions[i];
-    if(!c||!c.img){openSheet('JOONI GALLERY','<p>커미션 작품을 준비하고 있어요.</p>');return}
+    if(!c||!c.img){openSheet('JUUN GALLERY','<p>커미션 작품을 준비하고 있어요.</p>');return}
     openViewer({items:list,index:list.indexOf(c),ratio:'3/4',title:c=>c.title,img:c=>c.img,alt:c=>c.title,back:closeSheet,body:c=>`<p class="by">illust. ${escH(c.artist)}</p>`})}
   else if(a==='mon')openViewer({items:rpMons(),index:i,ratio:'1',pixel:true,title:m=>m.t,img:m=>m.img,alt:m=>m.t,back:closeSheet,body:m=>`<p class="by">그린 대원 · ${escH(m.n)}${m.ex?' · 예시 작품':''}</p>`})
   else if(a==='top')galView(rpTop(),i);
@@ -1602,7 +1616,7 @@ function adSiteRender(upd){const S=AD.site,lk=S.lastAt?kst(S.lastAt):null,lv=lk?
     <div class="ad-vid">${e.thumb?`<img src="${escH(e.thumb)}" alt="">`:''}<label class="ad-file sm">${e.video?'영상 바꾸기':'영상 파일 올리기'}<input type="file" accept="video/mp4,video/webm,video/quicktime" data-up="vid" data-i="${i}" hidden></label>${e.video?`<span>영상 파일이 연결됐어요 (유튜브보다 먼저 재생돼요)</span><button type="button" data-ad="rmvid" data-i="${i}">영상 빼기</button>`:'<span>mp4 · 50MB까지</span>'}</div>
     <div class="ad-mv"><button type="button" data-ad="up" data-l="edits" data-i="${i}" aria-label="위로">↑</button><button type="button" data-ad="rm" data-l="edits" data-i="${i}">빼기</button></div></div>`).join('')}
   <button type="button" class="ad-add" data-ad="add" data-l="edits">+ 에딧 추가</button>
-  <h3>커미션 (JOONI GALLERY) <small>작가님 웹 게시 허락 필수</small></h3>
+  <h3>커미션 (JUUN GALLERY) <small>작가님 웹 게시 허락 필수</small></h3>
   ${S.commissions.map((c,i)=>`<div class="ad-item">${c.img?`<img src="${escH(c.img)}" alt="" class="ad-th">`:''}<label class="ad-file sm">이미지 올리기<input type="file" accept="image/*" data-up="comm" data-i="${i}" hidden></label>
     <input data-l="commissions" data-i="${i}" data-k="title" value="${escH(c.title||'')}" placeholder="작품 제목"><input data-l="commissions" data-i="${i}" data-k="artist" value="${escH(c.artist||'')}" placeholder="작가명">
     <div class="ad-mv"><button type="button" data-ad="up" data-l="commissions" data-i="${i}" aria-label="위로">↑</button><button type="button" data-ad="rm" data-l="commissions" data-i="${i}">빼기</button></div></div>`).join('')}
