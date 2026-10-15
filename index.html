@@ -512,7 +512,7 @@ img{max-width:100%}
     <button class="r" data-d="right" aria-label="오른쪽">▶</button>
     <button class="d" data-d="down" aria-label="아래로">▼</button>
   </div>
-  <div class="hint"><b>이동</b> 십자패드, 또는 화면을 톡 눌러 그 자리로<br><b>입장</b> 기지 문 앞이나 UFO 앞 쭈일리언 앞에 서면 버튼이 떠요<br>키보드: 방향키·WASD 이동, E 입장</div>
+  <div class="hint"><b>이동</b> 십자패드, 또는 화면을 톡 눌러 그 자리로<br><b>입장</b> 기지 문 앞이나 쭈콩호 앞 쭈일리언 앞에 서면 버튼이 떠요<br>키보드: 방향키·WASD 이동, E 입장</div>
 </div>
 <div class="foot"><button class="adminLink" type="button">운영진</button></div>
 
@@ -543,7 +543,7 @@ const doneCount=()=>MISSIONS.filter(m=>done[m.id]).length;
 function decoded(){const letters=[...SECRET].map((ch,i)=>({ch,i})).filter(o=>o.ch!==' ');const show=Math.round(letters.length*doneCount()/5);
   const order=letters.map(o=>o.i).sort((a,b)=>((a*7)%19)-((b*7)%19)).slice(0,show);
   return [...SECRET].map((ch,i)=>ch===' '?' ':order.includes(i)?ch:'<i>▒</i>').join('')}
-function markDone(id){if(done[id])return;done[id]=true;store.set('jc_done',done);updateProg();if(doneCount()===5&&!endingSeen){catSay='다 해독했구나! 나한테 탐사 일지를 보고해 줘';catSayT=1200;addLog('쭈일리언','교신 다섯 개 해독 완료! UFO 앞으로 와서 탐사 일지를 보고해 줘',false)}}
+function markDone(id){if(done[id])return;done[id]=true;store.set('jc_done',done);updateProg();if(doneCount()===5&&!endingSeen){catSay='다 해독했구나! 나한테 탐사 일지를 보고해 줘';catSayT=1200;addLog('쭈일리언','교신 다섯 개 해독 완료! 쭈콩호 앞으로 와서 탐사 일지를 보고해 줘',false)}}
 function updateProg(){$('#prog').textContent=doneCount()+'/5'}
 
 /* ---------- 도트 스프라이트 ---------- */
@@ -1039,7 +1039,8 @@ function openGame(){
   cvs.addEventListener('pointerdown',e=>{if(!run)return;const r=cvs.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*W,y=(e.clientY-r.top)/r.height*H;
     const h=holes.find(h=>h.k&&rise(h)>.4&&Math.abs(x-h.x)<12&&y>h.y-18&&y<h.y+5);if(!h)return;
     const v=h.k==='z'?5:h.k==='y'?3:h.k==='r'?-2:1;const before=score;score=Math.max(0,score+v);
-    if(before<20&&score>=20){const g=$('#gtoast');g.hidden=false;g.classList.remove('go');void g.offsetWidth;g.classList.add('go');setTimeout(()=>{if(token===my)g.hidden=true},1400)}pops.push({x:h.x,y:h.y-16,v,a:0});h.k=null;$('#gs').textContent=score});
+    if(score>store.get('jc_best2',0)){store.set('jc_best2',score);$('#gb').textContent=score}
+    if(before<20&&score>=20){markDone('game');const g=$('#gtoast');g.hidden=false;g.classList.remove('go');void g.offsetWidth;g.classList.add('go');setTimeout(()=>{if(token===my)g.hidden=true},1400)}pops.push({x:h.x,y:h.y-16,v,a:0});h.k=null;$('#gs').textContent=score});
   function loop(t){if(token!==my||!run)return;const dt=Math.min(3,(t-lastT)/16.67);lastT=t;time-=dt/60;spawn-=dt;
     if(spawn<=0){const free=holes.filter(h=>!h.k);if(free.length){const h=free[Math.floor(Math.random()*free.length)],r=Math.random();
       h.k=r<.38?'g':r<.64?'p':r<.73?'y':r<.79?'z':'r';h.age=0;h.dur=Math.max(30,68-(20-time)*1.8)}spawn=14+Math.random()*14}
@@ -1466,7 +1467,7 @@ function vPrint(){const s=myStats();let seed=7;const r=()=>(seed=(seed*16807)%21
   <div class="rp-ptop"><div class="rp-hand" style="color:#ffd98a;font-size:20px">삐빅… 삐비빅…</div>
     <h2>교신 해독 완료!</h2><div class="rp-secret">${SECRET}</div>
     <p>미확인 교신의 정체는 생일 축하 메시지였어요.<br>${escH(s.name)} 대원의 탐사 일지가 도착하고 있어요</p></div>
-  <div class="rp-pstage"><img class="rp-ufo" src="${ART.ufo}" alt="고양이 UFO"><div class="rp-beam" aria-hidden="true"></div>
+  <div class="rp-pstage"><img class="rp-ufo" src="${ART.ufo}" alt="쭈콩호"><div class="rp-beam" aria-hidden="true"></div>
     <div class="rp-paper"><span class="rp-tp" style="top:-9px;left:74px;width:88px;background:#f7a8c4;transform:rotate(-3deg)"></span>
       <div class="rp-hand rp-pt">${escH(s.name)} 대원의<br>탐사 일지</div><div class="rp-pd">PLANET #1203 · ${s.dateStr}</div>
       <div class="rp-hand rp-pl"><div>✔ 교신 다섯 개 다 풀었다</div><div>✔ 숨은 외계인 찾아냄</div><div>✔ 쭈일리언 그려서 보냄</div></div>
@@ -1828,7 +1829,7 @@ function adSiteRender(upd){const S=AD.site,lk=S.lastAt?kst(S.lastAt):null,lv=lk?
     <div class="ad-hpf${AD.hpPc?' pc':''}" id="adHp">${heroTag(S.heroImg,S.heroPos,S.heroType,S.heroPoster,'adHpImg')}<div class="ad-hpfade"></div>
       <img class="ad-hpufo" src="${ART.ufo}" alt=""><div class="ad-hptx"><small>${escH(S.heroKicker||'')}</small><b>${escH(S.heroHeadline||'').replace(/\n/g,'<br>')}</b></div></div>
     <label>확대 <input type="range" min="100" max="250" step="1" data-hz="1" value="${Math.round((S.heroPos.z||1)*100)}"></label>
-    <div class="ad-hpm"><span class="ad-note">사진을 손가락이나 마우스로 끌어서 위치를 맞춰요. 글자와 UFO가 얼굴을 가리지 않게 해 주세요.</span><button type="button" data-ad="hpreset">처음 위치로</button></div></div>`:''}
+    <div class="ad-hpm"><span class="ad-note">사진을 손가락이나 마우스로 끌어서 위치를 맞춰요. 글자와 쭈콩호가 얼굴을 가리지 않게 해 주세요.</span><button type="button" data-ad="hpreset">처음 위치로</button></div></div>`:''}
   <h3>쭈일리언 참고 그림 <small>몽타주 연구소에서 보여 줘요</small></h3>
   <div class="ad-imgset">${S.refImg?`<img src="${escH(S.refImg)}" alt="" style="object-fit:contain;background:#fff">`:'<span>지금은 임시 도트 그림</span>'}<div><label class="ad-file">그림 올리기<input type="file" accept="image/*" data-up="ref" hidden></label>${S.refImg?'<button type="button" class="ad-add" data-ad="rmref">빼고 임시 그림 쓰기</button>':''}</div></div>
   <h3>쭈니 에딧 <small>첫 번째가 맨 위 배너</small></h3>
