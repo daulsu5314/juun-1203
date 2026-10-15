@@ -90,7 +90,15 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .vcount{text-align:center;font-size:12px;color:#9a8db0;font-variant-numeric:tabular-nums}
 .whyh{font-family:var(--display);font-size:13px;color:var(--berry-deep)}
 .booth9{position:relative;width:min(100%,calc(50vh * 9 / 16));aspect-ratio:9/16;margin:0 auto;background:#170d33;border-radius:6px;overflow:hidden}
-.booth9 video{position:absolute;left:5.556%;top:3.125%;width:88.889%;height:79.167%;object-fit:cover;transform:scaleX(-1)}
+.booth9 video{position:absolute;left:5.556%;top:3.125%;width:88.889%;height:79.167%;object-fit:cover}.booth9 video.mir{transform:scaleX(-1)}
+.sheet .booth9 canvas{background:transparent}
+.sheet .booth9 #pchar{background:#1e1040}
+.booth9 #pchar{inset:auto;left:5.556%;top:3.125%;width:88.889%;height:79.167%;image-rendering:pixelated}
+.bctl{position:absolute;left:0;right:0;bottom:4%;display:flex;align-items:center;justify-content:center;gap:26px;z-index:3}
+.bshut{width:64px;height:64px;border-radius:50%;background:#fff;border:5px solid #ffd166;box-shadow:0 0 0 3px #2a1f3d,0 4px 12px rgba(0,0,0,.35);padding:0}
+.bflip,.bsp{width:46px;height:46px;flex:none}.bflip{border-radius:50%;background:rgba(23,13,51,.8);color:#fff;padding:0;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.5)}
+.bstart{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);z-index:3;white-space:nowrap}
+.booth9 .cd{font-size:110px;pointer-events:none;z-index:2;text-shadow:0 4px 0 var(--ink),0 0 24px rgba(0,0,0,.4)}
 .booth9 #pshot{position:absolute;inset:0;width:100%;height:100%}
 .booth9 canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;border-radius:0;background:transparent}
 .stkwrap{width:min(100%,calc(52vh * 9 / 16));aspect-ratio:9/16;margin:0 auto;touch-action:none}
@@ -149,7 +157,7 @@ textarea{resize:vertical;min-height:70px}
 .cd{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:72px;color:#fff;text-shadow:0 4px 0 var(--ink)}
 .flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}.flash.go{animation:fl .45s ease-out}@keyframes fl{0%{opacity:.95}100%{opacity:0}}
 .thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.thumbs img,.thumbs span{width:100%;aspect-ratio:4/3;border-radius:6px;object-fit:cover;display:flex;align-items:center;justify-content:center;background:#efe6f5;color:#9a8db0;font-family:var(--display)}
-.sheet .fk.on,.sheet .tl.on{background:var(--ink);color:#fff}
+.sheet .fk.on,.sheet .tl.on,.sheet .pm.on{background:var(--ink);color:#fff}
 .filebtn{font-family:var(--display);font-size:15px;border-radius:8px;padding:10px 14px;cursor:pointer;background:var(--berry);color:#fff;box-shadow:0 3px 0 var(--berry-deep)}
 .pal .sw{width:30px;height:30px}
 .goods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
@@ -249,6 +257,7 @@ img{max-width:100%}
 .rp-big p{margin:0;font-size:12px;color:#cfc4ea}
 .rp-row{display:flex;gap:8px;padding:0 18px;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x proximity;scroll-padding:0 18px}
 .rp-row::-webkit-scrollbar{display:none}
+.rp-row{cursor:grab;-webkit-user-select:none;user-select:none}.rp-row.drag{cursor:grabbing}.rp-row img{-webkit-user-drag:none}
 .rp-card{flex:none;display:flex;flex-direction:column;gap:6px;background:none;color:#fff;padding:0;text-align:left;scroll-snap-align:start}
 .rp-th{position:relative;display:flex;align-items:center;justify-content:center;border-radius:6px;overflow:hidden;background:#2a1d4d;font-size:11px;color:#cfc4ea}
 .rp-th img{width:100%;height:100%;object-fit:cover;display:block}
@@ -315,7 +324,7 @@ img{max-width:100%}
     <span class="chip" id="dday">착륙까지 —</span>
     <span class="chip">교신 해독 <b id="prog">0/5</b></span>
     <span class="chip">접속 <b id="online">1</b>명</span>
-    <button class="ghost" id="rpBtn" hidden>탐사 보고서</button>
+    <button class="ghost" id="rpBtn" hidden>탐사 그만하기</button>
     <button class="ghost" id="meBtn">내 대원</button>
   </div>
 </div>
@@ -374,7 +383,7 @@ const doneCount=()=>MISSIONS.filter(m=>done[m.id]).length;
 function decoded(){const letters=[...SECRET].map((ch,i)=>({ch,i})).filter(o=>o.ch!==' ');const show=Math.round(letters.length*doneCount()/5);
   const order=letters.map(o=>o.i).sort((a,b)=>((a*7)%19)-((b*7)%19)).slice(0,show);
   return [...SECRET].map((ch,i)=>ch===' '?' ':order.includes(i)?ch:'<i>▒</i>').join('')}
-function markDone(id){if(done[id])return;done[id]=true;store.set('jc_done',done);updateProg();if(doneCount()===5&&!store.get('jc_fin',null))store.set('jc_fin',Date.now());if(doneCount()===5&&!endingSeen)pendingEnding=true}
+function markDone(id){if(done[id])return;done[id]=true;store.set('jc_done',done);updateProg();if(doneCount()===5&&!endingSeen){catSay='다 해독했구나! 나한테 탐사 일지를 보고해 줘';catSayT=1200;addLog('쭈일리언','교신 다섯 개 해독 완료! UFO 앞으로 와서 탐사 일지를 보고해 줘',false)}}
 function updateProg(){$('#prog').textContent=doneCount()+'/5'}
 
 /* ---------- 도트 스프라이트 ---------- */
@@ -637,7 +646,7 @@ document.querySelectorAll('.dpad button').forEach(b=>{const d=b.dataset.d;
   b.addEventListener('contextmenu',e=>e.preventDefault())});
 const KEYS={ArrowUp:'up',w:'up',W:'up',ArrowDown:'down',s:'down',S:'down',ArrowLeft:'left',a:'left',A:'left',ArrowRight:'right',d:'right',D:'right'};
 addEventListener('keydown',e=>{if(modalOpen){if(e.key==='Escape')closeSheet();else if(viewerNav&&(e.key==='ArrowLeft'||e.key==='ArrowRight')&&!e.target.matches('input,textarea,select'))viewerNav(e.key==='ArrowLeft'?-1:1);return}
-  if(rpOpen){if(e.key==='Escape')closeReport();return}
+  if(rpOpen)return
   if(e.target.matches('input,textarea,select'))return;
   if(KEYS[e.key]){press(KEYS[e.key]);e.preventDefault()}
   if((e.key==='e'||e.key==='E'||e.key==='Enter')&&near)openSpot(near.id)});
@@ -683,10 +692,13 @@ function openCat(){
   <p>${me.name} 대원, 기지 다섯 곳을 조사해서 교신을 해독해 줘. 미션을 하나씩 끝낼 때마다 신호가 조금씩 선명해질 거야.</p>
   <div class="decode" aria-label="해독 중인 교신">${decoded()}</div>
   <ul class="checks">${MISSIONS.map(m=>`<li class="${done[m.id]?'ok':''}"><span>${m.label}</span><span>${done[m.id]?'완료':'조사 중'}</span></li>`).join('')}</ul>
+  ${doneCount()===5&&!endingSeen?'<p><b>교신을 전부 해독했어!</b> 탐사 일지를 보고하면 탐사가 끝나고, 쭈니 생일 축하파티가 열려.</p><button class="primary" id="reportBtn">탐사 일지 보고하기</button>':''}
   <button class="soft" id="reset">미션 기록 초기화</button>`);
+  if($('#reportBtn'))$('#reportBtn').onclick=()=>{closeSheet();openEnding()};
   $('#reset').onclick=()=>{done={};endingSeen=false;store.set('jc_done',done);store.set('jc_end',false);updateProg();openCat()};
 }
-function openEnding(){endingSeen=true;store.set('jc_end',true);openReport('print')}
+function endExplore(){if(!store.get('jc_fin',null))store.set('jc_fin',Date.now())}
+function openEnding(){endingSeen=true;store.set('jc_end',true);endExplore();openReport('print')}
 
 /* 넘겨 보기 (사진관·몽타주 전시관 공용) */
 let viewerNav=null;
@@ -723,40 +735,78 @@ function drawFrame(c,f,name,withHole){c.fillStyle=f.bg;c.fillRect(0,0,PW,PH);c.f
   c.textAlign='center';c.textBaseline='middle';c.fillStyle=f.fg;c.font='40px Jua, sans-serif';c.fillText('PLANET #1203',PW/2,PH-118);
   c.font='19px Jua, sans-serif';c.fillText('2026.12.03 착륙 기록 · 대원 '+name,PW/2,PH-74);c.font='15px Jua, sans-serif';c.fillText('HAPPY BIRTHDAY JUUN',PW/2,PH-44)}
 let shotMem=null;const shotMine=()=>shotMem||(shotMem=store.get('jc_photos',[]));
+/* 내 캐릭터로 찍기: 카메라 없이 착륙 장면을 자동으로 그려요 */
+function charScene(seed,color){const W=120,H=190,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');x.imageSmoothingEnabled=false;
+  let q=seed;const r=()=>(q=(q*16807)%2147483647)/2147483647;
+  x.fillStyle='#1e1040';x.fillRect(0,0,W,H);
+  for(let i=0;i<46;i++){const k=r();x.fillStyle=k<.15?'#ffd166':k<.55?'#ffffff':'#9b86d8';x.fillRect(Math.floor(r()*W),Math.floor(r()*104),1,1)}
+  const pl=[['#ff8fab',8],['#8ff0d2',6],['#ffd166',7]][Math.floor(r()*3)],px=20+Math.floor(r()*80),py=16+Math.floor(r()*30);
+  x.fillStyle=pl[0];for(let y=-pl[1];y<=pl[1];y++){const w=Math.round(Math.sqrt(pl[1]*pl[1]-y*y));x.fillRect(px-w,py+y,w*2,1)}
+  x.drawImage(ground,PAD.x-60,PAD.y-38,120,86,0,104,120,86);
+  x.drawImage(UFO,46+Math.floor(r()*10),84,66,42);
+  const al=[alienSprite('#7fdc8a'),alienSprite('#ffb3cf'),alienSprite('#ffd166')];
+  for(let i=0;i<2;i++){const a=al[Math.floor(r()*3)];x.drawImage(a,6+Math.floor(r()*100),148+Math.floor(r()*14),a.width*2,a.height*2)}
+  const sp=playerSprite(color,['down','down','left','right'][Math.floor(r()*4)],Math.floor(r()*2));
+  x.drawImage(sp,12+Math.floor(r()*14),122,sp.width*3,sp.height*3);
+  if(r()<.75){const k=[STK.heart,STK.star][Math.floor(r()*2)];x.drawImage(k,20+Math.floor(r()*34),104,k.width*2,k.height*2)}
+  return c}
 function openPhoto(){
-  openSheet('착륙 기록소',`${mTag('photo')}<p>프레임을 고르고 한 장 찍어요. 마음에 들면 저장하고, 원하면 전시관에 걸 수 있어요.</p>
+  openSheet('착륙 기록소',`${mTag('photo')}<p>프레임을 고르고 한 장 남겨요. 카메라가 없어도 <b>내 캐릭터로 찍기</b>로 미션을 끝낼 수 있어요.</p>
   <button class="soft" id="phHall">착륙 기록 전시관 구경하기 →</button>
+  <div class="row pmode"><button class="soft pm on" type="button" data-m="cam">카메라로 찍기</button><button class="soft pm" type="button" data-m="char">내 캐릭터로 찍기</button></div>
   <div class="row fr">${FRAMES.map((f,i)=>`<button class="soft fk${i?'':' on'}" type="button" data-f="${i}">${f.name}</button>`).join('')}</div>
   <p class="zhint">프레임 디자인은 추후 준비돼요. 지금은 임시 디자인이에요.</p>
-  <div class="booth9" id="bth"><video id="pv" playsinline muted></video><img id="pshot" alt="찍은 사진" hidden><canvas id="pov" width="${PW}" height="${PH}"></canvas><div class="cd" id="pcd" hidden></div><div class="flash" id="pfl"></div></div>
-  <div class="row" style="justify-content:center"><button class="primary" id="pgo">카메라 켜기</button><label class="filebtn" id="pfileL" hidden>카메라로 찍기<input type="file" id="pfile" accept="image/*" capture="user" hidden></label></div>
+  <div class="booth9" id="bth"><video id="pv" playsinline muted></video><canvas id="pchar" hidden></canvas><img id="pshot" alt="찍은 사진" hidden><canvas id="pov" width="${PW}" height="${PH}"></canvas><div class="cd" id="pcd" hidden></div><div class="flash" id="pfl"></div>
+    <button class="primary bstart" id="pgo" type="button">카메라 켜기</button>
+    <div class="bctl" id="bctl" hidden><button class="bflip" id="pflip" type="button" aria-label="전면·후면 카메라 바꾸기"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 3v5h5"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 21v-5h-5"/></svg></button><button class="bshut" id="pshut" type="button" aria-label="3초 뒤에 찍기"></button><span class="bsp"></span></div></div>
+  <p class="zhint" id="phint"></p>
+  <div class="row" style="justify-content:center"><label class="filebtn" id="pfileL" hidden>휴대폰 카메라로 찍기<input type="file" id="pfile" accept="image/*" capture="user" hidden></label></div>
   <p id="pmsg"></p>
   <div id="pafter" hidden><img class="out" id="pimg" alt="행성 #1203 착륙 기록 사진">${saveUI('pimg','1203-착륙기록.png')}
   <div class="row" style="justify-content:center"><button class="soft" id="pre">다시 찍기</button><button class="primary" id="pexh">전시하기</button></div></div>`);
-  const my=token,pv=$('#pv'),ov=$('#pov'),oc=ov.getContext('2d');let fi=0,stream=null,raw=null,busy=false;
+  const my=token,pv=$('#pv'),pc=$('#pchar'),ov=$('#pov'),oc=ov.getContext('2d');
+  let fi=0,stream=null,raw=null,busy=false,mode='cam',facing='user',seed=(Date.now()%2147483646)+1;
   const drawOv=()=>{oc.clearRect(0,0,PW,PH);drawFrame(oc,FRAMES[fi],me.name,true)};drawOv();
-  onClose=()=>{if(stream)stream.getTracks().forEach(t=>t.stop())};
+  const stop=()=>{if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}};
+  onClose=stop;
   $('#phHall').onclick=openPhotoHall;
+  const ui=()=>{const live=!raw&&!busy;
+    $('#pgo').hidden=!(live&&mode==='cam'&&!stream&&$('#pfileL').hidden);
+    $('#bctl').hidden=!(live&&(mode==='char'||stream));
+    $('#pflip').setAttribute('aria-label',mode==='cam'?'전면·후면 카메라 바꾸기':'다른 포즈로 바꾸기');
+    pv.hidden=mode!=='cam';pc.hidden=mode!=='char';
+    $('#phint').textContent=raw||busy?'':mode==='char'?'왼쪽 버튼으로 포즈를 바꾸고, 가운데 버튼을 누르면 3초 뒤에 찍혀요':stream?'왼쪽 버튼으로 전면·후면 카메라를 바꾸고, 가운데 버튼을 누르면 3초 뒤에 찍혀요':''};
+  const drawChar=()=>{const sc=charScene(seed,me.color);pc.width=sc.width;pc.height=sc.height;const x=pc.getContext('2d');x.imageSmoothingEnabled=false;x.drawImage(sc,0,0)};
+  const nextSeed=()=>{seed=(seed*16807)%2147483647};
   function compose(){if(!raw)return;const c=document.createElement('canvas');c.width=PW;c.height=PH;const x=c.getContext('2d');drawFrame(x,FRAMES[fi],me.name,false);
-    const r=Math.max(HOLE.w/raw.width,HOLE.h/raw.height),w=raw.width*r,h=raw.height*r;x.save();x.beginPath();x.rect(HOLE.x,HOLE.y,HOLE.w,HOLE.h);x.clip();x.drawImage(raw,HOLE.x+(HOLE.w-w)/2,HOLE.y+(HOLE.h-h)/2,w,h);x.restore();
+    const r=Math.max(HOLE.w/raw.width,HOLE.h/raw.height),w=raw.width*r,h=raw.height*r;x.save();x.beginPath();x.rect(HOLE.x,HOLE.y,HOLE.w,HOLE.h);x.clip();x.imageSmoothingEnabled=!raw.px;x.drawImage(raw,HOLE.x+(HOLE.w-w)/2,HOLE.y+(HOLE.h-h)/2,w,h);x.restore();
     $('#pimg').src=c.toDataURL('image/jpeg',.88);$('#pshot').src=$('#pimg').src;$('#pafter').hidden=false;markDone('photo')}
-  function takeFrom(src,sw,sh,mirror){const c=document.createElement('canvas');c.width=sw;c.height=sh;const x=c.getContext('2d');if(mirror){x.translate(sw,0);x.scale(-1,1)}x.drawImage(src,0,0,sw,sh);raw=c;compose();
-    $('#pshot').hidden=false;pv.style.visibility='hidden';$('#pgo').textContent='다시 찍기';$('#pafter').scrollIntoView({behavior:'smooth',block:'nearest'})}
-  async function shoot(){if(busy)return;busy=true;$('#pgo').disabled=true;
+  function takeFrom(src,sw,sh,mirror,px){const c=document.createElement('canvas');c.width=sw;c.height=sh;const x=c.getContext('2d');x.imageSmoothingEnabled=!px;if(mirror){x.translate(sw,0);x.scale(-1,1)}x.drawImage(src,0,0,sw,sh);
+    raw=c;raw.px=!!px;compose();$('#pshot').hidden=false;ui();$('#pafter').scrollIntoView({behavior:'smooth',block:'nearest'})}
+  const toBooth=()=>$('#bth').scrollIntoView({behavior:'smooth',block:'center'});
+  async function startCam(){stop();$('#pmsg').textContent='';
+    try{const st=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:facing},width:{ideal:1080},height:{ideal:1440}},audio:false});
+      if(token!==my||mode!=='cam'){st.getTracks().forEach(t=>t.stop());return}
+      stream=st;pv.srcObject=stream;pv.classList.toggle('mir',facing==='user');await pv.play();ui();toBooth()}
+    catch(e){stream=null;$('#pfileL').hidden=false;$('#pfile').setAttribute('capture',facing);ui();
+      $('#pmsg').textContent='이 화면에서는 실시간 카메라를 켤 수 없어요. 휴대폰 카메라로 찍거나, 위의 "내 캐릭터로 찍기"를 골라 주세요.'}}
+  async function shoot(){if(busy||raw)return;busy=true;ui();toBooth();
     for(let n=3;n>0;n--){if(token!==my)return;$('#pcd').hidden=false;$('#pcd').textContent=n;await new Promise(r=>setTimeout(r,800))}
-    $('#pcd').hidden=true;const fl=$('#pfl');fl.classList.remove('go');void fl.offsetWidth;fl.classList.add('go');
-    takeFrom(pv,pv.videoWidth||720,pv.videoHeight||960,true);busy=false;$('#pgo').disabled=false}
-  function reset(){raw=null;$('#pshot').hidden=true;$('#pafter').hidden=true;pv.style.visibility='visible';if(stream)$('#pgo').textContent='찰칵 (3초 뒤)'}
-  $('#pgo').onclick=async()=>{if(raw){reset();return}
-    if(stream){shoot();return}
-    try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:1080},height:{ideal:1440}},audio:false});
-      if(token!==my){stream.getTracks().forEach(t=>t.stop());return}pv.srcObject=stream;await pv.play();$('#pgo').textContent='찰칵 (3초 뒤)'}
-    catch(e){$('#pgo').hidden=true;$('#pfileL').hidden=false;$('#pmsg').textContent='이 화면에서는 실시간 카메라를 켤 수 없어서 휴대폰 카메라로 찍어요. 실제 사이트에서는 프레임이 보이는 실시간 미리보기로 찍혀요.'}};
+    if(token!==my)return;$('#pcd').hidden=true;const fl=$('#pfl');fl.classList.remove('go');void fl.offsetWidth;fl.classList.add('go');busy=false;
+    if(mode==='cam')takeFrom(pv,pv.videoWidth||720,pv.videoHeight||960,facing==='user',false);else takeFrom(pc,pc.width,pc.height,false,true)}
+  function reset(){raw=null;$('#pshot').hidden=true;$('#pafter').hidden=true;if(mode==='char'){nextSeed();drawChar()}ui();toBooth()}
+  $('#pgo').onclick=startCam;
+  $('#pshut').onclick=shoot;
+  $('#pflip').onclick=()=>{if(busy)return;if(mode==='cam'){facing=facing==='user'?'environment':'user';startCam()}else{nextSeed();drawChar()}};
+  document.querySelectorAll('.pmode .pm').forEach(b=>b.onclick=()=>{if(busy)return;mode=b.dataset.m;document.querySelectorAll('.pmode .pm').forEach(x=>x.classList.toggle('on',x===b));
+    raw=null;$('#pshot').hidden=true;$('#pafter').hidden=true;$('#pmsg').textContent='';
+    if(mode==='char'){stop();$('#pfileL').hidden=true;drawChar()}ui()});
   $('#pfile').addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';if(!f)return;const r=new FileReader();
-    r.onload=()=>{const im=new Image();im.onload=()=>takeFrom(im,im.width,im.height,false);im.src=r.result};r.readAsDataURL(f)});
-  $('#pre').onclick=()=>{reset();if(!stream)$('#pfile').click()};
+    r.onload=()=>{const im=new Image();im.onload=()=>takeFrom(im,im.width,im.height,false,false);im.src=r.result};r.readAsDataURL(f)});
+  $('#pre').onclick=()=>{reset();if(mode==='cam'&&!stream&&!$('#pfileL').hidden)$('#pfile').click()};
   document.querySelectorAll('.fr .fk').forEach(b=>b.onclick=()=>{fi=+b.dataset.f;document.querySelectorAll('.fr .fk').forEach(x=>x.classList.toggle('on',x===b));drawOv();compose()});
   $('#pexh').onclick=()=>openStickerEditor($('#pimg').src);
+  ui();
 }
 /* 전시 전에 스티커로 얼굴 가리기 */
 function openStickerEditor(src){
@@ -805,9 +855,9 @@ function openPhotoHall(){
 /* 2. 외계인 수색대 · 두더지 잡기 */
 function openGame(){
   const best=store.get('jc_best2',0);
-  openSheet('외계인 수색대',`${mTag('game')}<p>외계인들이 크레이터에 숨어서 뭔가 몰래 준비하고 있어요. 고개를 내밀 때 톡 눌러 찾아내세요! 초록·분홍 외계인 +1, 반짝이 외계인 +3, 가끔 나오는 쭈일리언 +5! 운석을 누르면 -2. 20초 안에 15점 넘기면 미션 완료.</p>
+  openSheet('외계인 수색대',`${mTag('game')}<p>외계인들이 크레이터에 숨어서 뭔가 몰래 준비하고 있어요. 고개를 내밀 때 톡 눌러 찾아내세요! 초록·분홍 외계인 +1, 반짝이 외계인 +3, 가끔 나오는 쭈일리언 +5! 운석을 누르면 -2. 20초 안에 20점 넘기면 미션 완료.</p>
   <div class="stat"><span>점수 <b id="gs">0</b></span><span>남은 시간 <b id="gt">20</b>초</span><span>최고 <b id="gb">${best}</b></span></div>
-  <div class="gwrap"><canvas id="gc" style="image-rendering:pixelated"></canvas><div class="gres" id="gres" hidden></div><div class="gtoast" id="gtoast" hidden>15점 돌파!</div></div>
+  <div class="gwrap"><canvas id="gc" style="image-rendering:pixelated"></canvas><div class="gres" id="gres" hidden></div><div class="gtoast" id="gtoast" hidden>20점 돌파!</div></div>
   <button class="primary" id="gstart">수색 시작</button>`);
   const my=token,cvs=$('#gc'),W=96,H=128;cvs.width=W;cvs.height=H;const c=cvs.getContext('2d');
   const st=Array.from({length:22},()=>[Math.floor(Math.random()*W),Math.floor(Math.random()*20)]);
@@ -827,16 +877,16 @@ function openGame(){
   cvs.addEventListener('pointerdown',e=>{if(!run)return;const r=cvs.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*W,y=(e.clientY-r.top)/r.height*H;
     const h=holes.find(h=>h.k&&rise(h)>.4&&Math.abs(x-h.x)<12&&y>h.y-18&&y<h.y+5);if(!h)return;
     const v=h.k==='z'?5:h.k==='y'?3:h.k==='r'?-2:1;const before=score;score=Math.max(0,score+v);
-    if(before<15&&score>=15){const g=$('#gtoast');g.hidden=false;g.classList.remove('go');void g.offsetWidth;g.classList.add('go');setTimeout(()=>{if(token===my)g.hidden=true},1400)}pops.push({x:h.x,y:h.y-16,v,a:0});h.k=null;$('#gs').textContent=score});
+    if(before<20&&score>=20){const g=$('#gtoast');g.hidden=false;g.classList.remove('go');void g.offsetWidth;g.classList.add('go');setTimeout(()=>{if(token===my)g.hidden=true},1400)}pops.push({x:h.x,y:h.y-16,v,a:0});h.k=null;$('#gs').textContent=score});
   function loop(t){if(token!==my||!run)return;const dt=Math.min(3,(t-lastT)/16.67);lastT=t;time-=dt/60;spawn-=dt;
     if(spawn<=0){const free=holes.filter(h=>!h.k);if(free.length){const h=free[Math.floor(Math.random()*free.length)],r=Math.random();
-      h.k=r<.42?'g':r<.7?'p':r<.8?'y':r<.87?'z':'r';h.age=0;h.dur=Math.max(40,85-(20-time)*2)}spawn=18+Math.random()*16}
+      h.k=r<.38?'g':r<.64?'p':r<.73?'y':r<.79?'z':'r';h.age=0;h.dur=Math.max(30,68-(20-time)*1.8)}spawn=14+Math.random()*14}
     holes.forEach(h=>{if(h.k){h.age+=dt;if(h.age>=h.dur)h.k=null}});
     pops.forEach(p=>{p.a+=dt;p.y-=.3*dt});pops=pops.filter(p=>p.a<30);
     $('#gt').textContent=Math.max(0,Math.ceil(time));
     if(time<=0){run=false;holes.forEach(h=>h.k=null);const b=Math.max(store.get('jc_best2',0),score);store.set('jc_best2',b);$('#gb').textContent=b;
-      const ok=score>=15,gr=$('#gres');gr.className='gres '+(ok?'win':'lose');
-      gr.innerHTML=ok?`<b>성공!!</b><span>${score}점 · 숨은 외계인을 다 찾았어요</span>`:`<b>아쉬워요</b><span>${score}점 · 15점부터 성공이에요</span>`;gr.hidden=false;
+      const ok=score>=20,gr=$('#gres');gr.className='gres '+(ok?'win':'lose');
+      gr.innerHTML=ok?`<b>성공!!</b><span>${score}점 · 숨은 외계인을 다 찾았어요</span>`:`<b>아쉬워요</b><span>${score}점 · 20점부터 성공이에요</span>`;gr.hidden=false;
       $('#gstart').textContent='다시 수색';if(ok)markDone('game')}
     draw(t);if(run)requestAnimationFrame(loop)}
   $('#gstart').onclick=()=>{if(run)return;$('#gres').hidden=true;holes.forEach(h=>h.k=null);pops=[];score=0;time=20;run=true;lastT=performance.now();spawn=0;$('#gs').textContent=0;$('#gstart').textContent='수색 중…';requestAnimationFrame(loop)};
@@ -1108,7 +1158,7 @@ async function toggleLike(k,e){const on=isLiked(k,e.id);
   const it=R[k].find(x=>x.id===e.id);if(it&&typeof it.likes==='number')it.likes=Math.max(0,it.likes+(on?-1:1))}
 
 /* 맵 실시간 접속: 서버가 있으면 Supabase Realtime, 없으면 Claude 미리보기의 room */
-function startNet(){if(netStarted)return;netStarted=true;sbReady.then(()=>sb?startSbRoom():startClaudeRoom())}
+function startNet(){if(netStarted)return;netStarted=true;$('#rpBtn').hidden=false;sbReady.then(()=>sb?startSbRoom():startClaudeRoom())}
 async function startSbRoom(){
   for(let i=1;i<=40;i++){let active=false;const ch=sb.channel('planet-1203-'+i,{config:{presence:{key:uid},broadcast:{self:false}}});
     sbRoomHandlers(ch,()=>active);
@@ -1169,6 +1219,7 @@ const SVG={
   play:'<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 3l15 9-15 9z"/></svg>',
   ufo:'<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><ellipse cx="12" cy="14" rx="10" ry="4"/><path d="M7 12a5 5 0 0 1 10 0"/></svg>',
   back:'<svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square"><path d="M15 5l-7 7 7 7"/></svg>',
+  info:'<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>',
   heart:on=>`<svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="${on?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>`};
 const p2=n=>String(n).padStart(2,'0');
 const kst=t=>{const d=new Date(t+9*36e5);return{y:d.getUTCFullYear(),mo:d.getUTCMonth()+1,d:d.getUTCDate(),h:d.getUTCHours(),mi:d.getUTCMinutes()}};
@@ -1218,13 +1269,12 @@ function vCover(){const s=myStats(),mon=s.mon?s.mon.img:zzuImg();
     <div class="rp-cmid">
       <div class="rp-pola"><span class="rp-tp" style="top:-9px;left:38px;width:54px;background:#f7a8c4;transform:rotate(-6deg)"></span>
         <img class="im" src="${mon}" alt="내가 그린 쭈일리언"><span class="rp-hand cap">${s.mon?escH(s.mon.t):'내 몽타주'}</span><img class="rp-pstk" src="${ART.ap}" alt=""></div>
-      <div class="rp-hand rp-stats"><div><b>5/5</b> 교신 해독</div><div><b>${s.best}점</b> 외계인 수색</div><div><b>${s.mins?s.mins+'분':'—'}</b> 탐사</div></div></div>
+      <div class="rp-hand rp-stats"><div><b>${doneCount()}/5</b> 교신 해독</div><div><b>${s.best}점</b> 외계인 수색</div><div><b>${s.mins?s.mins+'분':'—'}</b> 탐사</div></div></div>
     <div class="rp-note"><small>내가 남긴 교신</small><div class="rp-hand">${s.note?escH(s.note):'아직 남긴 교신이 없어요'}</div></div>
     ${s.gal?`<div class="rp-gline"><img src="${s.gal.img}" alt=""><div>사진관에 <b>「${escH(s.gal.t)}」</b> 사진을 걸었어요</div></div>`:''}
     <div class="rp-hand rp-sign">주은아 생일 축하해!</div></div>
   <div class="rp-crow"><button data-act="save">이미지로 저장</button><button data-act="share">공유하기</button></div>
-  <button class="rp-cta" data-go="archive">다른 대원들 기록 보러가기</button>
-  <button class="rp-back" data-act="close">행성으로 돌아가기</button></div>`}
+  <button class="rp-cta" data-go="archive">${doneCount()===5?'탐사 성공 기념 · 쭈니 생일 축하파티':'쭈니 생일 축하파티'}</button></div>`}
 
 function vArchive(){
   const E=ARCHIVE.edits,h=E[0]||{title:'',by:'',len:''},notes=rpNotes(),tops=rpTop(),gal=rpGallery(),mons=rpMons(),shots=rpShots();
@@ -1236,13 +1286,13 @@ function vArchive(){
   <div class="rp-hero"${hero}>
     ${ARCHIVE.heroImg?'':'<div class="rp-hph">[주은이 사진]<br>세로 사진 · 얼굴이 위쪽 1/3에 오게</div>'}
     <div class="rp-nav"><div class="rp-logo">PLANET <span>1203</span></div>
-      <div class="rp-navr"><button data-go="cover">내 일지</button><button data-act="close" aria-label="행성으로 돌아가기">✕</button></div></div>
+      <div class="rp-navr"><button data-go="cover">내 일지</button></div></div>
     <img class="rp-float" src="${ART.ufo}" alt="">
     <div class="rp-fade"></div>
     <div class="rp-hin"><div class="rp-kick">JOONI EDIT · 오늘의 에딧</div><h1>HAPPY<br>JUUN DAY</h1>
       <div class="rp-ht">${escH(h.title)} <span>· edit by ${escH(h.by)}</span></div>
       <div class="rp-meta"><span class="g">탐사 성공률 100%</span><span>2026</span><span class="b">ALL</span>${h.len?`<span>${escH(h.len)}</span>`:''}</div>
-      <div class="rp-hbtn"><button class="rp-play" data-act="play" data-i="0">${SVG.play}재생</button><button class="rp-ghost" data-act="close">${SVG.ufo}다시 탐험</button></div>
+      <div class="rp-hbtn"><button class="rp-play" data-act="play" data-i="0">${SVG.play}재생</button><button class="rp-ghost" data-go="cover">${SVG.info}내 탐사 일지</button></div>
       ${ARCHIVE.heroCredit?`<div class="rp-credit">${escH(ARCHIVE.heroCredit)}</div>`:''}</div></div>
 
   <section class="rp-sec"><div class="rp-sh"><h2>쭈니 에딧</h2><small>대원들이 만든 팬 편집 영상</small></div>
@@ -1336,7 +1386,7 @@ async function coverCard(){
   x.fillStyle='#2a1d4d';x.font=HAND(700,36);x.textAlign='center';x.fillText(s.mon?s.mon.t:'내 몽타주',0,205);x.restore();x.textAlign='left';
   tape(320,400,130,-.12,'#f7a8c4');
   if(ap){x.save();x.imageSmoothingEnabled=false;x.translate(505,830);x.rotate(.17);const w=110;x.drawImage(ap,-w/2,-w/2,w,w*ap.height/ap.width);x.restore()}
-  [[`5/5`,' 교신 해독'],[`${s.best}점`,' 외계인 수색'],[s.mins?`${s.mins}분`:'—',' 탐사']].forEach(([a,b],i)=>{const y=500+i*90;x.font=HAND(700,52);x.fillStyle='#ff6f91';x.fillText(a,600,y);const w=x.measureText(a).width;x.font=HAND(400,48);x.fillStyle='#2a1d4d';x.fillText(b,600+w,y)});
+  [[`${doneCount()}/5`,' 교신 해독'],[`${s.best}점`,' 외계인 수색'],[s.mins?`${s.mins}분`:'—',' 탐사']].forEach(([a,b],i)=>{const y=500+i*90;x.font=HAND(700,52);x.fillStyle='#ff6f91';x.fillText(a,600,y);const w=x.measureText(a).width;x.font=HAND(400,48);x.fillStyle='#2a1d4d';x.fillText(b,600+w,y)});
   rr(x,110,890,860,190,28);x.fillStyle='#f4effc';x.fill();
   x.fillStyle='#6a5d8f';x.font=BODY(26);x.fillText('내가 남긴 교신',145,940);
   x.fillStyle='#2a1d4d';x.font=HAND(700,40);wrapLines(x,s.note||'아직 남긴 교신이 없어요',790,2).forEach((l,i)=>x.fillText(l,145,998+i*50));
@@ -1370,9 +1420,20 @@ rp.addEventListener('click',async e=>{const b=e.target.closest('[data-go],[data-
   else if(a==='scroll'){const t=$('#rpFan');if(t)t.scrollIntoView({behavior:'smooth',block:'start'})}
   else if(a==='tab'){rpTab=b.dataset.k;rpRefresh()}
   else if(a==='like'){const n=rpNotes().find(x=>x.id===b.dataset.id);if(n){b.disabled=true;toggleLike('notes',n).then(rpRefresh,()=>{b.disabled=false})}}
-  else if(a==='guest'){closeReport();openGuest()}
+  else if(a==='guest'){openGuest();onClose=()=>setTimeout(rpRefresh,0)}
 });
-$('#rpBtn').addEventListener('click',()=>openReport('archive'));
+$('#rpBtn').addEventListener('click',()=>{if(modalOpen)return;
+  openSheet('탐사 그만하기',`<p>지금까지 남긴 기록으로 탐사를 마치고 <b>쭈니 생일 축하파티</b>로 갈까요?</p><p>파티로 가면 탐사가 끝나요.</p>
+  <div class="row"><button class="soft" id="qNo">계속 탐사하기</button><button class="primary" id="qYes">파티 가기</button></div>`);
+  $('#qNo').onclick=closeSheet;$('#qYes').onclick=()=>{closeSheet();endExplore();openReport('archive')}});
+/* 가로 줄을 마우스로 끌어서 넘기기 */
+rp.addEventListener('dragstart',e=>{if(e.target.closest('.rp-row'))e.preventDefault()});
+rp.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'||e.button!==0)return;const row=e.target.closest('.rp-row');if(!row)return;
+  const sx=e.clientX,sl=row.scrollLeft;let moved=false;
+  const mv=ev=>{const dx=ev.clientX-sx;if(!moved&&Math.abs(dx)>5){moved=true;row.classList.add('drag');row.style.scrollSnapType='none'}if(moved)row.scrollLeft=sl-dx};
+  const up=()=>{removeEventListener('pointermove',mv);removeEventListener('pointerup',up);row.classList.remove('drag');row.style.scrollSnapType='';
+    if(moved){const kill=ev=>{ev.stopPropagation();ev.preventDefault()};row.addEventListener('click',kill,{capture:true,once:true});setTimeout(()=>row.removeEventListener('click',kill,{capture:true}),0)}};
+  addEventListener('pointermove',mv);addEventListener('pointerup',up)});
 $('#startRp').addEventListener('click',()=>openReport('archive'));
 if(endingSeen){$('#rpBtn').hidden=false;$('#startRp').hidden=false}
 
