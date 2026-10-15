@@ -484,7 +484,6 @@ img{max-width:100%}
     <span class="chip">교신 해독 <b id="prog">0/5</b></span>
     <span class="chip">접속 <b id="online">1</b>명</span>
     <button class="ghost" id="rpBtn" hidden>탐사 그만하기</button>
-    <button class="ghost" id="meBtn">내 대원</button>
   </div>
 </div>
 
@@ -1230,7 +1229,7 @@ function openGoods(i,fromShop){const L=goodsList(),g=L[i];if(!g)return;const ok=
   if(L.length>1){$('#gPrev').onclick=()=>openGoods((i-1+L.length)%L.length,fromShop);$('#gNext').onclick=()=>openGoods((i+1)%L.length,fromShop)}}
 
 /* 내 대원 */
-$('#meBtn').addEventListener('click',()=>{
+if($('#meBtn'))$('#meBtn').addEventListener('click',()=>{
   openSheet('내 대원',`<label class="f" for="mn">대원 이름<input id="mn" maxlength="10"></label>
   <p>우주복 포인트 색</p>
   <div class="row">${COLORS.map(c=>`<button class="sw${c===me.color?' on':''}" data-c="${c}" style="background:${c}" aria-label="우주복 색"></button>`).join('')}</div>
@@ -1991,7 +1990,7 @@ function closeGate(){store.set('jc_ticket',true);gate.classList.add('bye');setTi
 if(!/[?&#]admin\b/.test(location.search+location.hash))openGate();
 
 /* 디데이 */
-const OPEN=Date.UTC(2026,11,3,3,3),CLOSE=Date.UTC(2026,11,17,15,0);
+const OPEN=Date.UTC(2026,11,3,3,3),CLOSE=Date.UTC(2026,11,23,15,0);   // 착륙 12월 3일 12:03 ~ 12월 23일 24:00 (한국 시간)
 function tick(){const n=Date.now(),el=$('#dday');
   if(n<OPEN){const d=OPEN-n,dd=Math.floor(d/864e5),h=Math.floor(d/36e5)%24,m=Math.floor(d/6e4)%60,ss=Math.floor(d/1e3)%60;
     el.innerHTML=`착륙까지 <b>D-${dd}</b> ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`}
