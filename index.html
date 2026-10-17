@@ -813,4 +813,1253 @@ document.querySelectorAll('.dpad button').forEach(b=>{const d=b.dataset.d;
   b.addEventListener('pointerdown',e=>{e.preventDefault();press(d);b.classList.add('on')});
   ['pointerup','pointerleave','pointercancel'].forEach(ev=>b.addEventListener(ev,()=>{release(d);b.classList.remove('on')}));
   b.addEventListener('contextmenu',e=>e.preventDefault())});
-const KEYS={ArrowUp:'up',w:'up',W:'up',ArrowDown:'down',s:'down',S:'
+const KEYS={ArrowUp:'up',w:'up',W:'up',ArrowDown:'down',s:'down',S:'down',ArrowLeft:'left',a:'left',A:'left',ArrowRight:'right',d:'right',D:'right'};
+addEventListener('keydown',e=>{if(AD.open||gateOpen)return;if(modalOpen){if(e.key==='Escape')closeSheet();else if(viewerNav&&(e.key==='ArrowLeft'||e.key==='ArrowRight')&&!e.target.matches('input,textarea,select'))viewerNav(e.key==='ArrowLeft'?-1:1);return}
+  if(rpOpen)return
+  if(e.target.matches('input,textarea,select'))return;
+  if(KEYS[e.key]){press(KEYS[e.key]);e.preventDefault()}
+  if((e.key==='e'||e.key==='E'||e.key==='Enter')&&near)openSpot(near.id)});
+addEventListener('keyup',e=>{if(KEYS[e.key])release(KEYS[e.key])});
+addEventListener('blur',()=>held.length=0);
+cv.addEventListener('pointerdown',e=>{if(state!=='play'||modalOpen)return;const r=cv.getBoundingClientRect();
+  const wx=camX+(e.clientX-r.left)/r.width*vw,wy=camY+(e.clientY-r.top)/r.height*VH;
+  const b=booths.find(b=>wx>b.x&&wx<b.x+b.w&&wy>b.y&&wy<b.y+b.h);
+  me.tgt=b?{x:b.x+b.w/2,y:b.y+b.h+6}:{x:wx,y:wy}});
+$('#enterBtn').addEventListener('click',()=>near&&openSpot(near.id));
+$('#chatForm').addEventListener('submit',e=>{e.preventDefault();sendChat($('#chatIn').value);$('#chatIn').value=''});
+document.querySelectorAll('.emo').forEach(b=>b.addEventListener('click',()=>sendChat(b.dataset.e)));
+
+/* ---------- 시작 / 착륙 ---------- */
+$('#startSw').innerHTML=COLORS.map(c=>`<button type="button" class="sw${c===me.color?' on':''}" data-c="${c}" style="background:${c}" aria-label="우주복 색"></button>`).join('');
+$('#startSw').addEventListener('click',e=>{const b=e.target.closest('.sw');if(!b)return;me.color=b.dataset.c;document.querySelectorAll('#startSw .sw').forEach(x=>x.classList.toggle('on',x===b))});
+$('#nameIn').value=saved.name||'';
+if(saved.name){$('#nameIn').hidden=true;const na=$('#nameAs');na.hidden=false;na.innerHTML='';na.append('탐사대원 ');const nb=document.createElement('b');nb.textContent=saved.name;na.append(nb,' · 우주복 색은 바꿀 수 있어요');
+  const sp=document.querySelector('#startForm p');if(sp)sp.textContent='…1203…1203… 다시 행성 #1203으로 착륙합니다.'}
+$('#startForm').addEventListener('submit',e=>{e.preventDefault();if(!store.get('jc_land',null))store.set('jc_land',Date.now());me.name=$('#nameIn').value.trim()||'대원';store.set('jc_me',{name:me.name,color:me.color});
+  $('#start').hidden=true;$('#nameIn').blur();SFX.ufo();state='landing';introT=0;$('#skipBtn').hidden=false;me.x=PAD.x;me.y=PAD.y+28;me.dir='down'});
+$('#skipBtn').addEventListener('click',()=>{state='play';ufoAlt=0;me.alpha=1;$('#skipBtn').hidden=true;catSay='#1203 도착! 나한테 와 봐';catSayT=260});
+
+/* ---------- 모달 ---------- */
+let token=0,onClose=null;
+function runClose(){if(onClose){try{onClose()}catch(e){}onClose=null}}
+function openSheet(title,html){runClose();viewerNav=null;token++;modalOpen=true;held.length=0;me.tgt=null;$('#enterBtn').hidden=true;$('#sheetTitle').textContent=title;$('#sheetBody').innerHTML=html;$('#veil').hidden=false;$('#sheetBody').parentElement.scrollTop=0}
+function closeSheet(){runClose();token++;modalOpen=false;$('#veil').hidden=true;$('#enterBtn').hidden=!near;if(pendingEnding){pendingEnding=false;setTimeout(openEnding,250)}}
+$('#closeBtn').addEventListener('click',closeSheet);
+$('#veil').addEventListener('click',e=>{if(e.target.id==='veil')closeSheet()});
+function hiDPI(c,w,h){const d=Math.min(window.devicePixelRatio||1,2);c.width=w*d;c.height=h*d;const x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);return x}
+let dl=null;try{if(window.claude&&window.claude.use)window.claude.use('downloads').then(x=>{dl=x}).catch(()=>{})}catch(e){}
+const saveUI=(img,name)=>`<div class="row" style="justify-content:center"><button class="soft savebtn" type="button" data-img="${img}" data-name="${name}">이미지 저장하기</button></div><div class="save">저장이 안 되면 이미지를 길게 누르거나(폰) 우클릭(PC)하세요</div>`;
+$('#sheetBody').addEventListener('click',async e=>{const b=e.target.closest('.savebtn');if(!b)return;const img=document.getElementById(b.dataset.img);if(!img||!img.src.startsWith('data:'))return;
+  const tip=b.parentElement.nextElementSibling;
+  if(!dl){try{const l=document.createElement('a');l.href=img.src;l.download=b.dataset.name;document.body.append(l);l.click();l.remove();tip.textContent='저장했어요. 안 되면 이미지를 길게 눌러 저장하세요'}catch(err){tip.textContent='이미지를 길게 누르거나 우클릭해서 저장하세요'}return}
+  try{const bin=atob(img.src.split(',')[1]),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
+    await dl.save({filename:b.dataset.name,data:new Blob([u],{type:'image/png'})});tip.textContent='저장했어요'}
+  catch(err){tip.textContent=err&&err.code==='declined'?'저장을 취소했어요':'저장하지 못했어요. 이미지를 길게 눌러 저장해 주세요'}});
+const mTag=id=>{const m=MISSIONS.find(x=>x.id===id);return `<div class="mission">MISSION · ${m.label}${done[id]?' · 완료':''}</div>`};
+function openSpot(id){({cat:openCat,photo:openPhoto,game:openGame,draw:openDraw,guest:openGuest,gallery:openGallery,shop:openShop})[id]()}
+
+function openCat(){
+  openSheet('쭈일리언',`<p>안녕, 나는 쭈일리언! 머리 위 친구는 하늘이야. 우주를 탐험하는데 정체불명의 신호가 계속 잡혔어. "…1203…1203…" 신호를 따라와 보니 지도에 없는 작은 행성, 바로 여기 <b>#1203</b>이야.</p>
+  <p>${me.name} 대원, 기지 다섯 곳을 조사해서 교신을 해독해 줘. 미션을 하나씩 끝낼 때마다 신호가 조금씩 선명해질 거야.</p>
+  <div class="decode" aria-label="해독 중인 교신">${decoded()}</div>
+  <ul class="checks">${MISSIONS.map(m=>`<li class="${done[m.id]?'ok':''}"><span>${m.label}</span><span>${done[m.id]?'완료':'조사 중'}</span></li>`).join('')}</ul>
+  ${doneCount()===5&&!endingSeen?'<p><b>교신을 전부 해독했어!</b> 탐사 일지를 보고하면 탐사가 끝나고, 쭈니 생일 축하파티가 열려.</p><button class="primary" id="reportBtn">탐사 일지 보고하기</button>':''}
+  <button class="soft" id="reset">미션 기록 초기화</button>`);
+  if($('#reportBtn'))$('#reportBtn').onclick=()=>{closeSheet();openEnding()};
+  $('#reset').onclick=()=>{done={};endingSeen=false;store.set('jc_done',done);store.set('jc_end',false);updateProg();openCat()};
+}
+function endExplore(){if(!store.get('jc_fin',null))store.set('jc_fin',Date.now())}
+function openEnding(){endingSeen=true;store.set('jc_end',true);endExplore();openReport('print')}
+
+/* 넘겨 보기 (사진관·몽타주 전시관 공용) */
+let viewerNav=null;
+function openViewer(o){let i=o.index;
+  const show=()=>{const it=o.items[i],n=o.items.length;
+    openSheet(o.title(it),`<div class="vw${o.pixel?' px':''}" id="vw" style="aspect-ratio:${o.ratio};width:min(100%,calc(52vh * ${o.ratio}))"><img src="${o.img(it)}" alt="${o.alt(it)}" draggable="false">${n>1?'<button class="vnav l" id="vp" aria-label="이전 작품">◀</button><button class="vnav r" id="vn" aria-label="다음 작품">▶</button>':''}</div>
+    <div class="vcount">${i+1} / ${n}${n>1?' · 옆으로 밀어서 넘겨 보세요':''}</div>${o.body(it)}
+    <div class="row"><button class="soft" id="vback">← 목록으로</button>${o.extra?o.extra(it):''}</div><p id="vmsg" class="save"></p>`);
+    const go=d=>{i=(i+d+n)%n;show()};viewerNav=n>1?go:null;
+    if(n>1){$('#vp').onclick=()=>go(-1);$('#vn').onclick=()=>go(1)}
+    $('#vback').onclick=o.back;
+    const vw=$('#vw');let sx=null,sy=null;
+    vw.addEventListener('pointerdown',e=>{if(e.target.closest('.vnav'))return;sx=e.clientX;sy=e.clientY});
+    vw.addEventListener('pointerup',e=>{if(sx===null)return;const dx=e.clientX-sx,dy=e.clientY-sy;sx=null;if(n>1&&Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy))go(dx<0?1:-1)});
+    if(o.mount)o.mount(it,show)};
+  show()}
+const escH=s=>String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+
+/* 1. 착륙 기록소 · 한 장 포토부스 (휴대폰 9:16) */
+function outlined(src){const c=document.createElement('canvas');c.width=src.width+2;c.height=src.height+2;const x=c.getContext('2d');
+  const d=src.getContext('2d').getImageData(0,0,src.width,src.height).data,a=(i,j)=>i>=0&&j>=0&&i<src.width&&j<src.height&&d[(j*src.width+i)*4+3]>0;
+  x.fillStyle='#3a2459';for(let j=-1;j<=src.height;j++)for(let i=-1;i<=src.width;i++)if(!a(i,j)&&(a(i-1,j)||a(i+1,j)||a(i,j-1)||a(i,j+1)))x.fillRect(i+1,j+1,1,1);
+  x.drawImage(src,1,1);return c}
+const STK={zzu:ZZU,bear:outlined(sprite([".YY...YY.",".YYYYYYY.","YYYYYYYYY","YYEYYYEYY","YYYYOYYYY","YYYYYYYYY",".YYYYYYY.","..YY.YY.."],{Y:'#ffd84d',E:'#3a2459',O:'#3a2459'})),
+  heart:outlined(sprite([".RR.RR.","RRRRRRR","RWRRRRR","RRRRRRR",".RRRRR.","..RRR..","...R..."],{R:'#ff6f91',W:'#ffd1dc'})),
+  star:outlined(sprite(["...Y...","...Y...","YYYYYYY",".YYYYY.","..YYY..",".YY.YY.","Y.....Y"],{Y:'#ffd166'})),
+  alien:alienSprite('#7fdc8a')};
+const FRAMES=[{id:'f1',name:'프레임 1',bg:'#170d33',dot:'#ffd166',fg:'#ffd166'},{id:'f2',name:'프레임 2',bg:'#ff8fab',dot:'#fff',fg:'#fff'},{id:'f3',name:'프레임 3',bg:'#d8c8f7',dot:'#a35cc4',fg:'#3a2459'}];
+const PW=540,PH=960,HOLE={x:30,y:30,w:480,h:760};
+function drawFrame(c,f,name,withHole){c.fillStyle=f.bg;c.fillRect(0,0,PW,PH);c.fillStyle=f.dot;for(let i=0;i<46;i++)c.fillRect((i*137)%PW,(i*89)%PH,5,5);
+  if(withHole){c.clearRect(HOLE.x,HOLE.y,HOLE.w,HOLE.h)}
+  c.strokeStyle='#3a2459';c.lineWidth=6;c.strokeRect(HOLE.x-3,HOLE.y-3,HOLE.w+6,HOLE.h+6);
+  c.imageSmoothingEnabled=false;c.drawImage(ZZU,24,PH-150,68,72);c.drawImage(UFO,PW-120,PH-140,99,63);
+  c.textAlign='center';c.textBaseline='middle';c.fillStyle=f.fg;c.font='40px Jua, sans-serif';c.fillText('PLANET #1203',PW/2,PH-118);
+  c.font='19px Jua, sans-serif';c.fillText('2026.12.03 착륙 기록 · 대원 '+name,PW/2,PH-74);c.font='15px Jua, sans-serif';c.fillText('HAPPY BIRTHDAY JUUN',PW/2,PH-44)}
+let shotMem=null;const shotMine=()=>shotMem||(shotMem=store.get('jc_photos',[]));
+/* 내 캐릭터로 찍기: 카메라 없이 착륙 장면을 자동으로 그려요 */
+function charScene(seed,color){const W=120,H=190,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');x.imageSmoothingEnabled=false;
+  let q=seed;const r=()=>(q=(q*16807)%2147483647)/2147483647;
+  x.fillStyle='#1e1040';x.fillRect(0,0,W,H);
+  for(let i=0;i<46;i++){const k=r();x.fillStyle=k<.15?'#ffd166':k<.55?'#ffffff':'#9b86d8';x.fillRect(Math.floor(r()*W),Math.floor(r()*104),1,1)}
+  const pl=[['#ff8fab',8],['#8ff0d2',6],['#ffd166',7]][Math.floor(r()*3)],px=20+Math.floor(r()*80),py=16+Math.floor(r()*30);
+  x.fillStyle=pl[0];for(let y=-pl[1];y<=pl[1];y++){const w=Math.round(Math.sqrt(pl[1]*pl[1]-y*y));x.fillRect(px-w,py+y,w*2,1)}
+  x.drawImage(ground,PAD.x-60,PAD.y-38,120,86,0,104,120,86);
+  x.drawImage(UFO,46+Math.floor(r()*10),84,66,42);
+  const al=[alienSprite('#7fdc8a'),alienSprite('#ffb3cf'),alienSprite('#ffd166')];
+  for(let i=0;i<2;i++){const a=al[Math.floor(r()*3)];x.drawImage(a,6+Math.floor(r()*100),148+Math.floor(r()*14),a.width*2,a.height*2)}
+  const sp=playerSprite(color,['down','down','left','right'][Math.floor(r()*4)],Math.floor(r()*2));
+  x.drawImage(sp,12+Math.floor(r()*14),122,sp.width*3,sp.height*3);
+  if(r()<.75){const k=[STK.heart,STK.star][Math.floor(r()*2)];x.drawImage(k,20+Math.floor(r()*34),104,k.width*2,k.height*2)}
+  return c}
+function openPhoto(){
+  openSheet('착륙 기록소',`${mTag('photo')}<p>프레임을 고르고 한 장 남겨요. <b>쭈일리언 인형과 찍어도 되고, 주은이와 함께하는 다양한 일상을 찍어 주세요!!</b></p><p>카메라가 없으면 <b>내 캐릭터로 찍기</b>로, 이미 찍어 둔 사진이 있으면 <b>사진 올리기</b>로 남겨도 미션이 끝나요.</p>
+  <button class="soft" id="phHall">착륙 기록 전시관 구경하기 →</button>
+  <div class="row pmode"><button class="soft pm on" type="button" data-m="cam">카메라로 찍기</button><button class="soft pm" type="button" data-m="char">내 캐릭터로 찍기</button><button class="soft pm" type="button" data-m="up">사진 올리기</button></div>
+  <div class="row fr">${FRAMES.map((f,i)=>`<button class="soft fk${i?'':' on'}" type="button" data-f="${i}">${f.name}</button>`).join('')}</div>
+  <p class="zhint">프레임 디자인은 추후 준비돼요. 지금은 임시 디자인이에요.</p>
+  <div class="booth9" id="bth"><video id="pv" playsinline muted></video><canvas id="pchar" hidden></canvas><img id="pshot" alt="찍은 사진" hidden><canvas id="pov" width="${PW}" height="${PH}"></canvas><div class="cd" id="pcd" hidden></div><div class="flash" id="pfl"></div>
+    <button class="primary bstart" id="pgo" type="button">카메라 켜기</button><button class="primary bstart" id="pupBtn" type="button" hidden>앨범에서 사진 고르기</button><input type="file" id="pup" accept="image/*" hidden>
+    <div class="bctl" id="bctl" hidden><button class="bflip" id="pflip" type="button" aria-label="전면·후면 카메라 바꾸기"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 3v5h5"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 21v-5h-5"/></svg></button><button class="bshut" id="pshut" type="button" aria-label="3초 뒤에 찍기"></button><span class="bsp"></span></div></div>
+  <p class="zhint" id="phint"></p>
+  <div class="row" style="justify-content:center"><label class="filebtn" id="pfileL" hidden>휴대폰 카메라로 찍기<input type="file" id="pfile" accept="image/*" capture="user" hidden></label></div>
+  <p id="pmsg"></p>
+  <div id="pafter" hidden><img class="out" id="pimg" alt="행성 #1203 착륙 기록 사진">${saveUI('pimg','1203-착륙기록.png')}
+  <p class="zhint">이 사진은 내 탐사 일지에 자동으로 들어가요. <b>생일파티에 걸기</b>를 누르면 축하파티의 착륙 인증샷에도 올라가요.</p><p id="pexMsg" class="save"></p>
+  <div class="row" style="justify-content:center"><button class="soft" id="pre">다시 찍기</button><button class="primary" id="pexh">생일파티에 걸기</button></div></div>`);
+  const my=token,pv=$('#pv'),pc=$('#pchar'),ov=$('#pov'),oc=ov.getContext('2d');
+  let fi=0,stream=null,raw=null,busy=false,mode='cam',facing='user',seed=(Date.now()%2147483646)+1;
+  const drawOv=()=>{oc.clearRect(0,0,PW,PH);drawFrame(oc,FRAMES[fi],me.name,true)};drawOv();
+  const stop=()=>{if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}};
+  onClose=stop;
+  $('#phHall').onclick=openPhotoHall;
+  const ui=()=>{const live=!raw&&!busy;
+    $('#pgo').hidden=!(live&&mode==='cam'&&!stream&&$('#pfileL').hidden);$('#pupBtn').hidden=!(live&&mode==='up');
+    $('#bctl').hidden=!(live&&(mode==='char'||stream));
+    $('#pflip').setAttribute('aria-label',mode==='cam'?'전면·후면 카메라 바꾸기':'다른 포즈로 바꾸기');
+    pv.hidden=mode!=='cam';pc.hidden=mode!=='char';
+    $('#phint').textContent=raw||busy?'':mode==='char'?'왼쪽 버튼으로 포즈를 바꾸고, 가운데 버튼을 누르면 3초 뒤에 찍혀요':stream?'왼쪽 버튼으로 전면·후면 카메라를 바꾸고, 가운데 버튼을 누르면 3초 뒤에 찍혀요':''};
+  const drawChar=()=>{const sc=charScene(seed,me.color);pc.width=sc.width;pc.height=sc.height;const x=pc.getContext('2d');x.imageSmoothingEnabled=false;x.drawImage(sc,0,0)};
+  const nextSeed=()=>{seed=(seed*16807)%2147483647};
+  function compose(){if(!raw)return;const c=document.createElement('canvas');c.width=PW;c.height=PH;const x=c.getContext('2d');drawFrame(x,FRAMES[fi],me.name,false);
+    const r=Math.max(HOLE.w/raw.width,HOLE.h/raw.height),w=raw.width*r,h=raw.height*r;x.save();x.beginPath();x.rect(HOLE.x,HOLE.y,HOLE.w,HOLE.h);x.clip();x.imageSmoothingEnabled=!raw.px;x.drawImage(raw,HOLE.x+(HOLE.w-w)/2,HOLE.y+(HOLE.h-h)/2,w,h);x.restore();
+    $('#pimg').src=c.toDataURL('image/jpeg',.88);$('#pshot').src=$('#pimg').src;$('#pafter').hidden=false;markDone('photo');
+    try{const sm=document.createElement('canvas');sm.width=360;sm.height=640;sm.getContext('2d').drawImage(c,0,0,360,640);store.set('jc_myshot',{img:sm.toDataURL('image/jpeg',.82),at:Date.now()})}catch(e){}}
+  function takeFrom(src,sw,sh,mirror,px){const c=document.createElement('canvas');c.width=sw;c.height=sh;const x=c.getContext('2d');x.imageSmoothingEnabled=!px;if(mirror){x.translate(sw,0);x.scale(-1,1)}x.drawImage(src,0,0,sw,sh);
+    raw=c;raw.px=!!px;compose();$('#pshot').hidden=false;ui();$('#pafter').scrollIntoView({behavior:'smooth',block:'nearest'})}
+  const toBooth=()=>$('#bth').scrollIntoView({behavior:'smooth',block:'center'});
+  async function startCam(){stop();$('#pmsg').textContent='';
+    try{const st=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:facing},width:{ideal:1080},height:{ideal:1440}},audio:false});
+      if(token!==my||mode!=='cam'){st.getTracks().forEach(t=>t.stop());return}
+      stream=st;pv.srcObject=stream;pv.classList.toggle('mir',facing==='user');await pv.play();ui();toBooth()}
+    catch(e){stream=null;$('#pfileL').hidden=false;$('#pfile').setAttribute('capture',facing);ui();
+      $('#pmsg').textContent='이 화면에서는 실시간 카메라를 켤 수 없어요. 휴대폰 카메라로 찍거나, 위의 "내 캐릭터로 찍기"를 골라 주세요.'}}
+  async function shoot(){if(busy||raw)return;busy=true;ui();toBooth();
+    for(let n=3;n>0;n--){if(token!==my)return;$('#pcd').hidden=false;$('#pcd').textContent=n;SFX.beep();await new Promise(r=>setTimeout(r,800))}
+    if(token!==my)return;$('#pcd').hidden=true;SFX.shutter();const fl=$('#pfl');fl.classList.remove('go');void fl.offsetWidth;fl.classList.add('go');busy=false;
+    if(mode==='cam')takeFrom(pv,pv.videoWidth||720,pv.videoHeight||960,facing==='user',false);else takeFrom(pc,pc.width,pc.height,false,true)}
+  function reset(){raw=null;$('#pshot').hidden=true;$('#pafter').hidden=true;if(mode==='char'){nextSeed();drawChar()}ui();toBooth();if(mode==='up')$('#pup').click()}
+  $('#pgo').onclick=startCam;
+  $('#pshut').onclick=shoot;
+  $('#pflip').onclick=()=>{if(busy)return;if(mode==='cam'){facing=facing==='user'?'environment':'user';startCam()}else{nextSeed();drawChar()}};
+  document.querySelectorAll('.pmode .pm').forEach(b=>b.onclick=()=>{if(busy)return;mode=b.dataset.m;document.querySelectorAll('.pmode .pm').forEach(x=>x.classList.toggle('on',x===b));
+    raw=null;$('#pshot').hidden=true;$('#pafter').hidden=true;$('#pmsg').textContent='';
+    if(mode!=='cam'){stop();$('#pfileL').hidden=true}if(mode==='char')drawChar();ui()});
+  $('#pupBtn').onclick=()=>$('#pup').click();
+  $('#pup').addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';if(!f)return;const r=new FileReader();
+    r.onload=()=>{const im=new Image();im.onload=()=>takeFrom(im,im.width,im.height,false,false);im.src=r.result};r.readAsDataURL(f)});
+  $('#pfile').addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';if(!f)return;const r=new FileReader();
+    r.onload=()=>{const im=new Image();im.onload=()=>takeFrom(im,im.width,im.height,false,false);im.src=r.result};r.readAsDataURL(f)});
+  $('#pre').onclick=()=>{reset();if(mode==='cam'&&!stream&&!$('#pfileL').hidden)$('#pfile').click()};
+  document.querySelectorAll('.fr .fk').forEach(b=>b.onclick=()=>{fi=+b.dataset.f;document.querySelectorAll('.fr .fk').forEach(x=>x.classList.toggle('on',x===b));drawOv();compose()});
+  $('#pexh').onclick=async()=>{const b=$('#pexh');
+    if(mode!=='char')return openStickerEditor($('#pimg').src);   // 얼굴이 나올 수 있어서 스티커 단계를 거쳐요
+    if(b.disabled)return;b.disabled=true;b.textContent='거는 중…';   // 캐릭터 사진은 바로 걸어요
+    try{await addItem('photos',{img:$('#pimg').src,t:'착륙 성공!',n:me.name});b.textContent='걸었어요!';$('#pexMsg').textContent='축하파티 착륙 인증샷에 올라갔어요';setTimeout(openPhotoHall,700)}
+    catch(err){b.disabled=false;b.textContent='생일파티에 걸기';$('#pexMsg').textContent=errMsg(err)}};
+  ui();
+}
+/* 전시 전에 스티커로 얼굴 가리기 */
+function openStickerEditor(src){
+  openSheet('스티커 붙이기',`<p>전시관에는 다른 대원들도 봐요. 얼굴을 가리고 싶으면 스티커를 눌러 붙이고, 손가락으로 끌어서 옮기세요.</p>
+  <div class="stkwrap" id="sw9"><canvas id="sc" width="${PW}" height="${PH}"></canvas></div>
+  <div class="row stks">${Object.keys(STK).map(k=>`<button class="soft stk" type="button" data-k="${k}" aria-label="스티커"><img src="${STK[k].toDataURL()}" alt=""></button>`).join('')}</div>
+  <div class="row" style="justify-content:center"><button class="soft" id="sSm">작게</button><button class="soft" id="sBg">크게</button><button class="soft" id="sDel">선택 지우기</button></div>
+  <label class="f" for="sCap">한마디 (선택)<input id="sCap" maxlength="30" placeholder="예: 착륙 성공!"></label>
+  <div class="row" style="justify-content:center"><button class="soft" id="sBack">← 다시 찍으러 가기</button><button class="primary" id="sGo">이대로 전시하기</button></div><p id="sMsg" class="save"></p>`);
+  const cv2=$('#sc'),c=cv2.getContext('2d'),base=new Image();let stk=[],sel=-1,drag=null;
+  const draw=()=>{c.imageSmoothingEnabled=true;c.drawImage(base,0,0,PW,PH);c.imageSmoothingEnabled=false;
+    stk.forEach((s,i)=>{const sp=STK[s.k],w=s.sz,h=s.sz*sp.height/sp.width;c.drawImage(sp,s.x-w/2,s.y-h/2,w,h);
+      if(i===sel){c.strokeStyle='#8ff0d2';c.lineWidth=4;c.setLineDash([10,8]);c.strokeRect(s.x-w/2-6,s.y-h/2-6,w+12,h+12);c.setLineDash([])}})};
+  base.onload=draw;base.src=src;
+  const pos=e=>{const r=cv2.getBoundingClientRect();return[(e.clientX-r.left)/r.width*PW,(e.clientY-r.top)/r.height*PH]};
+  const hit=(x,y)=>{for(let i=stk.length-1;i>=0;i--){const s=stk[i],sp=STK[s.k],h=s.sz*sp.height/sp.width;if(Math.abs(x-s.x)<s.sz/2+8&&Math.abs(y-s.y)<h/2+8)return i}return -1};
+  cv2.addEventListener('pointerdown',e=>{cv2.setPointerCapture(e.pointerId);const[x,y]=pos(e);sel=hit(x,y);if(sel>=0)drag={dx:x-stk[sel].x,dy:y-stk[sel].y};draw()});
+  cv2.addEventListener('pointermove',e=>{if(!drag||sel<0)return;const[x,y]=pos(e);stk[sel].x=Math.max(0,Math.min(PW,x-drag.dx));stk[sel].y=Math.max(0,Math.min(PH,y-drag.dy));draw()});
+  ['pointerup','pointercancel'].forEach(ev=>cv2.addEventListener(ev,()=>drag=null));
+  document.querySelectorAll('.stk').forEach(b=>b.onclick=()=>{stk.push({k:b.dataset.k,x:PW/2,y:HOLE.y+HOLE.h*.38,sz:170});sel=stk.length-1;draw()});
+  $('#sSm').onclick=()=>{if(sel>=0){stk[sel].sz=Math.max(50,stk[sel].sz/1.2);draw()}};
+  $('#sBg').onclick=()=>{if(sel>=0){stk[sel].sz=Math.min(520,stk[sel].sz*1.2);draw()}};
+  $('#sDel').onclick=()=>{if(sel>=0){stk.splice(sel,1);sel=-1;draw()}};
+  $('#sBack').onclick=openPhoto;
+  $('#sGo').onclick=async()=>{const g=$('#sGo');if(g.disabled)return;sel=-1;draw();g.disabled=true;g.textContent='전시하는 중…';
+    try{await addItem('photos',{img:cv2.toDataURL('image/jpeg',.85),t:$('#sCap').value.trim()||'착륙 성공!',n:me.name});openPhotoHall()}
+    catch(err){g.disabled=false;g.textContent='이대로 전시하기';$('#sMsg').textContent=errMsg(err)}};
+}
+let photoExMem=null;
+function photoEx(){return photoExMem||(photoExMem=[0,1,2].map(i=>{const c=document.createElement('canvas');c.width=PW/4;c.height=PH/4;const x=c.getContext('2d');x.scale(.25,.25);drawFrame(x,FRAMES[i],'예시대원',false);
+    x.fillStyle='#2b1d55';x.fillRect(HOLE.x,HOLE.y,HOLE.w,HOLE.h);x.imageSmoothingEnabled=false;x.drawImage(i===1?STK.bear:ZZU,PW/2-90,HOLE.y+260,180,190);
+    return{id:'px'+i,img:c.toDataURL(),t:['착륙 성공!','하늘이랑 한 컷','#1203 도착'][i],n:'예시대원',ex:1}}))}
+function openPhotoHall(){
+  const items=itemsOf('photos');
+  openSheet('착륙 기록 전시관',`<p>대원들이 남긴 착륙 기록 사진이에요. 누르면 크게 보고 옆으로 넘겨 볼 수 있어요.</p>
+  <button class="primary" id="phNew">나도 찍으러 가기</button>
+  <div class="gal">${items.map((e,k)=>`<button class="ex" data-k="${k}"><span class="exf"><img src="${e.img}" alt="${escH(e.t)}"></span><span class="pl"><b>${escH(e.t)}</b>${e.ex?'<i>예시</i>':e.pending?'<i>숨김</i>':''}<small>${escH(e.n)}</small></span></button>`).join('')}</div>`);
+  $('#phNew').onclick=openPhoto;
+  document.querySelectorAll('.ex').forEach(b=>b.onclick=()=>openViewer({items,index:+b.dataset.k,ratio:'9/16',title:e=>e.t,img:e=>e.img,alt:e=>e.t,back:openPhotoHall,
+    body:e=>`<p class="by">찍은 대원 · ${escH(e.n)}${e.ex?' · 예시 사진':''}</p>`,
+    extra:e=>!e.mine?'':'<button class="soft" id="phDel">사진 내리기</button>',
+    mount:e=>{if(!e.mine)return;$('#phDel').onclick=()=>{const d=$('#phDel');if(!d.dataset.sure){d.dataset.sure=1;d.textContent='한 번 더 누르면 내려가요';return}
+      removeItem('photos',e).then(openPhotoHall,err=>{$('#vmsg').textContent=errMsg(err)})}}}));
+}
+
+/* 2. 외계인 수색대 · 두더지 잡기 */
+function openGame(){
+  const best=store.get('jc_best2',0);
+  openSheet('외계인 수색대',`${mTag('game')}<p>외계인들이 크레이터에 숨어서 뭔가 몰래 준비하고 있어요. 고개를 내밀 때 톡 눌러 찾아내세요! 초록·분홍 외계인 +1, 반짝이 외계인 +3, 가끔 나오는 쭈일리언 +5! 운석을 누르면 -2. 20초 안에 20점 넘기면 미션 완료.</p>
+  <div class="stat"><span>점수 <b id="gs">0</b></span><span>남은 시간 <b id="gt">20</b>초</span><span>최고 <b id="gb">${best}</b></span></div>
+  <div class="gwrap"><canvas id="gc" style="image-rendering:pixelated"></canvas><div class="gres" id="gres" hidden></div><div class="gtoast" id="gtoast" hidden>20점 돌파!</div></div>
+  <button class="primary" id="gstart">수색 시작</button>`);
+  const my=token,cvs=$('#gc'),W=96,H=128;cvs.width=W;cvs.height=H;const c=cvs.getContext('2d');
+  const st=Array.from({length:22},()=>[Math.floor(Math.random()*W),Math.floor(Math.random()*20)]);
+  const holes=[];[46,76,106].forEach(y=>[18,48,78].forEach(x=>holes.push({x,y,k:null,age:0,dur:0})));
+  const SPR={g:alienSprite('#7fdc8a'),p:alienSprite('#ffb3cf'),y:alienSprite('#ffd166'),z:ZZU,r:outlined(sprite(['..YY...','.YGGGG.','GGGGGGG','GGgGGGG','GGGGgGG','.GGGGG.'],{G:'#8a7ca8',g:'#6d6090',Y:'#ffb86b'}))};
+  let score=0,time=20,run=false,lastT=0,spawn=0,pops=[];
+  const rise=h=>{const a=h.age,d=h.dur;return a<8?a/8:a>d-8?Math.max(0,(d-a)/8):1};
+  function draw(t){c.fillStyle='#1e1040';c.fillRect(0,0,W,H);c.fillStyle='#9b86d8';st.forEach(([x,y])=>c.fillRect(x,y,1,1));
+    c.fillStyle='#8c6cc4';c.fillRect(0,22,W,4);c.fillStyle='#d8c8f7';c.fillRect(0,24,W,H-24);c.fillStyle='#f0e8ff';c.fillRect(0,24,W,1);
+    holes.forEach(h=>{c.fillStyle='#f0e8ff';c.fillRect(h.x-12,h.y-1,24,5);c.fillStyle='#2b1d55';c.fillRect(h.x-11,h.y-2,22,4);c.fillRect(h.x-9,h.y-3,18,6);
+      if(h.k){const s=SPR[h.k],r=rise(h),sh=s.height,vis=Math.round(sh*r);
+        if(vis>0)c.drawImage(s,0,0,s.width,vis,h.x-Math.floor(s.width/2),h.y-vis,s.width,vis);
+        if(h.k==='y'&&Math.sin(t/80)>0){c.fillStyle='#fff';c.fillRect(h.x+5,h.y-vis-1,1,1);c.fillRect(h.x-6,h.y-vis+3,1,1)}}
+      c.fillStyle='#bba5ea';c.fillRect(h.x-11,h.y+1,22,1)});
+    c.font='8px Jua, sans-serif';c.textAlign='center';pops.forEach(p=>{c.fillStyle=p.v>0?'#2a9d78':'#d94a72';c.fillText((p.v>0?'+':'')+p.v,p.x,p.y)});
+    if(!run){c.fillStyle='rgba(23,13,51,.7)';c.fillRect(0,0,W,H)}}
+  cvs.addEventListener('pointerdown',e=>{if(!run)return;const r=cvs.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*W,y=(e.clientY-r.top)/r.height*H;
+    const h=holes.find(h=>h.k&&rise(h)>.4&&Math.abs(x-h.x)<12&&y>h.y-18&&y<h.y+5);if(!h)return;
+    const v=h.k==='z'?5:h.k==='y'?3:h.k==='r'?-2:1;const before=score;v>0?SFX.coin(v):SFX.buzz();score=Math.max(0,score+v);
+    if(score>store.get('jc_best2',0)){store.set('jc_best2',score);$('#gb').textContent=score}
+    if(before<20&&score>=20){markDone('game');const g=$('#gtoast');g.hidden=false;g.classList.remove('go');void g.offsetWidth;g.classList.add('go');setTimeout(()=>{if(token===my)g.hidden=true},1400)}pops.push({x:h.x,y:h.y-16,v,a:0});h.k=null;$('#gs').textContent=score});
+  function loop(t){if(token!==my||!run)return;const dt=Math.min(3,(t-lastT)/16.67);lastT=t;time-=dt/60;spawn-=dt;
+    if(spawn<=0){const free=holes.filter(h=>!h.k);if(free.length){const h=free[Math.floor(Math.random()*free.length)],r=Math.random();
+      h.k=r<.38?'g':r<.64?'p':r<.73?'y':r<.79?'z':'r';h.age=0;h.dur=Math.max(30,68-(20-time)*1.8)}spawn=14+Math.random()*14}
+    holes.forEach(h=>{if(h.k){h.age+=dt;if(h.age>=h.dur)h.k=null}});
+    pops.forEach(p=>{p.a+=dt;p.y-=.3*dt});pops=pops.filter(p=>p.a<30);
+    $('#gt').textContent=Math.max(0,Math.ceil(time));
+    if(time<=0){run=false;holes.forEach(h=>h.k=null);const b=Math.max(store.get('jc_best2',0),score);store.set('jc_best2',b);$('#gb').textContent=b;
+      const ok=score>=20,gr=$('#gres');gr.className='gres '+(ok?'win':'lose');
+      gr.innerHTML=ok?`<b>성공!!</b><span>${score}점 · 숨은 외계인을 다 찾았어요</span>`:`<b>아쉬워요</b><span>${score}점 · 20점부터 성공이에요</span>`;gr.hidden=false;
+      $('#gstart').textContent='다시 수색';ok?SFX.win():SFX.lose();if(ok)markDone('game')}
+    draw(t);if(run)requestAnimationFrame(loop)}
+  $('#gstart').onclick=()=>{if(run)return;SFX.go();$('#gres').hidden=true;holes.forEach(h=>h.k=null);pops=[];score=0;time=20;run=true;lastT=performance.now();spawn=0;$('#gs').textContent=0;$('#gstart').textContent='수색 중…';requestAnimationFrame(loop)};
+  draw(0);
+}
+
+/* 3. 몽타주 연구소 · 촘촘한 도트 */
+function openDraw(){
+  const pal=['#2a1f3d','#5c4f73','#ff6f91','#ffb3d1','#ffb86b','#ffd166','#7fdc8a','#7fe0c2','#7fa8ff','#b98cff','#d9c6f5','#ffe0cc','#4a3045','#ffffff'];
+  openSheet('몽타주 연구소',`${mTag('draw')}<p>외계인 주민들이 쭈일리언이 어떻게 생겼는지 궁금해해요! 48×48 도트로 쭈일리언을 그려서 보여 주세요. 흰색은 지우개예요. 완성하면 전시관에 걸려요.</p>
+  <button class="soft" id="dHall">몽타주 전시관 구경하기 →</button>
+  ${refBox(false)}
+  <div class="dwrap" id="dw"><canvas id="dc" style="image-rendering:pixelated"></canvas></div>
+  <div class="row" style="justify-content:center"><button class="soft" id="zOut" aria-label="축소">－</button><span class="zl" id="zl">100%</span><button class="soft" id="zIn" aria-label="확대">＋</button><button class="soft" id="zReset">원래 크기</button></div>
+  <p class="zhint">두 손가락으로 벌리면 확대, 오므리면 축소, 두 손가락으로 끌면 이동해요.</p>
+  <div class="row pal">${pal.map((p,i)=>`<button class="sw${i?'':' on'}" data-c="${p}" style="background:${p};${p==='#ffffff'?'box-shadow:inset 0 0 0 1px #ccc':''}" aria-label="색 ${i+1}"></button>`).join('')}</div>
+  <div class="row"><span style="font-size:13px;color:#5c4f73">붓</span><button class="soft tl on" data-b="1">1칸</button><button class="soft tl" data-b="2">2칸</button><button class="soft tl" data-b="3">3칸</button><button class="soft tl" data-b="fill">채우기</button></div>
+  <label class="f" for="dtitle">작품 이름<input id="dtitle" maxlength="16" placeholder="예: 반짝이는 쭈일리언"></label>
+  <div class="row"><button class="soft" id="dundo">되돌리기</button><button class="soft" id="dclr">다 지우기</button><button class="primary" id="ddone">완성</button></div>
+  <img class="out" id="dimg" alt="쭈일리언 몽타주" hidden><div id="dsave" hidden>${saveUI('dimg','1203-몽타주.png')}</div>
+  <div class="row" id="dhallrow" hidden style="justify-content:center"><span class="save">전시관에 걸렸어요!</span><button class="soft" id="dgo">전시관에서 보기</button></div>`);
+  $('#dHall').onclick=openMontageHall;
+  const N=48,CS=10,cvs=$('#dc');cvs.width=N*CS;cvs.height=N*CS;const c=cvs.getContext('2d');
+  let grid=Array(N*N).fill('#ffffff'),col=pal[0],tool=1,down=false,lx=-1,ly=-1,drew=false;const hist=[];
+  const paint=()=>{grid.forEach((g,i)=>{c.fillStyle=g;c.fillRect((i%N)*CS,Math.floor(i/N)*CS,CS,CS)});
+    for(let i=0;i<=N;i++){c.fillStyle=i%8===0?'rgba(42,31,61,.16)':'rgba(42,31,61,.06)';c.fillRect(i*CS,0,1,N*CS);c.fillRect(0,i*CS,N*CS,1)}};
+  const stamp=(x,y)=>{const n=tool,o=Math.floor((n-1)/2);for(let j=0;j<n;j++)for(let i=0;i<n;i++){const a=x-o+i,b=y-o+j;if(a>=0&&b>=0&&a<N&&b<N)grid[b*N+a]=col}};
+  const line=(x0,y0,x1,y1)=>{const dx=Math.abs(x1-x0),dy=-Math.abs(y1-y0),sx=x0<x1?1:-1,sy=y0<y1?1:-1;let e=dx+dy;for(;;){stamp(x0,y0);if(x0===x1&&y0===y1)break;const e2=2*e;if(e2>=dy){e+=dy;x0+=sx}if(e2<=dx){e+=dx;y0+=sy}}};
+  const fill=(x,y)=>{const from=grid[y*N+x];if(from===col)return;const q=[[x,y]];while(q.length){const[a,b]=q.pop();if(a<0||b<0||a>=N||b>=N||grid[b*N+a]!==from)continue;grid[b*N+a]=col;q.push([a+1,b],[a-1,b],[a,b+1],[a,b-1])}};
+  const cell=e=>{const r=cvs.getBoundingClientRect();return[Math.floor((e.clientX-r.left)/r.width*N),Math.floor((e.clientY-r.top)/r.height*N)]};
+  const dw=$('#dw');let z=1,tx=0,ty=0,pinch=null,pinched=false,strokeSnap=null;const pts=new Map();
+  const applyZ=()=>{const W=dw.clientWidth;z=Math.max(1,Math.min(8,z));tx=Math.min(0,Math.max(W-W*z,tx));ty=Math.min(0,Math.max(W-W*z,ty));cvs.style.transform=`translate(${tx}px,${ty}px) scale(${z})`;$('#zl').textContent=Math.round(z*100)+'%'};
+  const zoomAt=(nz,cx,cy)=>{const px=(cx-tx)/z,py=(cy-ty)/z;z=Math.max(1,Math.min(8,nz));tx=cx-px*z;ty=cy-py*z;applyZ()};
+  const local=e=>{const r=dw.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+  const pinchInfo=()=>{const[a,b]=[...pts.values()];return{d:Math.hypot(a[0]-b[0],a[1]-b[1])||1,mx:(a[0]+b[0])/2,my:(a[1]+b[1])/2}};
+  dw.addEventListener('pointerdown',e=>{dw.setPointerCapture(e.pointerId);pts.set(e.pointerId,local(e));
+    if(pts.size===2){if(down&&strokeSnap){grid=strokeSnap;hist.pop();paint()}down=false;strokeSnap=null;pinched=true;const p=pinchInfo();pinch={...p,z0:z,px:(p.mx-tx)/z,py:(p.my-ty)/z};return}
+    if(pts.size>2||pinched)return;
+    const[x,y]=cell(e);if(x<0||y<0||x>=N||y>=N)return;strokeSnap=grid.slice();hist.push(strokeSnap);if(hist.length>30)hist.shift();drew=true;
+    if(tool==='fill'){fill(x,y);paint();strokeSnap=null;SFX.bloop();return}SFX.pop();lockSheet(true);down=true;lx=x;ly=y;stamp(x,y);paint()});
+  dw.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId))return;pts.set(e.pointerId,local(e));
+    if(pts.size>=2&&pinch){const p=pinchInfo();z=Math.max(1,Math.min(8,pinch.z0*p.d/pinch.d));tx=p.mx-pinch.px*z;ty=p.my-pinch.py*z;applyZ();return}
+    if(!down)return;const[x,y]=cell(e);if(x===lx&&y===ly)return;const cx=Math.max(0,Math.min(N-1,x)),cy=Math.max(0,Math.min(N-1,y));line(lx,ly,cx,cy);lx=cx;ly=cy;paint()});
+  const up=e=>{pts.delete(e.pointerId);if(pts.size<2)pinch=null;if(pts.size===0){down=false;pinched=false;strokeSnap=null;lockSheet(false)}};
+  ['pointerup','pointercancel'].forEach(ev=>dw.addEventListener(ev,up));
+  dw.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});dw.addEventListener('touchstart',e=>{if(e.touches.length<3)e.preventDefault()},{passive:false});
+  dw.addEventListener('wheel',e=>{e.preventDefault();const[cx,cy]=local(e);zoomAt(z*(e.deltaY<0?1.15:1/1.15),cx,cy)},{passive:false});
+  $('#zIn').onclick=()=>zoomAt(z*1.5,dw.clientWidth/2,dw.clientWidth/2);$('#zOut').onclick=()=>zoomAt(z/1.5,dw.clientWidth/2,dw.clientWidth/2);$('#zReset').onclick=()=>{z=1;tx=0;ty=0;applyZ()};
+  document.querySelectorAll('.pal .sw').forEach(b=>b.onclick=()=>{col=b.dataset.c;document.querySelectorAll('.pal .sw').forEach(x=>x.classList.toggle('on',x===b))});
+  document.querySelectorAll('.tl').forEach(b=>b.onclick=()=>{tool=b.dataset.b==='fill'?'fill':+b.dataset.b;document.querySelectorAll('.tl').forEach(x=>x.classList.toggle('on',x===b))});
+  $('#dundo').onclick=()=>{SFX.undo();if(hist.length){grid=hist.pop();paint()}};
+  $('#dclr').onclick=()=>{SFX.swish();hist.push(grid.slice());grid.fill('#ffffff');paint()};paint();
+  $('#ddone').onclick=()=>{if(!drew)return;const W=480,H=600,o=document.createElement('canvas');o.width=W;o.height=H;const x=o.getContext('2d');
+    x.fillStyle='#170d33';x.fillRect(0,0,W,H);x.fillStyle='#ffd166';for(let i=0;i<30;i++)x.fillRect((i*97)%W,(i*53)%H,4,4);
+    x.fillStyle=OL;x.fillRect(20,20,440,440);grid.forEach((g,i)=>{x.fillStyle=g;x.fillRect(24+(i%N)*9,24+Math.floor(i/N)*9,9,9)});
+    x.fillStyle='#8ff0d2';x.textAlign='center';x.font='30px Jua, sans-serif';x.fillText('쭈일리언 몽타주',W/2,H-82);
+    x.font='17px Jua, sans-serif';x.fillStyle='#fff';x.fillText('행성 #1203 · 그린 대원 '+me.name,W/2,H-44);
+    $('#dimg').src=o.toDataURL('image/png');$('#dimg').hidden=false;$('#dsave').hidden=false;markDone('draw');
+    const sm=document.createElement('canvas');sm.width=N;sm.height=N;const sx=sm.getContext('2d');grid.forEach((g,i)=>{sx.fillStyle=g;sx.fillRect(i%N,Math.floor(i/N),1,1)});
+    const hr=$('#dhallrow');hr.hidden=false;hr.querySelector('.save').textContent='전시관에 거는 중…';
+    addItem('montages',{img:sm.toDataURL('image/png'),t:$('#dtitle').value.trim()||'나의 쭈일리언',n:me.name}).then(()=>{hr.querySelector('.save').textContent='전시관에 걸렸어요!'},err=>{hr.querySelector('.save').textContent=errMsg(err)});$('#dgo').onclick=openMontageHall;$('#dimg').scrollIntoView({behavior:'smooth',block:'nearest'})};
+}
+
+/* 4. 교신 해독실 */
+const sampleNotes=[{n:'예시대원_별딸기',m:'주은아 생일 진심으로 축하해! 행성 #1203에서 영원히 행복하길 🍓',ex:1},{n:'예시대원_1203',m:'신호 잡혔다! 12월 3일은 우리 행성 최대 명절이에요.',ex:1}];
+function openGuest(){
+  const esc=s=>s.replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  const render=()=>{const L=itemsOf('notes');$('#gl').innerHTML=L.map(x=>`<div class="note"><span class="who">${esc(x.n)}</span>${x.ex?'<span class="tag">예시</span>':x.pending?'<span class="tag">운영진이 숨긴 글이에요</span>':''}${x.mine?`<button class="cm-del" data-nid="${esc(String(x.id))}">지우기</button>`:''}<div class="msg">${esc(x.m)}</div></div>`).join('');
+    $('#gl').querySelectorAll('[data-nid]').forEach(b=>b.onclick=()=>{if(!b.dataset.sure){b.dataset.sure=1;b.textContent='한 번 더 누르면 지워져요';return}const x=L.find(y=>String(y.id)===b.dataset.nid);if(x)removeItem('notes',x).then(render,()=>{})})};
+  openSheet('교신 해독실',`${mTag('guest')}<p>행성에서 잡힌 교신 기록이에요. 주은이에게 보낼 생일 메시지를 남기면 신호가 더 강해져요.</p>
+  <form id="gf" class="gb"><p class="who-as">✦ <b>${escH(me.name)}</b> 대원 이름으로 올라가요</p><input id="gn" type="hidden">
+  <label class="f" for="gm">교신 메시지<textarea id="gm" maxlength="200" placeholder="생일 축하해 주은아!"></textarea></label>
+  <button class="primary" type="submit">교신 보내기</button><p id="gmsg" class="save"></p></form><div class="gb" id="gl"></div>`);
+  $('#gn').value=me.name;render();
+  $('#gf').addEventListener('submit',e=>{e.preventDefault();const n=$('#gn').value.trim()||me.name,m=$('#gm').value.trim();if(!m){$('#gm').focus();return}
+    const btn=$('#gf button[type=submit]');if(btn.disabled)return;btn.disabled=true;$('#gmsg').textContent='';
+    addItem('notes',{n,m}).then(()=>{$('#gm').value='';render();markDone('guest')},err=>{$('#gmsg').textContent=errMsg(err)}).finally(()=>{btn.disabled=false})});
+}
+
+/* 5. 쭈니 사진관 (휴대폰 세로 9:16 비율) */
+function placeholderArt(i){const c=document.createElement('canvas');c.width=90;c.height=160;const x=c.getContext('2d');
+  const bg=[['#2b1d55','#ff8fab'],['#1e1040','#8ff0d2'],['#3b2d6b','#ffd166']][i%3];x.fillStyle=bg[0];x.fillRect(0,0,90,160);
+  x.fillStyle=bg[1];for(let k=0;k<20;k++)x.fillRect((k*37+i*11)%88,(k*23+i*7)%158,2,2);
+  x.globalAlpha=.22;x.fillStyle='#fff';x.fillRect(27,52,36,58);x.fillRect(35,34,20,20);x.globalAlpha=1;
+  x.imageSmoothingEnabled=false;const sp=i===1?alienSprite('#ffb3cf'):i===2?alienSprite('#7fdc8a'):ZZU;x.drawImage(sp,Math.round(45-sp.width),128,sp.width*2,sp.height*2);
+  return c.toDataURL()}
+const SAMPLE_EX=[
+  {id:'ex1',t:'반달 눈웃음',w:'무대에서 웃을 때 눈이 반달이 되는 순간이 제일 좋아요. 보는 사람까지 같이 웃게 돼요.',n:'예시대원_별딸기',ex:1},
+  {id:'ex2',t:'연습실의 주은',w:'안 보이는 데서도 끝까지 동작 하나하나 챙기는 모습이 멋있어요.',n:'예시대원_1203',ex:1},
+  {id:'ex3',t:'손하트 장인',w:'팬들 쪽으로 몸을 돌려서 손하트 해 줄 때마다 행성 #1203에 불이 하나씩 켜지는 기분이에요.',n:'예시대원_쭈쭈',ex:1}];
+let exImgs=null,galMem=null;
+function openGallery(){
+  if(!exImgs)exImgs=SAMPLE_EX.map((_,i)=>placeholderArt(i));
+  const all=()=>itemsOf('gallery');
+  function list(){const items=all();
+    openSheet('쭈니 사진관',`${mTag('gallery')}<p>대원들이 고른 주은이의 순간들이에요. 사진을 누르면 그 사진을 고른 이유도 볼 수 있고, 옆으로 넘기며 구경할 수 있어요.</p>
+    <button class="primary" id="gaAdd">사진 걸기</button>
+    <div class="gal">${items.map((e,k)=>`<button class="ex" data-k="${k}"><span class="exf"><img src="${e.img}" alt="${escH(e.t)}"></span><span class="pl"><b>${escH(e.t)}</b>${e.ex?'<i>예시</i>':e.pending?'<i>숨김</i>':''}<small>${escH(e.n)}${isLiked('gallery',e.id)?' 💜':''}</small></span></button>`).join('')}</div>`);
+    $('#gaAdd').onclick=form;
+    document.querySelectorAll('.ex').forEach(b=>b.onclick=()=>openViewer({items,index:+b.dataset.k,ratio:'9/16',
+      title:e=>e.t,img:e=>e.img,alt:e=>e.t,back:list,
+      body:e=>`<div class="whyh">이 사진을 고른 이유</div><blockquote class="why">${escH(e.w)}</blockquote><p class="by">고른 대원 · ${escH(e.n)}${e.ex?' · 예시 작품':''}</p>`,
+      extra:e=>{const on=isLiked('gallery',e.id);return`<button class="${on?'primary':'soft'}" id="gaLike">${on?'💜 좋아요 했어요':'💜 좋아요'}</button>${e.mine?'<button class="soft" id="gaDel">사진 내리기</button>':''}`},
+      mount:(e,show)=>{$('#gaLike').onclick=()=>toggleLike('gallery',e).then(show,err=>{$('#vmsg').textContent=errMsg(err)});
+        if(e.mine)$('#gaDel').onclick=()=>{const d=$('#gaDel');if(!d.dataset.sure){d.dataset.sure=1;d.textContent='한 번 더 누르면 내려가요';return}removeItem('gallery',e).then(list,err=>{$('#vmsg').textContent=errMsg(err)})}}}));
+  }
+  function form(){
+    openSheet('사진 걸기',`<p>주은이 사진 한 장과, 그 사진을 고른 이유를 적어 주세요. 휴대폰 세로 비율(9:16)로 걸려요.</p>
+    <label class="f" for="gaFile">사진<input type="file" id="gaFile" accept="image/*"></label>
+    <div class="vw" id="gaPrev" style="aspect-ratio:9/16" hidden><img id="gaPrevImg" alt="올릴 사진 미리보기"></div>
+    <label class="f" for="gaT">사진 이름<input id="gaT" maxlength="20" placeholder="예: 반달 눈웃음"></label>
+    <label class="f" for="gaW">이 사진을 고른 이유<textarea id="gaW" maxlength="150" placeholder="이 순간이 왜 좋은지 적어 주세요"></textarea></label>
+    <p class="who-as">✦ <b>${escH(me.name)}</b> 대원 이름으로 올라가요</p><input id="gaN" type="hidden">
+    <div class="row"><button class="soft" id="gaBack">← 사진관으로</button><button class="primary" id="gaGo">사진 걸기</button></div><p id="gaMsg" class="save"></p>`);
+    $('#gaN').value=me.name;let img=null;$('#gaBack').onclick=list;
+    $('#gaFile').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{
+      const k=Math.min(1,1080/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+      img=c.toDataURL('image/jpeg',.8);$('#gaPrevImg').src=img;$('#gaPrev').hidden=false};im.src=r.result};r.readAsDataURL(f)});
+    $('#gaGo').onclick=async()=>{const go=$('#gaGo');if(go.disabled)return;const t=$('#gaT').value.trim(),w=$('#gaW').value.trim(),n=$('#gaN').value.trim()||me.name;
+      if(!img){$('#gaMsg').textContent='사진을 먼저 골라 주세요';return}if(!t||!w){$('#gaMsg').textContent='사진 이름과 고른 이유를 적어 주세요';return}
+      go.disabled=true;go.textContent='거는 중…';
+      try{await addItem('gallery',{img,t,w,n});markDone('gallery');list()}catch(err){go.disabled=false;go.textContent='사진 걸기';$('#gaMsg').textContent=errMsg(err)}};
+  }
+  list();
+}
+
+/* 쭈일리언 참고 그림: 공식 그림이 준비되면 REF_IMG에 이미지 주소를 넣으면 돼요 */
+const REF_IMG=null;
+function refBox(open){const RI=(typeof ARCHIVE!=='undefined'&&ARCHIVE.refImg)||REF_IMG;const src=RI||(()=>{const c=document.createElement('canvas');c.width=17*12;c.height=19*12;const x=c.getContext('2d');x.imageSmoothingEnabled=false;x.drawImage(ZZU,0,0,c.width,c.height);return c.toDataURL()})();
+  return `<details class="ref"${open?' open':''}><summary>쭈일리언 참고 그림 보기</summary><div class="refin"><img src="${src}" alt="쭈일리언 참고 그림"${RI?'':' class="px"'}><p>${RI?'이 그림을 보면서 그려 보세요.':'공식 쭈일리언 그림은 추후 들어가요. 지금은 임시 도트 그림이에요.'}</p></div></details>`}
+/* 몽타주 전시관 */
+let monMem=null,monEx=null;
+const monMine=()=>monMem||(monMem=store.get('jc_montages',[]));
+function monExamples(){if(monEx)return monEx;
+  const mkImg=(spr,k,bg)=>{const c=document.createElement('canvas');c.width=48;c.height=48;const x=c.getContext('2d');x.fillStyle=bg;x.fillRect(0,0,48,48);x.imageSmoothingEnabled=false;const w=spr.width*k,h=spr.height*k;x.drawImage(spr,Math.round((48-w)/2),Math.round((48-h)/2),w,h);return c.toDataURL()};
+  return monEx=[{id:'mx1',n:'예시대원_별딸기',t:'우주복 쭈일리언',img:mkImg(playerSprite('#ff6f91','down',0),2,'#ffffff'),ex:1},
+    {id:'mx2',n:'예시대원_1203',t:'하늘이랑 쭈일리언',img:mkImg(ZZU,2,'#fff7f0'),ex:1},
+    {id:'mx3',n:'예시주민',t:'초록 친구 버전',img:mkImg(alienSprite('#7fdc8a'),3,'#efe8fd'),ex:1}]}
+function openMontageHall(){
+  const items=itemsOf('montages');
+  openSheet('몽타주 전시관',`${mTag('draw')}<p>대원들이 그린 쭈일리언 몽타주를 구경하는 곳이에요. 작품을 누르면 크게 보고 옆으로 넘겨 볼 수 있어요.</p>
+  ${refBox(true)}
+  <button class="primary" id="mnNew">보고 그리러 가기</button>
+  <div class="mgal">${items.map((m,k)=>`<button class="mex" data-k="${k}"><span class="mf"><img src="${m.img}" alt="${escH(m.t)}"></span><span class="pl"><b>${escH(m.t)}</b>${m.ex?'<i>예시</i>':m.pending?'<i>숨김</i>':''}<small>${escH(m.n)}</small></span></button>`).join('')}</div>`);
+  $('#mnNew').onclick=openDraw;
+  document.querySelectorAll('.mex').forEach(b=>b.onclick=()=>openViewer({items,index:+b.dataset.k,ratio:'1',pixel:true,
+    title:m=>m.t,img:m=>m.img,alt:m=>m.t,back:openMontageHall,
+    body:m=>`<p class="by">그린 대원 · ${escH(m.n)}${m.ex?' · 예시 작품':''}</p>`,
+    extra:m=>!m.mine?'':'<button class="soft" id="mnDel">작품 내리기</button>',
+    mount:m=>{if(!m.mine)return;$('#mnDel').onclick=()=>{const d=$('#mnDel');if(!d.dataset.sure){d.dataset.sure=1;d.textContent='한 번 더 누르면 내려가요';return}
+      removeItem('montages',m).then(openMontageHall,err=>{$('#vmsg').textContent=errMsg(err)})}}}));
+}
+
+/* 6. 굿즈 상점 */
+const GPAL={O:OL,P:'#c9a6ff',W:'#ffffff',Y:'#ffd166',L:'#d9c6f5',D:'#3b2d6b',S:'#ffe0cc',E:OL,B:'#9fbcff',R:'#ff8fab',G:'#7fdc8a'};
+const GOODS=[
+  {n:'생일 컵홀더',p:'카페 방문 특전',d:'착륙 기념 도트 디자인',a:["..OOOOOOOO..",".OPPPPPPPPO.",".OPWWWWWWPO.",".OPWYYYYWPO.",".OPWWWWWWPO.","..OPPPPPPO..","..OPPPPPPO..","..OPPPPPPO..","...OOOOOO..."]},
+  {n:'포토카드 세트',p:'₩5,000',d:'5장 1세트',a:["OOOOOOOO..","OLLLLLLO..","OLDDDDLOOO","OLDSSDLOWO","OLDDDDLOWO","OLLLLLLOWO","OOOOOOOOWO","...OWWWWWO","...OOOOOOO"]},
+  {n:'아크릴 키링',p:'₩8,000',d:'쭈일리언 우주복',a:["....OOO.....","...O...O....","....OOO.....",".....O......","...OOOOO....","..OBBBBBO...","..OBSSSBO...","..OBEBEBO...","..OBSSSBO...","...OOOOO...."]},
+  {n:'도트 스티커팩',p:'₩3,000',d:'쭈일리언 · 하늘이 · 주민',a:["....OO....","...OYYO...","OOOOYYOOOO","OYYYYYYYYO",".OYYYYYYO.","..OYYYYO..",".OYYOOYYO.",".OOO..OOO."]},
+  {n:'엽서 세트',p:'₩4,000',d:'#1203 풍경 3종',a:["OOOOOOOOOOOO","OWWWWWWWORRO","OWBBBBBWORRO","OWBGGBBWOOOO","OWWWWWWWWWWO","OWDDDDDDDDWO","OWWWWWWWWWWO","OOOOOOOOOOOO"]},
+  {n:'슬로건',p:'₩12,000',d:'HAPPY BIRTHDAY JUUN',a:["OOOOOOOOOOOOOO","OPPPPPPPPPPPPO","OPWWPWWPWWPWWO","OPPPPPPPPPPPPO","OOOOOOOOOOOOOO"]}];
+let goodsImgs=null;
+function goodsIcon(rows){const sp=sprite(rows,GPAL),k=7,c=document.createElement('canvas');c.width=14*k;c.height=12*k;const x=c.getContext('2d');x.imageSmoothingEnabled=false;
+  x.drawImage(sp,Math.round((c.width-sp.width*k)/2),Math.round((c.height-sp.height*k)/2),sp.width*k,sp.height*k);return c.toDataURL()}
+function goodsList(){const G=(typeof ARCHIVE!=='undefined'&&ARCHIVE.goods)||[];
+  if(G.length)return G.map(g=>({img:g.img||null,n:g.name||'',p:g.price||'',d:g.desc||'',link:g.link||''}));
+  if(!goodsImgs)goodsImgs=GOODS.map(g=>goodsIcon(g.a));return GOODS.map((g,i)=>({img:goodsImgs[i],n:g.n,p:g.p,d:g.d,link:'',px:1,ex:1}))}
+function openShop(){const L=goodsList();
+  openSheet('굿즈 상점',`<p>생카 굿즈를 구경하는 곳이에요. 굿즈를 누르면 자세히 볼 수 있어요.</p>
+  <div class="goods">${L.map((g,i)=>`<button class="good" type="button" data-g="${i}"><span class="gimg${g.px?' px':''}">${g.img?`<img src="${escH(g.img)}" alt="">`:'<i>사진 준비 중</i>'}</span><span class="gn">${escH(g.n)}${g.ex?'<span class="tag">예시</span>':''}</span><span class="gp">${escH(g.p)}</span></button>`).join('')}</div>`);
+  document.querySelectorAll('.good[data-g]').forEach(b=>b.onclick=()=>openGoods(+b.dataset.g,true))}
+function openGoods(i,fromShop){const L=goodsList(),g=L[i];if(!g)return;const ok=/^https?:\/\//i.test(g.link||'');
+  openSheet(g.n||'굿즈',`<div class="gdet${g.px?' px':''}">${g.img?`<img src="${escH(g.img)}" alt="${escH(g.n)}">`:'<i>사진 준비 중</i>'}</div>
+  ${g.p?`<div class="gp" style="font-size:22px">${escH(g.p)}</div>`:''}${g.d?`<p class="gdesc">${escH(g.d)}</p>`:''}${g.ex?'<p class="zhint">예시 상품이에요. 운영진이 실제 굿즈로 바꿔 넣을 거예요.</p>':''}
+  <div class="row">${fromShop?'<button class="soft" id="gBack">← 굿즈 목록</button>':''}${ok?`<a class="filebtn" href="${escH(g.link)}" target="_blank" rel="noopener">구매·신청하러 가기 →</a>`:'<button class="soft" disabled>판매 링크 준비 중</button>'}</div>
+  ${L.length>1?'<div class="row" style="justify-content:space-between"><button class="soft" id="gPrev">◀ 이전 굿즈</button><button class="soft" id="gNext">다음 굿즈 ▶</button></div>':''}`);
+  if(fromShop)$('#gBack').onclick=openShop;
+  if(L.length>1){$('#gPrev').onclick=()=>openGoods((i-1+L.length)%L.length,fromShop);$('#gNext').onclick=()=>openGoods((i+1)%L.length,fromShop)}}
+
+/* 내 대원 */
+if($('#meBtn'))$('#meBtn').addEventListener('click',()=>{
+  openSheet('내 대원',`<label class="f" for="mn">대원 이름<input id="mn" maxlength="10"></label>
+  <p>우주복 포인트 색</p>
+  <div class="row">${COLORS.map(c=>`<button class="sw${c===me.color?' on':''}" data-c="${c}" style="background:${c}" aria-label="우주복 색"></button>`).join('')}</div>
+  <button class="primary" id="msave">저장</button>`);
+  $('#mn').value=me.name;let col=me.color;
+  document.querySelectorAll('.sheet .sw').forEach(b=>b.onclick=()=>{col=b.dataset.c;document.querySelectorAll('.sheet .sw').forEach(x=>x.classList.toggle('on',x===b))});
+  $('#msave').onclick=()=>{me.name=$('#mn').value.trim()||'대원';me.color=col;store.set('jc_me',{name:me.name,color:me.color});$('#nameIn').value=me.name;closeSheet()};
+});
+
+
+/* =====================================================================
+   서버 연결 (Supabase)
+   SB_URL, SB_KEY 를 비워 두면 서버 없이 이 기기에만 저장돼요 (미리보기·테스트용).
+   ===================================================================== */
+const SB_URL='https://aelbjklfcfzpraptncvm.supabase.co';          // 예: 'https://abcdefghijk.supabase.co'  (Project Settings → API → Project URL)
+const SB_KEY='sb_publishable_ZqrBrrtIGyLBmojp_CoHEw_-3Jqoi-h';          // anon public 키 또는 publishable 키 (공개돼도 괜찮은 키예요. service_role 키는 절대 넣지 마세요)
+const TURNSTILE_KEY='';   // Supabase에서 캡차(Turnstile)를 켰을 때만: Cloudflare Turnstile 사이트 키
+const ROOM_SIZE=5;        // 행성 한 곳에 같이 보이는 대원 수. Pro 플랜이면 8 정도로 늘려도 돼요. 넘치면 다음 행성(#1203-2, -3…)으로 나눠 들어가요
+const BUCKET='uploads';
+
+let sb=null,uid=null,SEND_MS=66,netSend=null,netStarted=false,roomNo=1,netCh=null;
+const R={notes:[],gallery:[],montages:[],photos:[],fancams:[],liked:new Set(),at:0};
+const pubUrl=p=>`${SB_URL}/storage/v1/object/public/${BUCKET}/${p}`;
+function errMsg(e){const s=String(e&&(e.message||e.code)||e||'');
+  if(/rate_limited/.test(s))return'조금 천천히 올려 주세요. 1분 뒤에 다시 해 볼까요?';
+  if(/daily_limit/.test(s))return'오늘 올릴 수 있는 만큼 다 올렸어요. 내일 또 와 주세요!';
+  if(/storage_full/.test(s))return'이 기기 저장 공간이 꽉 찼어요';
+  if(/check constraint|violates/.test(s))return'글자 수를 확인해 주세요';
+  return'전송하지 못했어요. 잠시 뒤에 다시 해 주세요'}
+function dataBlob(u){const[h,b]=u.split(','),bin=atob(b),a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new Blob([a],{type:h.slice(5).split(';')[0]})}
+
+function captchaToken(){if(!TURNSTILE_KEY)return Promise.resolve(undefined);
+  return new Promise(res=>{const go=()=>{const d=document.createElement('div');d.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:30';document.body.append(d);
+      window.turnstile.render(d,{sitekey:TURNSTILE_KEY,callback:t=>{res(t);setTimeout(()=>d.remove(),800)},'error-callback':()=>{res(undefined);d.remove()}})};
+    if(window.turnstile)return go();const s=document.createElement('script');s.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';s.async=true;s.onload=go;s.onerror=()=>res(undefined);document.head.append(s)})}
+
+async function sbInit(){if(!SB_URL||!SB_KEY||!window.supabase)return;
+  try{const c=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true}});
+    let{data:{session}}=await c.auth.getSession();
+    if(!session){const{data,error}=await c.auth.signInAnonymously({options:{captchaToken:await captchaToken()}});if(error)throw error;session=data.session}
+    sb=c;uid=session.user.id;SEND_MS=700;await pull(true)}
+  catch(e){console.warn('Supabase에 연결하지 못해서 이 기기 저장으로 동작해요',e);sb=null}}
+const sbReady=sbInit();
+
+/* 서버에서 목록 불러오기 (공개된 것 + 내가 올린 것) + 운영진이 저장한 생카 설정 */
+async function pull(force){if(!sb)return;const now=Date.now();if(!force&&now-R.at<30000)return;R.at=now;
+  const sel=(t,c)=>sb.from(t).select(c).order('created_at',{ascending:false}).limit(300);
+  const[n,g,m,p,l,st]=await Promise.all([
+    sel('notes','id,user_id,name,message,approved,created_at'),
+    sel('gallery_ranked','id,user_id,name,title,reason,image_path,approved,created_at,like_count'),
+    sel('montages','id,user_id,name,title,image_path,approved,created_at'),
+    sel('photos','id,user_id,name,caption,image_path,approved,created_at'),
+    sb.from('likes').select('item_type,item_id').eq('user_id',uid),
+    sb.from('site_settings').select('data').eq('id',1).maybeSingle()]);
+  if(!st.error&&st.data&&st.data.data)Object.assign(ARCHIVE,st.data.data);
+  [n,g,m,p].forEach(r=>{if(!r.error)r.data=r.data.filter(x=>x.approved||x.user_id===uid)});
+  const base=x=>({id:x.id,n:x.name,mine:x.user_id===uid,pending:!x.approved,at:Date.parse(x.created_at)});
+  if(!n.error)R.notes=n.data.map(x=>({...base(x),m:x.message,t:Date.parse(x.created_at)}));
+  if(!g.error)R.gallery=g.data.map(x=>({...base(x),t:x.title,w:x.reason,img:pubUrl(x.image_path),path:x.image_path,likes:x.like_count||0}));
+  if(!m.error)R.montages=m.data.map(x=>({...base(x),t:x.title,img:pubUrl(x.image_path),path:x.image_path}));
+  if(!p.error)R.photos=p.data.map(x=>({...base(x),t:x.caption,img:pubUrl(x.image_path),path:x.image_path}));
+  const fc=await sel('fancams_ranked','id,user_id,name,url,comment,approved,created_at,like_count,comment_count');
+  if(!fc.error)R.fancams=fc.data.filter(x=>x.approved||x.user_id===uid).map(x=>({...base(x),url:x.url,c:x.comment,likes:x.like_count||0,cc:x.comment_count||0}));
+  if(!l.error)R.liked=new Set(l.data.map(x=>x.item_type+':'+x.item_id))}
+setInterval(()=>{if(sb&&document.visibilityState==='visible'&&(rpOpen||modalOpen))pull()},60000);
+
+/* 목록 = 서버가 있으면 서버, 없으면 이 기기 + 예시 */
+const LS={notes:'jc_notes',gallery:'jc_gallery',montages:'jc_montages',photos:'jc_photos',fancams:'jc_fancams'};
+function localList(k){return store.get(LS[k],[]).map((x,i)=>k==='notes'?{id:x.id||'n'+(x.t||i),n:x.n,m:x.m,t:x.t||0,mine:1}:{...x,mine:1}).reverse()}
+function exList(k){
+  if(k==='notes')return sampleNotes.map((x,i)=>({id:'sx'+i,n:x.n,m:x.m,t:0,ex:1}));
+  if(k==='gallery'){if(!exImgs)exImgs=SAMPLE_EX.map((_,i)=>placeholderArt(i));return SAMPLE_EX.map((e,i)=>({...e,img:exImgs[i]}))}
+  if(k==='montages')return monExamples();
+  if(k==='photos')return photoEx();
+  if(k==='fancams')return[{id:'fx1',n:'예시대원_별딸기',url:'',c:'엔딩 요정 직캠은 꼭 보세요. 마지막에 손 흔들어 주는 거 진짜 최고',ex:1,likes:0,cc:0},{id:'fx2',n:'예시대원_1203',url:'',c:'이 무대 표정 연기 미쳤어요. 2절부터 집중!',ex:1,likes:0,cc:0}];return[]}
+const itemsOf=k=>sb?R[k]:[...localList(k),...exList(k)];
+const mineOf=k=>itemsOf(k).filter(x=>x.mine);
+
+/* 올리기 · 내리기 */
+async function addItem(k,d){
+  if(!sb){const a=store.get(LS[k],[]),id='l'+Date.now();a.push(k==='notes'?{id,n:d.n,m:d.m,t:Date.now()}:{id,...d});
+    try{localStorage.setItem(LS[k],JSON.stringify(a))}catch(e){throw new Error('storage_full')}return}
+  let path=null;
+  if(d.img){const blob=dataBlob(d.img),ext=blob.type==='image/png'?'png':'jpg';path=`${uid}/${k}-${Date.now()}.${ext}`;
+    const up=await sb.storage.from(BUCKET).upload(path,blob,{contentType:blob.type,cacheControl:'31536000',upsert:false});if(up.error)throw up.error}
+  const row=k==='fancams'?{name:d.n,url:d.url,comment:d.c}:k==='notes'?{name:d.n,message:d.m}:k==='gallery'?{name:d.n,title:d.t,reason:d.w,image_path:path}:k==='montages'?{name:d.n,title:d.t,image_path:path}:{name:d.n,caption:d.t,image_path:path};
+  const r=await sb.from(k).insert(row).select().single();
+  if(r.error){if(path)sb.storage.from(BUCKET).remove([path]);throw r.error}
+  const x=r.data,b={id:x.id,n:x.name,mine:true,pending:!x.approved,at:Date.parse(x.created_at)};
+  R[k].unshift(k==='fancams'?{...b,url:x.url,c:x.comment,likes:0,cc:0}:k==='notes'?{...b,m:x.message,t:b.at}:{...b,t:d.t,w:d.w,img:d.img,path,likes:0})}
+async function removeItem(k,e){
+  if(!sb){store.set(LS[k],store.get(LS[k],[]).filter((x,i)=>(k==='notes'?(x.id||'n'+(x.t||i)):x.id)!==e.id));return}
+  const r=await sb.from(k).delete().eq('id',e.id);if(r.error)throw r.error;
+  if(e.path)sb.storage.from(BUCKET).remove([e.path]);R[k]=R[k].filter(x=>x.id!==e.id)}
+
+/* 좋아요 (사진관 · 교신) */
+const LK={gallery:'jc_likes',notes:'jc_nlikes',fancams:'jc_flikes'};
+const isLiked=(k,id)=>sb?R.liked.has(k+':'+id):!!store.get(LK[k],{})[id];
+async function toggleLike(k,e){const on=isLiked(k,e.id);
+  if(!sb){const l=store.get(LK[k],{});l[e.id]=!on;store.set(LK[k],l);return}
+  const r=on?await sb.from('likes').delete().match({item_type:k,item_id:e.id,user_id:uid}):await sb.from('likes').insert({item_type:k,item_id:e.id});
+  if(r.error&&r.error.code!=='23505')throw r.error;
+  if(on)R.liked.delete(k+':'+e.id);else R.liked.add(k+':'+e.id);
+  const it=R[k].find(x=>x.id===e.id);if(it&&typeof it.likes==='number')it.likes=Math.max(0,it.likes+(on?-1:1))}
+
+/* 파티 라운지: 열어 둔 사람만 몇 초마다 새 글을 가져와요 (실시간 한도 걱정 없음) */
+const LG={list:[],last:null,timer:null,loading:false};
+const lgMap=x=>({id:x.id,n:x.name,col:x.color,m:x.message,at:Date.parse(x.created_at),mine:x.user_id===uid,pending:!x.approved});
+async function loungeLoad(){if(!sb){LG.list=store.get('jc_lounge',[]).slice(-150);return}
+  const r=await sb.from('lounge').select('id,user_id,name,color,message,approved,created_at').order('created_at',{ascending:false}).limit(80);
+  if(r.error)return;LG.list=r.data.filter(x=>x.approved||x.user_id===uid).reverse().map(lgMap);LG.last=r.data.length?r.data[0].created_at:null}
+async function loungePoll(){if(!sb||LG.loading)return 0;LG.loading=true;
+  try{let q=sb.from('lounge').select('id,user_id,name,color,message,approved,created_at').order('created_at',{ascending:true}).limit(100);if(LG.last)q=q.gt('created_at',LG.last);
+    const r=await q;if(r.error||!r.data.length)return 0;LG.last=r.data[r.data.length-1].created_at;
+    const have=new Set(LG.list.map(x=>x.id)),add=r.data.filter(x=>(x.approved||x.user_id===uid)&&!have.has(x.id)).map(lgMap);LG.list=LG.list.concat(add).slice(-300);return add.length}
+  finally{LG.loading=false}}
+async function loungeSend(m){
+  if(!sb){const a=store.get('jc_lounge',[]);const x={id:'lg'+Date.now(),n:me.name,col:me.color,m,at:Date.now(),mine:1};a.push(x);store.set('jc_lounge',a.slice(-150));LG.list.push(x);return}
+  const r=await sb.from('lounge').insert({name:me.name.slice(0,16)||'대원',color:/^#[0-9a-f]{6}$/i.test(me.color)?me.color:'#ff6f91',message:m}).select().single();
+  if(r.error)throw r.error;if(!LG.list.some(x=>x.id===r.data.id))LG.list.push(lgMap(r.data))}
+async function loungeDel(x){if(!sb){store.set('jc_lounge',store.get('jc_lounge',[]).filter(y=>y.id!==x.id));LG.list=LG.list.filter(y=>y.id!==x.id);return}
+  const r=await sb.from('lounge').delete().eq('id',x.id);if(r.error)throw r.error;LG.list=LG.list.filter(y=>y.id!==x.id)}
+
+/* 화면을 떠나면 맵 연결 끊기: 다른 앱으로 가서 20초가 지나면 끊고, 돌아오면 다시 연결. 창을 닫으면 바로 끊어요 */
+let netHideT=null;
+function netDrop(){if(netCh&&sb){sb.removeChannel(netCh)}netCh=null;netSend=null;remotes.clear();online=1;try{$('#online').textContent=1}catch(e){}}
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='hidden'){clearTimeout(netHideT);netHideT=setTimeout(()=>{if(netCh){netDrop();if(!rpOpen)netStarted=false}},20000)}
+  else clearTimeout(netHideT)});
+addEventListener('pagehide',()=>{clearTimeout(netHideT);netDrop()});
+
+/* 직캠 댓글 */
+async function loadComments(pid){if(!sb)return store.get('jc_comments',[]).filter(c=>c.p===pid);
+  const r=await sb.from('comments').select('id,user_id,name,message,approved,created_at').eq('item_id',pid).order('created_at',{ascending:true}).limit(300);
+  if(r.error)return[];return r.data.filter(x=>x.approved||x.user_id===uid).map(x=>({id:x.id,n:x.name,m:x.message,at:Date.parse(x.created_at),mine:x.user_id===uid,pending:!x.approved}))}
+async function addComment(pid,n,m){if(!sb){const a=store.get('jc_comments',[]);a.push({id:'c'+Date.now(),p:pid,n,m,at:Date.now(),mine:1});store.set('jc_comments',a);return}
+  const r=await sb.from('comments').insert({item_type:'fancams',item_id:pid,name:n,message:m}).select().single();if(r.error)throw r.error;
+  const it=R.fancams.find(x=>x.id===pid);if(it)it.cc=(it.cc||0)+1}
+async function delComment(c,pid){if(!sb){store.set('jc_comments',store.get('jc_comments',[]).filter(x=>x.id!==c.id));return}
+  const r=await sb.from('comments').delete().eq('id',c.id);if(r.error)throw r.error;const it=R.fancams.find(x=>x.id===pid);if(it)it.cc=Math.max(0,(it.cc||0)-1)}
+
+/* 맵 실시간 접속: 서버가 있으면 Supabase Realtime, 없으면 Claude 미리보기의 room */
+function startNet(){if(netStarted)return;netStarted=true;$('#rpBtn').hidden=false;sbReady.then(()=>sb?startSbRoom():startClaudeRoom())}
+async function startSbRoom(){
+  for(let i=1;i<=40;i++){let active=false;const ch=sb.channel('planet-1203-'+i,{config:{presence:{key:uid},broadcast:{self:false}}});
+    sbRoomHandlers(ch,()=>active);
+    const ok=await new Promise(res=>{let done=false;const fin=v=>{if(!done){done=true;res(v)}};
+      ch.subscribe(async st=>{if(st==='SUBSCRIBED'){try{await ch.track({n:me.name,c:me.color})}catch(e){}setTimeout(()=>fin(true),700)}
+        else if(st==='CHANNEL_ERROR'||st==='TIMED_OUT'||st==='CLOSED')fin(false)});
+      setTimeout(()=>fin(false),8000)});
+    if(!ok){sb.removeChannel(ch);return}                        // 실시간 연결이 안 되면 혼자 탐험해요
+    if(Object.keys(ch.presenceState()).length>ROOM_SIZE){await sb.removeChannel(ch);continue}   // 꽉 찼으면 다음 행성으로
+    active=true;roomNo=i;netCh=ch;
+    for(let j=npcs.length-1;j>=0;j--)if(!npcs[j].alien)npcs.splice(j,1); // 진짜 대원이 들어오니 예시 대원은 뺌
+    netSend={pos:o=>ch.send({type:'broadcast',event:'p',payload:{...o,k:uid}}),chat:o=>ch.send({type:'broadcast',event:'c',payload:{say:o.say,n:me.name,k:uid}})};
+    lastPres='';ch.presenceState&&sbSync(ch);
+    if(i>1)addLog('안내',`사람이 많아서 행성 #1203-${i}에 착륙했어요`,false);
+    return}}
+function sbSync(ch){const st=ch.presenceState(),now=Date.now();online=Math.max(1,Object.keys(st).length);$('#online').textContent=online;
+  remotes.forEach((r,k)=>{if(!st[k]&&now-(r.seen||0)>5000)remotes.delete(k)})}
+function sbRoomHandlers(ch,isActive){
+  ch.on('presence',{event:'sync'},()=>{if(isActive())sbSync(ch)})
+    .on('presence',{event:'join'},({key})=>{if(isActive()&&key!==uid)lastPres=''})   // 새로 온 대원에게 내 위치를 다시 알려 줌
+    .on('broadcast',{event:'p'},({payload:pr})=>{if(!isActive()||!pr||pr.k===uid||typeof pr.x!=='number'||typeof pr.y!=='number')return;
+      let r=remotes.get(pr.k);if(!r){r={x:pr.x,y:pr.y,dir:'down',walk:false,frame:0,ft:0,say:'',sayT:0};remotes.set(pr.k,r)}
+      r.seen=Date.now();r.tx=Math.max(0,Math.min(WW,pr.x));r.ty=Math.max(0,Math.min(WH,pr.y));r.face=DL[pr.d]||'down';
+      r.name=clean(pr.n,10)||'대원';r.color=typeof pr.c==='string'&&/^#[0-9a-f]{6}$/i.test(pr.c)?pr.c:'#ff6f91'})
+    .on('broadcast',{event:'c'},({payload:pr})=>{if(!isActive()||!pr)return;const tx=clean(pr.say,40);if(!tx)return;
+      const r=remotes.get(pr.k);if(r){r.say=tx;r.sayT=300}addLog(clean(pr.n,10)||'대원',tx,false)})}
+
+
+const ART={ufo:'data:image/png;base64,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',ag:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGIAAAByCAMAAACfrfSnAAAAYFBMVEUXIRWl36O0y8LvpcTHvK1jqG3s3dVDGTR9jpCNjnmCk5cTQg6U4pQlEEgJJxIcEyaxzLip062Y3Zj7/PvF+73L+sJEHDlcqGv743MvGQciEin6nMHGwq3y27h4lYskNBtsdGWoAAAAIHRSTlP/////////////////AP///////////////////////9AeG8gAAAN9SURBVHja7ZqLdqMgEIYHL7HdtYaht60xyfu/5SIgCSAC8dK0J39PklPO6Ccwg8MovHj0pfUyqbYN2YEXsTsK7UKI3XE3bedHHP8JHQOIsN0D8UBIp91JZ4RGyLWQ7RB0bgiFHjyfhFwL2f482KUj9LWePoVOYLeXZd/+J3SC+0I0ce33ihDj8fnkaT8tN1BPvt7dgmgMgbjYsizBbS9Ltz0KQQ0h1kKI8j+znTGCpn0EoqGM1RHyWdHmJyF8ikLUqyOQjwG7vScZxCBmaRKh/B25IxKmlYpA5/4Cdjzg+5shkopAOz7AnGbeA4F413pjc6d9Y4QMqV+BIGqaBwRhc513NYTRC7XQ83jgAUHITKd14wNEPGCW6XjgYXcVeTcvJIiZig/QA/TeDw5HsHpR0eanIdi3I1AG2g0edOUW/Md2ELMXEsGsw2MRynQCwcibXDpQZDCofnSS43dOaSw/iIT4EUrYWClZYOSIlao1foRugr2h0I2WNtP234TQh7S9EhDcuEfQIAK3RcQMlLZvx+2DCIBoxD4d0QKk9ALEBfFP/EDBq1JsL5T5DtnaiFes7xbhXw1vQ7SrIeRpqHsISxsoYizqUwvI7XPhQyB2RceVf81EiLN03XCfuUaQQmpA7EGEkt1LH6LdyyX6SyCKYgTRFQehPHExR2sxr3KprlsVcVgWYd+SIBdnyYsRRJfn1wi5bsYjBvsJRKF70Uo5vWCjmRltWuMAiTgchoHKxhAAV4TrXjBPzhqLIETGBbWTFoUg2I0WkZhdp6IyMAg6CB56QtQ8Ex1MEeB8Posvob+6ToUaKpO2zocIFYUofPSqPpTOkcdhMuLjgphOdxMQelrPDiJu57oZImbjSKFqTUTSRiwKca6Gqa6qtq16BIvrhSwS8U0xBpN87bDQ/wX3HRk/q9gUX0pdcXUmO/SitvbLFOzcAXJrIBsg6LII+j2IYUWdXaCQITCOYHJvvgxiZC50EXXmtF+KRBOl4JmIqVLwMs4bV5ZfHUEfiAfigfiliDUfuqmGbZ7rzUGQxr+YZwvdktQD8LHnemgm7SumB2sitkty7jCPGhlYsvBchN9BCOZRdtJvy6qZ1sOzjIQ8Cu2tvv18w7ZvwnkUZYFlzX1XYTzpXxJRr42gs+8XayCwnjVQGyAi5sJ+eSn4htULFfvrhJeX7FewwoiQ/X8JgUw3i2XxTwAAAABJRU5ErkJggg==',ap:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGgAAABqCAMAAABnCuSYAAAAYFBMVEX4uNZTKnwcEyXpveIzCiZIGjjowNnRgqz+2+/++v8hEif94e7td6fqwOS9ibRDBin/rtbXfqwbEx0aDSQrBx7DkrC4jcHft9zhhK0AAAAAAAAAAAAAAAAAAAAAAAAAAAB/O6xjAAAAIHRSTlP/AP//////////////////////////////AAAAAAAAALQh9nsAAALZSURBVHja7ZqJcqQgEIZRGHBwEXUmu3n/Jw2XjhdyCGbi5q9KUkHws7EbsAEU8UIooDJw1miU/m6Xk3SgpuuIULMql6UdadDPAxFiA3XiGZriFBBJB0LEDtosjwY1+yCSCsTN/QjfLm84QkM87cbVGsQgANCIQfGPFpxK1BkvvC6qv94gBg7pDUHwaiAEDsobhM+yCGOBwvE4Tuk+SEWHiI9qoRirtsIJLJ2gqutK/cSDNrvw20GDrgCqJqD4rgNWENuyKMM7MvEDcAL31vG0AjEmQwi/bqwCVuvQGAFn8TRMYFh22YGX7+xC8HKCSsVPftAxd35HkO677KDR6/A5FgnQVMAHi+dNXCDTBqCFXCxT7al+U4T8QLIhpeUoSl1TOxb1py2W9d8NtG64BpXlXv13AT1KGgMSjQKdgYZb9NCvKtAiSnva9/IZvUHm2UItetC7kSfIVn8XJNWbdrUnyFbf3XWeIBALEgEoOdGgeyzong+kfTUUVIY7g/bVrKC2XTesA0G1vtMOyCQoPtAk+jxGhhFU9kK0RB+dFCF20B8lwsvZ4IWYL0iHBTf36dowEA0bvT1Arc2iwGliAJFAEHWlAw6AptMELZ15Bwto6Dpw2wX5W2QDkfG6xb0Jny22ntwJmonqjGX3SZbfSa+Abdt2MHfrC+m2kClmci04Wz+27eRO8i2JLyUm6vkmmSwgX+HLgdhFQKMv4X9nWQTl5z9jMCMIYwkYExocZNLNpN1BqlyqKyc0gthJoCITCFrTaL8g14iwfkdmZyalNWJ+sCbYeer4sWbyExkFkWvL4CxQKqeAxdVA+EIgNf0wlhvEuIyfja3f5JuJ6KxdS/Tf7sOeBwIngXh+EFMbSSA7KNdg+m0gdDnQ0HXwOs5QmGUd3FyfWbT+sIoOWD2/7BxQSjXWMcextqUT/QCQ6/BXKhD8Bfkfe5sHivuEnqzFhkNv8MA51UQHZL8A3xI7ETKBfi0AAAAASUVORK5CYII='};
+
+/* =====================================================================
+   탐사 보고서 : ① 교신 해독 · 일지 출력 → ② 내 탐사 일지 → ③ 모두의 기록(아카이브) → ④ 교신 전체 보기
+   ===================================================================== */
+
+/* ---- 운영진이 채워 넣는 곳 ---- */
+const ARCHIVE={
+  tag:'#주은_생일행성_1203',             // 공유할 때 붙는 해시태그
+  heroImg:null,                           // 아카이브 맨 위 주은이 사진 주소 (세로 사진, 얼굴이 위쪽 1/3에 오게)
+  heroCredit:'',                          // 사진 출처 표기 (예: 'ⓒ 출처')
+  // 쭈니 에딧: yt 에 유튜브 영상 ID(주소의 v= 뒤 11자리)를 넣으면 썸네일과 재생이 연결돼요. 첫 번째가 맨 위 배너예요.
+  edits:[
+    {title:'[에딧 제목]',by:'[닉네임]',yt:'',len:''},
+    {title:'[에딧 제목]',by:'[닉네임]',yt:'',len:''},
+    {title:'[에딧 제목]',by:'[닉네임]',yt:'',len:''},
+    {title:'[에딧 제목]',by:'[닉네임]',yt:'',len:''}],
+  // 커미션: img 에 작품 이미지 주소, 작가님 웹 게시 허락을 꼭 받고 넣어 주세요
+  commissions:[
+    {img:null,title:'[작품 제목]',artist:'[작가명]'},
+    {img:null,title:'[작품 제목]',artist:'[작가명]'},
+    {img:null,title:'[작품 제목]',artist:'[작가명]'},
+    {img:null,title:'[작품 제목]',artist:'[작가명]'}],
+  lastAt:Date.UTC(2026,11,3,14,59),       // 마지막 교신 공개 시각 = 12월 3일 23:59 (KST)
+  lastMsg:'[마지막 교신 내용]'              // 공개 시각이 지나면 보이는 내용
+};
+
+/* ---- 공용 ---- */
+const SVG={
+  play:'<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 3l15 9-15 9z"/></svg>',
+  ufo:'<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><ellipse cx="12" cy="14" rx="10" ry="4"/><path d="M7 12a5 5 0 0 1 10 0"/></svg>',
+  back:'<svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square"><path d="M15 5l-7 7 7 7"/></svg>',
+  info:'<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>',
+  heart:on=>`<svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="${on?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>`};
+const p2=n=>String(n).padStart(2,'0');
+const kst=t=>{const d=new Date(t+9*36e5);return{y:d.getUTCFullYear(),mo:d.getUTCMonth()+1,d:d.getUTCDate(),h:d.getUTCHours(),mi:d.getUTCMinutes()}};
+const ytOk=id=>/^[\w-]{11}$/.test(id||'');
+if(!store.get('jc_no',null))store.set('jc_no',String(Math.floor(Math.random()*9999)+1).padStart(4,'0'));
+let zzuURL=null;
+const zzuImg=()=>zzuURL||(zzuURL=(()=>{const c=document.createElement('canvas');c.width=17*6;c.height=19*6;const x=c.getContext('2d');x.imageSmoothingEnabled=false;x.drawImage(ZZU,0,0,c.width,c.height);return c.toDataURL()})());
+
+/* ---- 내 기록 ---- */
+function myStats(){
+  const land=store.get('jc_land',null),fin=store.get('jc_fin',null),notes=mineOf('notes'),mons=mineOf('montages'),gal=mineOf('gallery'),k=land?kst(land):null;
+  return{name:me.name,no:store.get('jc_no','0000'),
+    landStr:k?`${k.mo}월 ${k.d}일 ${p2(k.h)}:${p2(k.mi)}`:'—',dateStr:k?`${k.y}.${p2(k.mo)}.${p2(k.d)}`:'2026.12.03',
+    mins:land&&fin?Math.max(1,Math.round((fin-land)/6e4)):null,best:store.get('jc_best2',0),
+    note:notes.length?notes[0].m:'',mon:mons[0]||null,gal:gal[0]||null,shot:mineOf('photos')[0]||(store.get('jc_myshot',null)?{img:store.get('jc_myshot').img,t:'착륙 인증샷'}:null)}}
+
+/* ---- 모두의 기록 (서버가 연결되면 전체 대원 기록, 아니면 이 기기 + 예시) ---- */
+const rpNotes=()=>itemsOf('notes');
+const rpGallery=()=>itemsOf('gallery');
+function rpTop(){return rpGallery().map((e,i)=>({e,i,l:sb?(e.likes||0):(isLiked('gallery',e.id)?1:0)})).sort((a,b)=>b.l-a.l||a.i-b.i).slice(0,10).map(o=>o.e)}
+const rpMons=()=>itemsOf('montages');
+const rpShots=()=>itemsOf('photos');
+
+/* ---- 화면 ---- */
+const rp=$('#rp');let rpOpen=false,rpView=null,rpTab='new';
+
+function vPrint(){const s=myStats();let seed=7;const r=()=>(seed=(seed*16807)%2147483647)/2147483647;
+  const stars=Array.from({length:34},()=>`<i style="left:${(r()*100).toFixed(1)}%;top:${(r()*100).toFixed(1)}%;opacity:${(.3+r()*.7).toFixed(2)}"></i>`).join('');
+  return`<div class="rpv rp-print"><div class="rp-stars" aria-hidden="true">${stars}</div>
+  <div class="rp-ptop"><div class="rp-hand" style="color:#ffd98a;font-size:20px">삐빅… 삐비빅…</div>
+    <h2>교신 해독 완료!</h2><div class="rp-secret">${SECRET}</div>
+    <p>미확인 교신의 정체는 생일 축하 메시지였어요.<br>${escH(s.name)} 대원의 탐사 일지가 도착하고 있어요</p></div>
+  <div class="rp-pstage"><img class="rp-ufo" src="${ART.ufo}" alt="쭈콩호"><div class="rp-beam" aria-hidden="true"></div>
+    <div class="rp-paper"><span class="rp-tp" style="top:-9px;left:74px;width:88px;background:#f7a8c4;transform:rotate(-3deg)"></span>
+      <div class="rp-hand rp-pt">${escH(s.name)} 대원의<br>탐사 일지</div><div class="rp-pd">PLANET #1203 · ${s.dateStr}</div>
+      <div class="rp-hand rp-pl"><div>✔ 교신 다섯 개 다 풀었다</div><div>✔ 숨은 외계인 찾아냄</div><div>✔ 쭈일리언 그려서 보냄</div></div>
+      <img class="rp-stk" src="${ART.ag}" alt=""></div></div>
+  <img class="rp-al l" src="${ART.ag}" alt=""><img class="rp-al r" src="${ART.ap}" alt="">
+  <button class="rp-cta" data-go="cover">일지 펼쳐보기</button></div>`}
+
+function vCover(){const s=myStats(),mon=s.mon?s.mon.img:zzuImg();
+  return`<div class="rpv rp-cover">
+  <div class="rp-chead"><div><div class="rp-jua" style="font-size:15px;color:#6a4fc0">PLANET #1203</div><div style="font-size:12px;color:#6a5d8f">쭈일리언 외계행성 탐사</div></div>
+    <img src="${ART.ufo}" alt="" style="width:74px;transform:rotate(6deg)"></div>
+  <div class="rp-paperg"><span class="rp-tp" style="top:-10px;right:40px;width:70px;background:#b9e8c8;transform:rotate(4deg)"></span>
+    <div><div class="rp-hand rp-ctitle">${escH(s.name)} 대원의 탐사 일지</div><div class="rp-cmeta">대원 번호 1203-${s.no} · ${s.landStr} 착륙</div></div>
+    <div class="rp-cmid">
+      <div class="rp-pola"><span class="rp-tp" style="top:-9px;left:38px;width:54px;background:#f7a8c4;transform:rotate(-6deg)"></span>
+        <img class="im" src="${mon}" alt="내가 그린 쭈일리언"><span class="rp-hand cap">쭈일리언 몽타주</span><img class="rp-pstk" src="${ART.ap}" alt=""></div>
+      <div class="rp-hand rp-stats"><div><b>${doneCount()}/5</b> 교신 해독</div><div><b>${s.best}점</b> 외계인 수색</div><div><b>${s.mins?s.mins+'분':'—'}</b> 탐사</div></div></div>
+    <div class="rp-note"><small>내가 남긴 교신</small><div class="rp-hand">${s.note?escH(s.note):'아직 남긴 교신이 없어요'}</div></div>
+    ${s.shot||s.gal?`<div class="rp-cbot">${s.shot?`<div class="rp-pola rp-pola2"><span class="rp-tp" style="top:-9px;left:44px;width:54px;background:#ffd98a;transform:rotate(5deg)"></span><img class="im" src="${s.shot.img}" alt="착륙 인증샷"><span class="rp-hand cap">착륙 인증샷</span></div>`:''}
+      ${s.gal?`<div class="rp-gcard"><small>사진관에 건 사진</small><img src="${s.gal.img}" alt=""><b class="rp-hand">「${escH(s.gal.t)}」</b></div>`:''}</div>`:''}
+    <div class="rp-hand rp-sign">주은아 생일 축하해!</div></div>
+  <div class="rp-crow"><button data-act="save">이미지로 저장</button><button data-act="share">공유하기</button></div>
+  <button class="rp-cta" data-go="archive">${doneCount()===5?'탐사 성공 기념 · 쭈니 생일 축하파티':'쭈니 생일 축하파티'}</button></div>`}
+
+function vArchive(){
+  const E=ARCHIVE.edits,h=heroInfo(),notes=rpNotes(),tops=rpTop(),gal=rpGallery(),mons=rpMons(),shots=rpShots();
+  if(!goodsImgs)goodsImgs=GOODS.map(g=>goodsIcon(g.a));
+  const th=e=>e.thumb?`<img src="${escH(e.thumb)}" alt="" loading="lazy">`:ytOk(e.yt)?`<img src="https://i.ytimg.com/vi/${e.yt}/hqdefault.jpg" alt="" loading="lazy">`:'[에딧 썸네일]';
+  const tk=notes.slice(0,8).map(n=>`<span>${escH(n.m.length>28?n.m.slice(0,28)+'…':n.m)}<em>✦</em></span>`).join('');
+  const hero='';
+  return`<div class="rpv rp-arc">
+  <div class="rp-hero"${hero}>
+    ${ARCHIVE.heroImg?heroTag(ARCHIVE.heroImg,ARCHIVE.heroPos,ARCHIVE.heroType,ARCHIVE.heroPoster):'<div class="rp-hph">[주은이 사진]<br>세로 사진 · 얼굴이 위쪽 1/3에 오게</div>'}
+    <div class="rp-nav"><div class="rp-logo">PLANET <span>#1203</span></div>
+      </div>
+    <img class="rp-float" src="${ART.ufo}" alt="">
+    <div class="rp-fade"></div>
+    <div class="rp-hin">${h.kick?`<div class="rp-kick">${escH(h.kick)}</div>`:''}<h1>${escH(h.head).replace(/\n/g,'<br>')}</h1>
+      ${h.title||h.by?`<div class="rp-ht">${escH(h.title||'')}${h.by?` <span>· edit by ${escH(h.by)}</span>`:''}</div>`:''}
+      <div class="rp-meta"><span class="g">탐사 성공률 100%</span><span>2026</span><span class="b">ALL</span>${h.len?`<span>${escH(h.len)}</span>`:''}</div>
+      <div class="rp-hbtn"><button class="rp-play" data-act="hplay">${SVG.play}재생</button><button class="rp-ghost" data-go="cover">${SVG.info}내 탐사 일지</button></div>
+      ${ARCHIVE.heroCredit?`<div class="rp-credit">${escH(ARCHIVE.heroCredit)}</div>`:''}</div></div>
+
+  <section class="rp-sec"><div class="rp-sh"><h2>쭈니 에딧</h2><small>대원들이 만든 팬 편집 영상</small></div>
+    <div class="rp-row">${E.map((e,i)=>`<button class="rp-card" style="width:220px" data-act="play" data-i="${i}"><span class="rp-th" style="height:124px">${th(e)}${e.len?`<span class="rp-dur">${escH(e.len)}</span>`:''}</span><span class="rp-ct">${escH(e.title)}</span>${e.by?`<span class="rp-cs">edit by ${escH(e.by)}</span>`:''}</button>`).join('')}</div></section>
+
+  <section class="rp-sec" style="padding-top:38px"><div class="rp-big"><div><div class="rp-kick">COMMISSION</div><h2>JUUN GALLERY</h2><p>작가님들께 맡긴 쭈니 커미션</p></div></div>
+    <div class="rp-row" style="gap:10px">${ARCHIVE.commissions.map((c,i)=>`<button class="rp-card" style="width:176px" data-act="comm" data-i="${i}"><span class="rp-th" style="height:252px;border-radius:8px;background:#f6f1fb;color:#5a4d80">${c.img?`<img src="${escH(c.img)}" alt="${escH(c.title)}" loading="lazy">`:'[커미션 작품]'}<span class="rp-no">No.${p2(i+1)}</span></span><span class="rp-ct" style="font-weight:800">${escH(c.title)}</span><span class="rp-cs">illust. ${escH(c.artist)}</span></button>`).join('')}</div></section>
+
+  <section class="rp-sec" style="padding-top:40px"><div class="rp-big"><div><div class="rp-live"><i></i>LIVE · ${notes.length}개 수신</div><h2>TRANSMISSIONS</h2><p>하츄대원들이 주은이에게 보낸 교신</p></div><button class="rp-link" data-go="msgs">전체 보기 &gt;</button></div>
+    <div class="rp-mq" aria-hidden="true"><div class="rp-mqi">${tk}${tk}</div></div>
+    <div class="rp-row" style="gap:10px">${notes.slice(0,10).map((n,i)=>`<button class="rp-msg" data-go="msgs"><span class="rp-mh"><span>수신 #${String(notes.length-i).padStart(4,'0')}</span><span>${n.t?(k=>p2(k.h)+':'+p2(k.mi))(kst(n.t)):''}</span></span><span class="rp-mt">${escH(n.m)}</span><span class="rp-mf"><img src="${i%2?ART.ap:ART.ag}" alt=""><span>from <b>${escH(n.n)}</b> 대원</span></span></button>`).join('')}</div></section>
+
+  <section class="rp-sec" style="padding-top:36px"><div class="rp-sh"><h2>보급품</h2><small>생카 굿즈</small></div>
+    <div class="rp-row">${goodsList().map((g,i)=>`<button class="rp-card" style="width:132px" data-act="good" data-i="${i}"><span class="rp-th${g.px?' rp-gimg':''}" style="height:132px${g.px?'':';background:#f6f1fb'}">${g.img?`<img loading="lazy" src="${escH(g.img)}" alt="${escH(g.n)}">`:'[굿즈 사진]'}</span><span class="rp-ct">${escH(g.n)}</span><span class="rp-cs">${escH(g.p)}</span></button>`).join('')}</div></section>
+
+  <section class="rp-sec" style="padding-top:40px"><div class="rp-big"><div><div class="rp-kick">FANCAM</div><h2>MY BEST FANCAM</h2><p>하츄대원들의 최애 직캠 자랑</p></div><button class="rp-link" data-go="cams">전체 보기 &gt;</button></div>
+    <div class="rp-row" style="gap:10px"><button class="rp-card rp-cpost" style="width:150px;height:124px" data-act="campost"><b>+</b>내 최애 직캠<br>자랑하기</button>${itemsOf('fancams').slice(0,20).map(c=>`<button class="rp-card" style="width:220px" data-act="cam" data-id="${c.id}"><span class="rp-th" style="height:124px">${camThumb(c)}</span><span class="rp-ct rp-clamp">${escH(c.c)}</span><span class="rp-cs">${escH(c.n)} · ♥ ${camLikes(c)} · 댓글 ${c.cc||0}</span></button>`).join('')}</div></section>
+
+  <section class="rp-sec" style="padding-top:40px"><div class="rp-big"><div><div class="rp-kick" style="color:#7ee07e">CHAT</div><h2>PARTY LOUNGE</h2><p>하츄대원들끼리 수다 떠는 곳</p></div></div>
+    <button class="rp-lgcard" data-go="lounge">${LG.list.length?LG.list.slice(-3).map(x=>`<span class="lg-pv"><b>${escH(x.n)}</b> ${escH(x.m)}</span>`).join(''):'<span class="lg-pv">아직 조용해요. 첫 인사를 남겨 볼까요?</span>'}<span class="lg-go">라운지 입장 →</span></button></section>
+
+  <section class="rp-sec" style="padding-top:36px"><div class="rp-sh"><h2>대원들이 그린 쭈일리언</h2><small>${mons.length}점</small></div>
+    <div class="rp-row">${mons.slice(0,40).map((m,i)=>`<button class="rp-card" style="width:112px" data-act="mon" data-i="${i}"><span class="rp-th px" style="height:112px;background:#fff">${`<img loading="lazy" src="${m.img}" alt="${escH(m.t)}">`}</span><span class="rp-ct">${escH(m.t)}</span><span class="rp-cs">by ${escH(m.n)}${m.pending?' · 숨김':''}</span></button>`).join('')}</div></section>
+
+  <section class="rp-sec"><div class="rp-sh"><h2>오늘의 쭈니 TOP 10</h2><small>사진관 공감 순위</small></div>
+    <div class="rp-row" style="gap:0">${tops.map((e,i)=>`<button class="rp-top" data-act="top" data-i="${i}" aria-label="${i+1}위 ${escH(e.t)}"><span class="n">${i+1}</span><span class="rp-th"><img loading="lazy" src="${e.img}" alt=""></span></button>`).join('')}</div></section>
+
+  <button class="rp-files" data-act="scroll"><img src="${ART.ufo}" alt=""><span class="in"><span class="rp-kick">특집</span><b>ZZUALIEN<br>FILES</b><small>대원들이 자랑하는 쭈니 사진 ${gal.length}장</small></span></button>
+
+  <section class="rp-sec" id="rpFan"><div class="rp-sh"><h2>대원들이 자랑하는 쭈니</h2><small>사진관 · 최신순</small></div>
+    <div class="rp-row">${gal.slice(0,40).map((e,i)=>`<button class="rp-card" style="width:132px" data-act="gal" data-i="${i}"><span class="rp-th" style="height:190px"><img loading="lazy" src="${e.img}" alt="${escH(e.t)}"></span><span class="rp-ct">「${escH(e.t)}」</span><span class="rp-cs">${escH(e.n)}${e.pending?' · 숨김':''}</span></button>`).join('')}</div></section>
+
+  <section class="rp-sec"><div class="rp-sh"><h2>착륙 인증샷</h2><small>${shots.length}장</small></div>
+    <div class="rp-row">${shots.slice(0,40).map((p,i)=>`<button class="rp-card" style="width:120px" data-act="shot" data-i="${i}"><span class="rp-th" style="height:213px"><img loading="lazy" src="${p.img}" alt="${escH(p.t)}"></span><span class="rp-cs" style="margin:0">${escH(p.n)} 대원${p.pending?' · 숨김':''}</span></button>`).join('')}</div></section>
+
+  <div class="rp-last" id="rpLast"></div>
+  <div class="rp-foot"><div>쭈일리언 외계행성 탐사대 · 비영리 팬 이벤트<br>영상·사진 출처는 각 작품에 표기<br><button class="adminLink" type="button">운영진</button></div><div style="display:flex;gap:4px"><img src="${ART.ag}" alt=""><img src="${ART.ap}" alt=""></div></div></div>`}
+
+function vMsgs(){const all=rpNotes(),lk={};all.forEach(n=>{if(isLiked('notes',n.id))lk[n.id]=1});
+  const list=rpTab==='mine'?all.filter(n=>n.mine):rpTab==='liked'?all.filter(n=>lk[n.id]):all;
+  return`<div class="rpv rp-msgs">
+  <div class="rp-mtop"><button class="rp-ib" data-go="archive" aria-label="뒤로">${SVG.back}</button><div class="rp-logo" style="font-size:20px">PLANET <span>#1203</span></div></div>
+  <div class="rp-mhead"><div class="rp-live"><i></i>LIVE · 지금도 수신 중</div><h1>TRANSMISSIONS</h1><p>하츄대원 교신 <b>${all.length}개</b>가 도착했어요</p></div>
+  <div class="rp-tabs">${[['new','최신순'],['mine','내 교신'],['liked','공감한 교신']].map(([k,l])=>`<button class="${rpTab===k?'on':''}" data-act="tab" data-k="${k}" aria-pressed="${rpTab===k}">${l}</button>`).join('')}</div>
+  <div class="rp-mlist">${list.length?list.map((n,i)=>`<div class="rp-mi"><img src="${i%2?ART.ap:ART.ag}" alt=""><div>
+    <div class="h"><span><b>${escH(n.n)}</b> 대원${n.ex?' · 예시':n.pending?' · 숨김':''}</span><span>${n.t?(k=>`${k.mo}.${k.d} ${p2(k.h)}:${p2(k.mi)}`)(kst(n.t)):''}</span></div>
+    <div class="m">${escH(n.m)}</div>
+    <button class="rp-lk${lk[n.id]?' on':''}" data-act="like" data-id="${n.id}" aria-pressed="${!!lk[n.id]}">${SVG.heart(lk[n.id])}공감</button></div></div>`).join(''):`<p class="rp-empty">${rpTab==='mine'?'아직 보낸 교신이 없어요':'아직 공감한 교신이 없어요'}</p>`}</div>
+  <div class="rp-mfoot"><button class="rp-cta" data-act="guest">나도 교신 보내기</button><small>부적절한 교신은 운영진이 내릴 수 있어요</small></div></div>`}
+
+function heroInfo(){const A=ARCHIVE,e=(A.edits||[])[0]||{},own=!!(A.heroVideo||A.heroYt),v=(k,f)=>A[k]!=null?A[k]:f;
+  return{kick:v('heroKicker','JOONI EDIT · 오늘의 에딧'),head:v('heroHeadline','HAPPY\nJUUN DAY'),title:v('heroSub',own?'':e.title||''),by:v('heroBy',own?'':e.by||''),len:own?(A.heroLen||''):(e.len||''),
+    play:own?{title:A.heroSub||'',by:A.heroBy||'',video:A.heroVideo||null,thumb:A.heroThumb||null,yt:A.heroYt||''}:e}}
+const heroCss=p=>{p=p||{};const x=+p.x>=0?+p.x:50,y=+p.y>=0?+p.y:30,z=Math.max(1,+p.z||1);return`object-position:${x}% ${y}%;transform:scale(${z});transform-origin:${x}% ${y}%`};
+/* ---- 최애 직캠 자랑 (링크로만 공유) ---- */
+function camInfo(url){url=String(url||'');const yt=url.match(/(?:youtube\.com\/(?:watch\?(?:[^#]*&)?v=|shorts\/|live\/|embed\/)|youtu\.be\/)([\w-]{11})/);
+  if(yt)return{kind:'yt',label:'YouTube',id:yt[1],thumb:`https://i.ytimg.com/vi/${yt[1]}/hqdefault.jpg`};
+  const host=((url.match(/^https?:\/\/(?:www\.|m\.|mobile\.)?([^/?#]+)/i)||[])[1]||'').toLowerCase();
+  const L=[[/^(x|twitter)\.com$/,'X'],[/instagram\.com$/,'Instagram'],[/tiktok\.com$/,'TikTok'],[/weverse\.io$/,'Weverse'],[/naver\.com$/,'NAVER TV'],[/bilibili\.com$/,'bilibili']];
+  const f=L.find(([r])=>r.test(host));return{kind:'link',label:f?f[1]:(host||'링크'),id:null,thumb:null}}
+const camThumb=c=>{const i=camInfo(c.url);return i.thumb?`<img loading="lazy" src="${i.thumb}" alt="">`:`<span class="rp-plat">${escH(c.ex?'예시':i.label)}</span>`};
+let camTab='new';
+function camsList(){const all=itemsOf('fancams');
+  if(camTab==='hot')return all.slice().sort((a,b)=>((b.likes||0)+(isLiked('fancams',b.id)&&!sb?1:0))-((a.likes||0)+(isLiked('fancams',a.id)&&!sb?1:0)));
+  if(camTab==='mine')return all.filter(c=>c.mine);return all}
+const camLikes=c=>(c.likes||0)+(!sb&&isLiked('fancams',c.id)?1:0);
+function vCams(){const list=camsList();
+  return`<div class="rpv rp-msgs">
+  <div class="rp-mtop"><button class="rp-ib" data-go="archive" aria-label="뒤로">${SVG.back}</button><div class="rp-logo" style="font-size:20px">PLANET <span>#1203</span></div></div>
+  <div class="rp-mhead"><div class="rp-kick">FANCAM</div><h1>MY BEST FANCAM</h1><p>하츄대원들의 최애 직캠 자랑 <b>${itemsOf('fancams').length}개</b></p></div>
+  <div class="rp-tabs">${[['new','최신순'],['hot','공감순'],['mine','내 글']].map(([k,l])=>`<button class="${camTab===k?'on':''}" data-act="camtab" data-k="${k}" aria-pressed="${camTab===k}">${l}</button>`).join('')}</div>
+  <div class="rp-mlist">${list.length?list.map(c=>`<button class="rp-camrow" data-act="cam" data-id="${c.id}"><span class="rp-th">${camThumb(c)}</span>
+    <span class="tx"><span class="m">${escH(c.c)}</span><span class="h"><b>${escH(c.n)}</b> 대원${c.ex?' · 예시':c.pending?' · 숨김':''}</span><span class="h">${SVG.heart(isLiked('fancams',c.id))} ${camLikes(c)} · 댓글 ${c.cc||0}</span></span></button>`).join(''):`<p class="rp-empty">${camTab==='mine'?'아직 자랑한 직캠이 없어요':'아직 없어요'}</p>`}</div>
+  <div class="rp-mfoot"><button class="rp-cta" data-act="campost">내 최애 직캠 자랑하기</button><small>직캠은 링크로만 공유해요 · 원본 출처는 영상 속 촬영자에게 있어요</small></div></div>`}
+function openCamPost(){
+  openSheet('최애 직캠 자랑하기',`<p>유튜브, X, 인스타, 틱톡 등 직캠 <b>링크</b>를 붙여 넣고 최애 포인트를 적어 주세요. 영상 파일은 올리지 않아요.</p>
+  <form id="cpf" class="gb"><label class="f" for="cpu">직캠 링크<input id="cpu" type="url" inputmode="url" maxlength="300" placeholder="https://youtu.be/…" required></label>
+  <label class="f" for="cpc">최애 포인트<textarea id="cpc" maxlength="150" placeholder="예: 2절 하이라이트 표정 꼭 보세요" required></textarea></label>
+  <p class="who-as">✦ <b>${escH(me.name)}</b> 대원 이름으로 올라가요</p><input id="cpn" type="hidden">
+  <button class="primary" type="submit">자랑하기</button><p id="cpm" class="save"></p></form>`);
+  $('#cpn').value=me.name;
+  $('#cpf').onsubmit=async e=>{e.preventDefault();const url=$('#cpu').value.trim(),c=$('#cpc').value.trim(),n=$('#cpn').value.trim()||me.name,btn=$('#cpf button');
+    if(!/^https?:\/\/\S+\.\S+/i.test(url)){$('#cpm').textContent='https:// 로 시작하는 링크를 넣어 주세요';return}if(!c){$('#cpc').focus();return}
+    btn.disabled=true;try{await addItem('fancams',{n,url,c});closeSheet();camTab='new';if(rpOpen)rpShow('cams')}catch(err){btn.disabled=false;$('#cpm').textContent=errMsg(err)}}}
+async function openCam(id){const c=itemsOf('fancams').find(x=>x.id===id);if(!c)return;const i=camInfo(c.url),on=isLiked('fancams',c.id);
+  openSheet(`${c.n} 대원의 최애 직캠`,`${i.kind==='yt'?`<div style="position:relative;aspect-ratio:16/9;border-radius:8px;overflow:hidden;background:#000"><iframe src="https://www.youtube-nocookie.com/embed/${i.id}?playsinline=1&rel=0" title="직캠" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe></div>`
+      :c.url?`<a class="filebtn" href="${escH(c.url)}" target="_blank" rel="noopener">${escH(i.label)}에서 직캠 보기 →</a>`:'<p class="zhint">예시 글이에요.</p>'}
+    <blockquote class="why">${escH(c.c)}</blockquote>
+    <div class="row"><button class="${on?'primary':'soft'}" id="ckLike">${on?'💜 공감했어요':'💜 공감'} ${camLikes(c)}</button>${c.mine?'<button class="soft" id="ckDel">글 내리기</button>':''}</div>
+    <div class="whyh">댓글</div><div class="gb" id="ckList"><p class="zhint">불러오는 중…</p></div>
+    ${c.ex?'':`<form id="ckf" class="gb"><label class="f" for="ckm">댓글 남기기<textarea id="ckm" maxlength="150" placeholder="같이 이야기해요" required></textarea></label><button class="primary" type="submit">댓글 달기</button><p id="ckmsg" class="save"></p></form>`}`);
+  onClose=()=>{$('#sheetBody').innerHTML='';rpRefresh()};
+  const my=token;
+  const draw=async()=>{const L=await loadComments(c.id);if(token!==my)return;
+    $('#ckList').innerHTML=L.length?L.map(x=>`<div class="note"><span class="who">${escH(x.n)}</span><span class="tag">${(k=>`${k.mo}.${k.d} ${p2(k.h)}:${p2(k.mi)}`)(kst(x.at))}${x.pending?' · 숨김':''}</span>${x.mine?`<button class="cm-del" data-cid="${x.id}">지우기</button>`:''}<div class="msg">${escH(x.m)}</div></div>`).join(''):'<p class="zhint">첫 댓글을 남겨 주세요</p>';
+    $('#ckList').querySelectorAll('.cm-del').forEach(b=>b.onclick=async()=>{const x=L.find(y=>y.id===b.dataset.cid);if(!b.dataset.sure){b.dataset.sure=1;b.textContent='한 번 더';return}try{await delComment(x,c.id);draw()}catch(err){}})};
+  draw();
+  $('#ckLike').onclick=()=>toggleLike('fancams',c).then(()=>{if(token===my)openCam(id)},()=>{});
+  if(c.mine)$('#ckDel').onclick=()=>{const d=$('#ckDel');if(!d.dataset.sure){d.dataset.sure=1;d.textContent='한 번 더 누르면 내려가요';return}removeItem('fancams',c).then(()=>{closeSheet()},()=>{})};
+  if($('#ckf'))$('#ckf').onsubmit=async e=>{e.preventDefault();const m=$('#ckm').value.trim();if(!m)return;const b=$('#ckf button');b.disabled=true;
+    try{await addComment(c.id,me.name,m);$('#ckm').value='';draw()}catch(err){$('#ckmsg').textContent=errMsg(err)}b.disabled=false}}
+const heroTag=(src,pos,type,poster,id)=>{const st=heroCss(pos),ia=id?` id="${id}"`:'',v=type==='video'||/\.(mp4|webm|mov)(\?|$)/i.test(src||'');
+  return v?`<video class="rp-himg"${ia} src="${escH(src)}"${poster?` poster="${escH(poster)}"`:''} muted autoplay loop playsinline style="${st}"></video>`:`<img class="rp-himg"${ia} src="${escH(src)}" alt="" style="${st}">`};
+function lgRow(x){const k=kst(x.at);return`<div class="lg-m${x.mine?' me':''}"><span class="lg-dot" style="background:${/^#[0-9a-f]{6}$/i.test(x.col||'')?x.col:'#ff6f91'}"></span><div class="lg-b"><div class="lg-h"><b>${escH(x.n)}</b><span>${p2(k.h)}:${p2(k.mi)}${x.pending?' · 숨김':''}</span>${x.mine?`<button class="lg-del" data-lgdel="${escH(String(x.id))}">지우기</button>`:''}</div><div class="lg-t">${escH(x.m)}</div></div></div>`}
+function vLounge(){return`<div class="rpv rp-lounge">
+  <div class="rp-mtop"><button class="rp-ib" data-act="lgback" aria-label="뒤로">${SVG.back}</button><div><div class="rp-logo" style="font-size:20px">PARTY LOUNGE</div><div class="lg-sub">대원들끼리 수다 떠는 곳 · 주은이에게 보내는 교신은 TRANSMISSIONS로</div></div></div>
+  <div class="lg-list" id="lgList">${LG.list.length?LG.list.map(lgRow).join(''):'<p class="rp-empty">첫 인사를 남겨 주세요!</p>'}</div>
+  <form class="lg-in" id="lgForm"><input id="lgText" maxlength="100" placeholder="${escH(me.name)} 대원으로 말하기" autocomplete="off" aria-label="라운지 메시지"><button type="submit">보내기</button></form>
+  <div class="lg-quick">${['생일 축하해!!','어디서 왔어요?','직캠 추천해 주세요','하츄 반가워요'].map(t=>`<button type="button" data-lgq="${t}">${t}</button>`).join('')}</div>
+  <p class="lg-note" id="lgNote">서로를 배려해 주세요. 부적절한 글은 운영진이 내릴 수 있어요.</p></div>`}
+function lgScroll(){const L=$('#lgList');if(L)L.scrollTop=L.scrollHeight}
+function lgRender(keep){const L=$('#lgList');if(!L)return;const atEnd=L.scrollHeight-L.scrollTop-L.clientHeight<80;
+  L.innerHTML=LG.list.length?LG.list.map(lgRow).join(''):'<p class="rp-empty">첫 인사를 남겨 주세요!</p>';if(!keep||atEnd)lgScroll()}
+async function openLounge(){rpView='lounge';rp.innerHTML=vLounge();rp.scrollTop=0;await loungeLoad();if(rpView!=='lounge')return;lgRender();
+  clearInterval(LG.timer);LG.timer=setInterval(async()=>{if(rpView!=='lounge'||!rpOpen){clearInterval(LG.timer);return}if(document.visibilityState!=='visible')return;
+    const n=await loungePoll();if(n)lgRender(true)},6000);
+  const f=$('#lgForm');f.onsubmit=async e=>{e.preventDefault();const i=$('#lgText'),m=i.value.trim();if(!m)return;i.disabled=true;
+    try{await loungeSend(m);i.value='';await loungePoll();lgRender()}catch(err){$('#lgNote').textContent=errMsg(err)}i.disabled=false;i.focus()};
+  rp.querySelectorAll('[data-lgq]').forEach(b=>b.onclick=()=>{$('#lgText').value=b.dataset.lgq;$('#lgText').focus()});
+  $('#lgList').onclick=async e=>{const b=e.target.closest('[data-lgdel]');if(!b)return;if(!b.dataset.sure){b.dataset.sure=1;b.textContent='한 번 더';return}
+    const x=LG.list.find(y=>String(y.id)===b.dataset.lgdel);if(x){try{await loungeDel(x);lgRender(true)}catch(err){}}}}
+const VIEWS={lounge:vLounge,cams:vCams,print:vPrint,cover:vCover,archive:vArchive,msgs:vMsgs};
+function rpShow(v){if(v==='lounge')return openLounge();rpView=v;rp.innerHTML=VIEWS[v]();rp.scrollTop=0;if(v==='cams')pull().then(()=>{if(rpView==='cams')rpRefresh()});if(v==='archive')updLast()}
+function rpRefresh(){if(!rpOpen||rpView==='lounge')return;const st=rp.scrollTop;rp.innerHTML=VIEWS[rpView]();rp.scrollTop=st;if(rpView==='archive')updLast()}
+function openReport(v){if(netCh){sb.removeChannel(netCh);netCh=null;netSend=null;remotes.clear();online=1}rpOpen=true;held.length=0;me.tgt=null;$('#enterBtn').hidden=true;$('#rpBtn').hidden=false;$('#startRp').hidden=false;rp.hidden=false;if(v==='print')SFX.print();rpShow(v||'archive');loungeLoad().then(()=>{if(rpView==='archive')rpRefresh()});pull().then(()=>{if(rpView==='archive'||rpView==='msgs')rpRefresh()})}
+function closeReport(){rpOpen=false;rp.hidden=true;rp.innerHTML='';$('#enterBtn').hidden=!near||modalOpen}
+
+function updLast(){const el=$('#rpLast');if(!el)return;const n=Date.now(),left=ARCHIVE.lastAt-n;
+  if(left>0){const d=Math.floor(left/864e5),h=Math.floor(left/36e5)%24,m=Math.floor(left/6e4)%60,s=Math.floor(left/1e3)%60;
+    el.innerHTML=`<div><div class="rp-kick">LAST TRANSMISSION</div><div class="t">12.03 23:59</div><div class="s">마지막 교신이 이 시간에 열려요<br>남은 시간 ${d?`D-${d} `:''}${p2(h)}:${p2(m)}:${p2(s)}</div></div><img src="${ART.ufo}" alt="">`}
+  else el.innerHTML=`<div><div class="rp-kick">LAST TRANSMISSION · OPEN</div><div class="t">해독 완료</div><div class="s">${escH(ARCHIVE.lastMsg)}</div></div><img src="${ART.ufo}" alt="" style="opacity:1">`}
+
+/* 크게 보기 (게임의 넘겨 보기 창을 그대로 씀) */
+function galView(items,i){openViewer({items,index:i,ratio:'9/16',title:e=>e.t,img:e=>e.img,alt:e=>e.t,back:closeSheet,
+  body:e=>`<div class="whyh">이 사진을 고른 이유</div><blockquote class="why">${escH(e.w)}</blockquote><p class="by">고른 대원 · ${escH(e.n)}${e.ex?' · 예시 작품':''}</p>`,
+  extra:e=>{const on=isLiked('gallery',e.id);return`<button class="${on?'primary':'soft'}" id="gaLike">${on?'💜 좋아요 했어요':'💜 좋아요'}</button>`},
+  mount:(e,show)=>{$('#gaLike').onclick=()=>toggleLike('gallery',e).then(()=>{show();rpRefresh()},err=>{$('#vmsg').textContent=errMsg(err)})}})}
+function playEdit(i){playItem(ARCHIVE.edits[i])}
+function playItem(e){if(!e)return;const by=e.by?`<p class="by">edit by ${escH(e.by)}</p>`:'';
+  openSheet(e.title||'쭈니 에딧',e.video?`<video src="${escH(e.video)}"${e.thumb?` poster="${escH(e.thumb)}"`:''} controls playsinline autoplay style="display:block;width:100%;max-height:70vh;border-radius:8px;background:#000"></video>${by}`
+    :ytOk(e.yt)?`<div style="position:relative;aspect-ratio:16/9;border-radius:8px;overflow:hidden;background:#000"><iframe src="https://www.youtube-nocookie.com/embed/${e.yt}?autoplay=1&playsinline=1&rel=0" title="${escH(e.title||'쭈니 에딧')}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe></div>
+    ${by}<a href="https://youtu.be/${e.yt}" target="_blank" rel="noopener" style="font-family:var(--display);color:var(--berry-deep)">유튜브에서 보기 →</a>`
+    :`<p>영상을 준비하고 있어요.</p>`);
+  onClose=()=>{$('#sheetBody').innerHTML=''}}
+
+/* 일지 이미지 (저장·공유용 1080×1350) */
+const loadImg=src=>new Promise(r=>{const im=new Image();if(/^https?:/.test(src))im.crossOrigin='anonymous';im.onload=()=>r(im);im.onerror=()=>r(null);im.src=src});
+function wrapLines(x,text,maxW,max){const L=[];let line='';for(const ch of[...text.replace(/\s+/g,' ')]){if(x.measureText(line+ch).width>maxW&&line){L.push(line);line=ch}else line+=ch}if(line)L.push(line);
+  if(L.length>max){L.length=max;L[max-1]=L[max-1].slice(0,-1)+'…'}return L}
+async function coverCard(){
+  try{await Promise.all(['700 60px Gaegu','40px Jua','30px "Gowun Dodum"'].map(f=>document.fonts.load(f)))}catch(e){}
+  const s=myStats(),W=1080,H=1920,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+  const[ufo,mon,ap,shot,gim]=await Promise.all([loadImg(ART.ufo),loadImg(s.mon?s.mon.img:zzuImg()),loadImg(ART.ap),s.shot?loadImg(s.shot.img):null,s.gal?loadImg(s.gal.img):null]);
+  const HAND=(w,sz)=>`${w} ${sz}px Gaegu, cursive`,BODY=sz=>`${sz}px "Gowun Dodum", sans-serif`;
+  x.fillStyle='#fdf7f1';x.fillRect(0,0,W,H);x.textAlign='left';x.textBaseline='alphabetic';
+  x.fillStyle='#6a4fc0';x.font='38px Jua, sans-serif';x.fillText('PLANET #1203',70,92);
+  x.fillStyle='#6a5d8f';x.font=BODY(26);x.fillText('쭈일리언 외계행성 탐사',70,134);
+  const px=60,py=180,pw=W-120,ph=1700;
+  rr(x,px,py,pw,ph,36);x.fillStyle='#fff';x.fill();
+  x.save();rr(x,px,py,pw,ph,36);x.clip();x.fillStyle='#ece4fa';for(let i=px;i<px+pw;i+=40)x.fillRect(i,py,2,ph);for(let j=py;j<py+ph;j+=40)x.fillRect(px,j,pw,2);x.restore();
+  x.strokeStyle='#d9c9f3';x.lineWidth=4;rr(x,px,py,pw,ph,36);x.stroke();
+  const tape=(cx,cy,w,rot,col)=>{x.save();x.translate(cx,cy);x.rotate(rot);x.globalAlpha=.85;x.fillStyle=col;x.fillRect(-w/2,-20,w,40);x.restore()};
+  tape(W-260,py,150,.07,'#b9e8c8');
+  if(ufo){const w=210,h=w*ufo.height/ufo.width;x.save();x.translate(W-170,100);x.rotate(.1);x.drawImage(ufo,-w/2,-h/2,w,h);x.restore()}
+  let fs=74;const title=s.name+' 대원의 탐사 일지';x.font=HAND(700,fs);while(x.measureText(title).width>pw-110&&fs>40){fs-=4;x.font=HAND(700,fs)}
+  x.fillStyle='#2a1d4d';x.fillText(title,110,300);
+  x.fillStyle='#6a5d8f';x.font=BODY(28);x.fillText(`대원 번호 1203-${s.no} · ${s.landStr} 착륙`,110,352);
+  x.save();x.translate(330,620);x.rotate(-.07);x.shadowColor='rgba(42,29,77,.18)';x.shadowBlur=24;x.shadowOffsetY=6;x.fillStyle='#fff';x.fillRect(-190,-210,380,450);x.restore();
+  x.save();x.translate(330,620);x.rotate(-.07);x.fillStyle='#f4effc';x.fillRect(-170,-190,340,340);
+  if(mon){x.imageSmoothingEnabled=false;const k=Math.min(340/mon.width,340/mon.height),w=mon.width*k,h=mon.height*k;x.drawImage(mon,-w/2,-20-h/2,w,h)}
+  x.fillStyle='#2a1d4d';x.font=HAND(700,36);x.textAlign='center';x.fillText('쭈일리언 몽타주',0,205);x.restore();x.textAlign='left';
+  tape(320,400,130,-.12,'#f7a8c4');
+  if(ap){x.save();x.imageSmoothingEnabled=false;x.translate(505,830);x.rotate(.17);const w=110;x.drawImage(ap,-w/2,-w/2,w,w*ap.height/ap.width);x.restore()}
+  [[`${doneCount()}/5`,' 교신 해독'],[`${s.best}점`,' 외계인 수색'],[s.mins?`${s.mins}분`:'—',' 탐사']].forEach(([a,b],i)=>{const y=500+i*90;x.font=HAND(700,52);x.fillStyle='#ff6f91';x.fillText(a,600,y);const w=x.measureText(a).width;x.font=HAND(400,48);x.fillStyle='#2a1d4d';x.fillText(b,600+w,y)});
+  rr(x,110,890,860,190,28);x.fillStyle='#f4effc';x.fill();
+  x.fillStyle='#6a5d8f';x.font=BODY(26);x.fillText('내가 남긴 교신',145,940);
+  x.fillStyle='#2a1d4d';x.font=HAND(700,40);wrapLines(x,s.note||'아직 남긴 교신이 없어요',790,2).forEach((l,i)=>x.fillText(l,145,998+i*50));
+  const cover=(im,dx,dy,dw,dh)=>{const r=Math.max(dw/im.width,dh/im.height),w=im.width*r,h=im.height*r;x.save();x.beginPath();x.rect(dx,dy,dw,dh);x.clip();x.drawImage(im,dx+(dw-w)/2,dy+(dh-h)/2,w,h);x.restore()};
+  const sx=shot?330:540;
+  if(shot){x.save();x.translate(sx,1460);x.rotate(.05);x.shadowColor='rgba(42,29,77,.18)';x.shadowBlur=24;x.shadowOffsetY=6;x.fillStyle='#fff';x.fillRect(-185,-345,370,700);x.restore();
+    x.save();x.translate(sx,1460);x.rotate(.05);x.imageSmoothingEnabled=true;cover(shot,-165,-325,330,587);x.fillStyle='#2a1d4d';x.font=HAND(700,36);x.textAlign='center';x.fillText('착륙 인증샷',0,322);x.restore();
+    tape(sx+10,1118,130,.09,'#ffd98a')}
+  if(gim){const gx=shot?620:380,gy=1150;x.textAlign='left';x.fillStyle='#6a5d8f';x.font=BODY(26);x.fillText('사진관에 건 사진',gx,gy-24);
+    x.save();x.translate(gx+150,gy+267);x.rotate(-.035);x.shadowColor='rgba(42,29,77,.18)';x.shadowBlur=20;x.shadowOffsetY=5;x.fillStyle='#fff';x.fillRect(-150,-267,300,534);x.restore();
+    x.save();x.translate(gx+150,gy+267);x.rotate(-.035);x.beginPath();x.rect(-150,-267,300,534);x.clip();cover(gim,-150,-267,300,534);x.restore();
+    x.fillStyle='#2a1d4d';x.font=HAND(700,38);x.fillText(wrapLines(x,`「${s.gal.t}」`,300,1)[0],gx,gy+600)}
+  x.textAlign='left';
+  x.save();x.translate(W-110,1835);x.rotate(-.03);x.fillStyle='#6a4fc0';x.font=HAND(700,46);x.textAlign='right';x.fillText('주은아 생일 축하해!',0,0);x.restore();
+  x.fillStyle='#9a8db0';x.font=BODY(22);x.textAlign='center';x.fillText(`PLANET #1203 · ${ARCHIVE.tag}`,W/2,1905);
+  return c.toDataURL('image/png')}
+function showCard(u,msg){openSheet('내 탐사 일지',`<img class="out" id="rpCard" src="${u}" alt="탐사 일지 이미지" style="image-rendering:auto">${msg?`<p>${msg}</p>`:''}${saveUI('rpCard','1203-탐사일지.png')}`)}
+async function shareCard(){const u=await coverCard();
+  try{const f=new File([dataBlob(u)],'1203-탐사일지.png',{type:'image/png'});
+    if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'행성 #1203 탐사 일지',text:ARCHIVE.tag});return}}
+  catch(e){if(e&&e.name==='AbortError')return}
+  showCard(u,`이 화면에서는 바로 공유가 안 돼서 이미지로 저장해 올려 주세요. ${escH(ARCHIVE.tag)}`)}
+
+/* 눌렀을 때 */
+rp.addEventListener('click',async e=>{const b=e.target.closest('[data-go],[data-act]');if(!b||!rp.contains(b))return;
+  if(b.dataset.go){rpShow(b.dataset.go);return}
+  const a=b.dataset.act,i=+b.dataset.i;
+  if(a==='close')closeReport();
+  else if(a==='play')playEdit(i);
+  else if(a==='hplay')playItem(heroInfo().play);
+  else if(a==='save'){b.disabled=true;try{showCard(await coverCard())}finally{b.disabled=false}}
+  else if(a==='share'){b.disabled=true;try{await shareCard()}finally{b.disabled=false}}
+  else if(a==='comm'){const list=ARCHIVE.commissions.filter(c=>c.img),c=ARCHIVE.commissions[i];
+    if(!c||!c.img){openSheet('JUUN GALLERY','<p>커미션 작품을 준비하고 있어요.</p>');return}
+    openViewer({items:list,index:list.indexOf(c),ratio:'3/4',title:c=>c.title,img:c=>c.img,alt:c=>c.title,back:closeSheet,body:c=>`<p class="by">illust. ${escH(c.artist)}</p>`})}
+  else if(a==='mon')openViewer({items:rpMons(),index:i,ratio:'1',pixel:true,title:m=>m.t,img:m=>m.img,alt:m=>m.t,back:closeSheet,body:m=>`<p class="by">그린 대원 · ${escH(m.n)}${m.ex?' · 예시 작품':''}</p>`})
+  else if(a==='top')galView(rpTop(),i);
+  else if(a==='gal')galView(rpGallery(),i);
+  else if(a==='shot')openViewer({items:rpShots(),index:i,ratio:'9/16',title:p=>p.t,img:p=>p.img,alt:p=>p.t,back:closeSheet,body:p=>`<p class="by">찍은 대원 · ${escH(p.n)}${p.ex?' · 예시 사진':''}</p>`});
+  else if(a==='shop')openShop();
+  else if(a==='good')openGoods(i,false);
+  else if(a==='campost')openCamPost();
+  else if(a==='lgback'){clearInterval(LG.timer);rpShow('archive')}
+  else if(a==='cam')openCam(b.dataset.id);
+  else if(a==='camtab'){camTab=b.dataset.k;rpRefresh()}
+  else if(a==='scroll'){const t=$('#rpFan');if(t)t.scrollIntoView({behavior:'smooth',block:'start'})}
+  else if(a==='tab'){rpTab=b.dataset.k;rpRefresh()}
+  else if(a==='like'){const n=rpNotes().find(x=>x.id===b.dataset.id);if(n){b.disabled=true;toggleLike('notes',n).then(rpRefresh,()=>{b.disabled=false})}}
+  else if(a==='guest'){openGuest();onClose=()=>setTimeout(rpRefresh,0)}
+});
+$('#rpBtn').addEventListener('click',()=>{if(modalOpen)return;
+  openSheet('탐사 그만하기',`<p>지금까지 남긴 기록으로 탐사를 마치고 <b>쭈니 생일 축하파티</b>로 갈까요?</p><p>파티로 가면 탐사가 끝나요.</p>
+  <div class="row"><button class="soft" id="qNo">계속 탐사하기</button><button class="primary" id="qYes">파티 가기</button></div>`);
+  $('#qNo').onclick=closeSheet;$('#qYes').onclick=()=>{closeSheet();endExplore();openReport('archive')}});
+/* 가로 줄을 마우스로 끌어서 넘기기 */
+rp.addEventListener('dragstart',e=>{if(e.target.closest('.rp-row'))e.preventDefault()});
+rp.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'||e.button!==0)return;const row=e.target.closest('.rp-row');if(!row)return;
+  const sx=e.clientX,sl=row.scrollLeft;let moved=false;
+  const mv=ev=>{const dx=ev.clientX-sx;if(!moved&&Math.abs(dx)>5){moved=true;row.classList.add('drag');row.style.scrollSnapType='none'}if(moved)row.scrollLeft=sl-dx};
+  const up=()=>{removeEventListener('pointermove',mv);removeEventListener('pointerup',up);row.classList.remove('drag');row.style.scrollSnapType='';
+    if(moved){const kill=ev=>{ev.stopPropagation();ev.preventDefault()};row.addEventListener('click',kill,{capture:true,once:true});setTimeout(()=>row.removeEventListener('click',kill,{capture:true}),0)}};
+  addEventListener('pointermove',mv);addEventListener('pointerup',up)});
+$('#startRp').addEventListener('click',()=>openReport('archive'));
+const isBack=()=>endingSeen||!!store.get('jc_fin',null);
+if(isBack()){$('#startRp').hidden=false}
+
+
+
+/* =====================================================================
+   운영진 공간 : 사이트 맨 아래 '운영진' → Supabase 이메일 로그인 → 운영진 명단에 있을 때만 열림
+   (비밀번호는 코드에 없어요. 권한은 서버(RLS)가 확인해요)
+   ===================================================================== */
+const AD={open:false,tab:'notes',filter:'all',rows:[],msg:'',busy:false,stats:null};
+const adm=$('#adm');
+const AD_TABS=[['notes','교신'],['gallery','사진관'],['montages','몽타주'],['photos','인증샷'],['fancams','직캠'],['comments','댓글'],['lounge','라운지'],['site','생카 설정'],['stats','현황']];
+const AD_COLS={lounge:'id,user_id,name,message,approved,created_at',fancams:'id,user_id,name,url,comment,approved,created_at,like_count,comment_count',comments:'id,user_id,name,message,item_id,approved,created_at',notes:'id,user_id,name,message,approved,created_at',gallery:'id,user_id,name,title,reason,image_path,approved,created_at,like_count',
+  montages:'id,user_id,name,title,image_path,approved,created_at',photos:'id,user_id,name,caption,image_path,approved,created_at'};
+const ytId=v=>{v=String(v||'').trim();if(/^[\w-]{11}$/.test(v))return v;const m=v.match(/(?:v=|youtu\.be\/|shorts\/|embed\/|live\/)([\w-]{11})/);return m?m[1]:''};
+const kstStr=t=>{const k=kst(Date.parse(t));return`${k.mo}.${k.d} ${p2(k.h)}:${p2(k.mi)}`};
+
+async function isAdmin(){if(!sb)return false;const{data:{session}}=await sb.auth.getSession();if(!session||session.user.is_anonymous)return false;
+  const r=await sb.from('admins').select('user_id').eq('user_id',session.user.id).maybeSingle();return!!(r.data&&!r.error)}
+async function openAdmin(){AD.open=true;held.length=0;adm.hidden=false;adm.innerHTML='<div class="adw"><p class="ad-empty">불러오는 중…</p></div>';
+  await sbReady;
+  if(!sb){adm.innerHTML=`<div class="adw">${adHead()}<p class="ad-empty">서버(Supabase)가 연결되지 않았어요. 코드의 SB_URL·SB_KEY를 확인해 주세요.</p></div>`;return}
+  if(await isAdmin())return adGo(AD.tab);
+  adLogin()}
+function closeAdmin(){AD.open=false;adm.hidden=true;adm.innerHTML=''}
+const adHead=(right='')=>`<div class="ad-top"><b>운영진 공간</b><span>${right}</span><button class="ad-x" data-ad="close" aria-label="닫기">✕</button></div>`;
+function adLogin(err){adm.innerHTML=`<div class="adw">${adHead()}
+  <form class="ad-login" id="adLogin"><h2>운영진 로그인</h2><p>Supabase에 등록한 운영진 이메일로 들어와요.</p>
+  <label>이메일<input type="email" id="adE" autocomplete="username" required></label>
+  <label>비밀번호<input type="password" id="adP" autocomplete="current-password" required></label>
+  <button class="ad-pri" type="submit">로그인</button><p class="ad-err">${err?escH(err):''}</p>
+  <p class="ad-note">이 브라우저에서 탐사하던 대원 기록과는 따로예요. 운영은 다른 브라우저나 시크릿 창에서 하는 걸 추천해요.</p></form></div>`;
+  $('#adLogin').onsubmit=async e=>{e.preventDefault();const b=e.target.querySelector('button');b.disabled=true;
+    const{error}=await sb.auth.signInWithPassword({email:$('#adE').value.trim(),password:$('#adP').value});
+    if(error){b.disabled=false;return adLogin('이메일이나 비밀번호가 맞지 않아요')}
+    if(!(await isAdmin())){await sb.auth.signOut();return adLogin('운영진 명단에 없는 계정이에요')}
+    adGo(AD.tab)}}
+async function adLogout(){await sb.auth.signOut();location.reload()}
+
+async function adGo(tab){AD.tab=tab;AD.msg='';
+  const nav=`<div class="ad-tabs">${AD_TABS.map(([k,l])=>`<button class="${k===tab?'on':''}" data-ad="tab" data-k="${k}">${l}</button>`).join('')}</div>`;
+  adm.innerHTML=`<div class="adw">${adHead('<button class="ad-link" data-ad="logout">로그아웃</button>')}${nav}<div id="adBody"><p class="ad-empty">불러오는 중…</p></div></div>`;
+  if(tab==='site')return adSite();if(tab==='stats')return adStats();
+  const r=await sb.from(tab==='gallery'?'gallery_ranked':tab==='fancams'?'fancams_ranked':tab).select(AD_COLS[tab]).order('created_at',{ascending:false}).limit(500);
+  if(r.error){$('#adBody').innerHTML=`<p class="ad-err">불러오지 못했어요: ${escH(r.error.message)}</p>`;return}
+  AD.rows=r.data;adList()}
+function adList(){const t=AD.tab,rows=AD.filter==='hidden'?AD.rows.filter(x=>!x.approved):AD.rows,hid=AD.rows.filter(x=>!x.approved).length;
+  $('#adBody').innerHTML=`<div class="ad-bar"><span>전체 ${AD.rows.length} · 숨김 ${hid}</span>
+    <div class="ad-chips"><button class="${AD.filter==='all'?'on':''}" data-ad="filter" data-k="all">전체</button><button class="${AD.filter==='hidden'?'on':''}" data-ad="filter" data-k="hidden">숨긴 것만</button></div></div>
+  ${rows.length?`<div class="ad-list">${rows.map(x=>{const img=x.image_path?pubUrl(x.image_path):'';
+    const text=t==='fancams'?`<a href="${escH(x.url)}" target="_blank" rel="noopener">${escH(x.url)}</a><br>${escH(x.comment)}<br><small>공감 ${x.like_count||0} · 댓글 ${x.comment_count||0}</small>`:t==='comments'||t==='lounge'?escH(x.message):t==='notes'?escH(x.message):t==='gallery'?`<b>「${escH(x.title)}」</b> ${escH(x.reason)}<br><small>공감 ${x.like_count||0}</small>`:t==='montages'?`<b>${escH(x.title)}</b>`:`<b>${escH(x.caption)}</b>`;
+    return`<div class="ad-row${x.approved?'':' off'}">${img?`<a href="${img}" target="_blank" rel="noopener" class="ad-im${t==='montages'?' px':''}"><img src="${img}" alt="" loading="lazy"></a>`:''}
+      <div class="ad-tx"><div class="ad-meta"><b>${escH(x.name)}</b> · ${kstStr(x.created_at)}${x.approved?'':' · <em>숨김</em>'}</div><div>${text}</div></div>
+      <div class="ad-act"><button data-ad="toggle" data-id="${x.id}">${x.approved?'숨기기':'다시 공개'}</button><button class="ad-del" data-ad="del" data-id="${x.id}">삭제</button></div></div>`}).join('')}</div>`:'<p class="ad-empty">아직 없어요</p>'}`}
+async function adToggle(id){const x=AD.rows.find(r=>r.id===id);if(!x)return;const v=!x.approved,r=await sb.from(AD.tab).update({approved:v}).eq('id',id);
+  if(r.error)return alert('바꾸지 못했어요: '+r.error.message);x.approved=v;adList();R.at=0}
+async function adDel(id,btn){const x=AD.rows.find(r=>r.id===id);if(!x)return;
+  if(!btn.dataset.sure){btn.dataset.sure=1;btn.textContent='한 번 더 누르면 삭제';return}
+  const r=await sb.from(AD.tab).delete().eq('id',id);if(r.error)return alert('삭제하지 못했어요: '+r.error.message);
+  if(x.image_path)sb.storage.from(BUCKET).remove([x.image_path]);AD.rows=AD.rows.filter(r=>r.id!==id);adList();R.at=0}
+
+/* 생카 설정: 저장하면 사이트의 ARCHIVE 값을 덮어써요 */
+async function adSite(){const r=await sb.from('site_settings').select('data,updated_at').eq('id',1).maybeSingle();
+  const d={...ARCHIVE,...((r.data&&r.data.data)||{})};const h0=heroInfo();AD.site=JSON.parse(JSON.stringify({heroType:d.heroType||'img',heroPoster:d.heroPoster||null,goods:d.goods||[],heroKicker:h0.kick,heroHeadline:h0.head,heroSub:h0.title,heroBy:h0.by,heroVideo:d.heroVideo||null,heroThumb:d.heroThumb||null,heroYt:d.heroYt||'',heroLen:d.heroLen||'',heroPos:d.heroPos||{x:50,y:30,z:1},refImg:d.refImg||'',heroImg:d.heroImg||'',heroCredit:d.heroCredit||'',tag:d.tag||'',edits:d.edits||[],commissions:d.commissions||[],lastAt:d.lastAt,lastMsg:d.lastMsg||''}));
+  const ph=v=>/^\[.*\]$/.test(v||'')?'':v;AD.site.edits.forEach(e=>['title','by'].forEach(k=>e[k]=ph(e[k])));AD.site.commissions.forEach(c=>['title','artist'].forEach(k=>c[k]=ph(c[k])));AD.site.lastMsg=ph(AD.site.lastMsg);
+  adSiteRender(r.data&&r.data.updated_at)}
+function adSiteRender(upd){const S=AD.site,lk=S.lastAt?kst(S.lastAt):null,lv=lk?`${lk.y}-${p2(lk.mo)}-${p2(lk.d)}T${p2(lk.h)}:${p2(lk.mi)}`:'';
+  $('#adBody').innerHTML=`<form id="adSite" class="ad-form">
+  <h3>메인 배너 사진</h3>
+  <div class="ad-imgset">${S.heroImg?(S.heroType==='video'?`<video src="${escH(S.heroImg)}" muted autoplay loop playsinline></video>`:`<img src="${escH(S.heroImg)}" alt="">`):'<span>사진 없음</span>'}<div><label class="ad-file">사진 · GIF · 영상 올리기<input type="file" accept="image/*,video/mp4,video/webm,video/quicktime" data-up="hero" hidden></label>${AD.heroMB>6?`<span class="ad-err">용량이 커요 (${AD.heroMB.toFixed(1)}MB). 접속자가 많으면 전송량이 많이 들어요. 5MB 이하를 추천해요</span>`:'<span class="ad-note">GIF·영상은 소리 없이 반복 재생돼요. 5MB 이하 추천</span>'}
+    <input data-f="heroImg" value="${escH(S.heroImg)}" placeholder="또는 이미지 주소"><input data-f="heroCredit" value="${escH(S.heroCredit)}" placeholder="사진 출처 (버튼 아래 아주 작게 보여요)"></div></div>
+  <h3>배너 글자</h3>
+  <label>위 작은 글씨<input data-f="heroKicker" value="${escH(S.heroKicker)}" placeholder="JOONI EDIT · 오늘의 에딧"></label>
+  <label>큰 제목 <small class="ad-note">줄을 바꾸면 화면에서도 줄이 바뀌어요</small><textarea data-f="heroHeadline" rows="2">${escH(S.heroHeadline)}</textarea></label>
+  <div class="ad-item"><label>제목 아래 한 줄<input data-f="heroSub" value="${escH(S.heroSub)}" placeholder="예: 주은"></label><label>만든 사람 (edit by 뒤에 붙어요)<input data-f="heroBy" value="${escH(S.heroBy)}" placeholder="예: 백쭌"></label></div>
+  <h3>재생 버튼 영상 <small>배너의 재생을 누르면 나와요 (예: 티저)</small></h3>
+  <div class="ad-item"><div class="ad-vid">${S.heroThumb?`<img src="${escH(S.heroThumb)}" alt="">`:''}<label class="ad-file sm">${S.heroVideo?'영상 바꾸기':'영상 파일 올리기'}<input type="file" accept="video/mp4,video/webm,video/quicktime" data-up="hvid" hidden></label>${S.heroVideo?'<span>영상 파일이 연결됐어요</span><button type="button" data-ad="rmhvid">영상 빼기</button>':'<span>mp4 · 50MB까지</span>'}</div>
+    <input data-f="heroYt" value="${escH(S.heroYt)}" placeholder="또는 유튜브 주소"><input data-f="heroLen" value="${escH(S.heroLen)}" placeholder="길이 (예: 0:30)" class="sm"></div>
+  <p class="ad-note">재생 버튼 영상을 비워 두면 아래 쭈니 에딧의 첫 번째 영상이 재생돼요.</p>
+  ${S.heroImg?`<div class="ad-hp"><div class="ad-hpm"><button type="button" class="${AD.hpPc?'':'on'}" data-ad="hpm" data-k="m">폰에서</button><button type="button" class="${AD.hpPc?'on':''}" data-ad="hpm" data-k="pc">PC에서</button></div>
+    <div class="ad-hpf${AD.hpPc?' pc':''}" id="adHp">${heroTag(S.heroImg,S.heroPos,S.heroType,S.heroPoster,'adHpImg')}<div class="ad-hpfade"></div>
+      <img class="ad-hpufo" src="${ART.ufo}" alt=""><div class="ad-hptx"><small>${escH(S.heroKicker||'')}</small><b>${escH(S.heroHeadline||'').replace(/\n/g,'<br>')}</b></div></div>
+    <label>확대 <input type="range" min="100" max="250" step="1" data-hz="1" value="${Math.round((S.heroPos.z||1)*100)}"></label>
+    <div class="ad-hpm"><span class="ad-note">사진을 손가락이나 마우스로 끌어서 위치를 맞춰요. 글자와 쭈콩호가 얼굴을 가리지 않게 해 주세요.</span><button type="button" data-ad="hpreset">처음 위치로</button></div></div>`:''}
+  <h3>쭈일리언 참고 그림 <small>몽타주 연구소에서 보여 줘요</small></h3>
+  <div class="ad-imgset">${S.refImg?`<img src="${escH(S.refImg)}" alt="" style="object-fit:contain;background:#fff">`:'<span>지금은 임시 도트 그림</span>'}<div><label class="ad-file">그림 올리기<input type="file" accept="image/*" data-up="ref" hidden></label>${S.refImg?'<button type="button" class="ad-add" data-ad="rmref">빼고 임시 그림 쓰기</button>':''}</div></div>
+  <h3>쭈니 에딧 <small>첫 번째가 맨 위 배너</small></h3>
+  ${S.edits.map((e,i)=>`<div class="ad-item"><input data-l="edits" data-i="${i}" data-k="title" value="${escH(e.title||'')}" placeholder="에딧 제목"><input data-l="edits" data-i="${i}" data-k="by" value="${escH(e.by||'')}" placeholder="만든 사람">
+    <input data-l="edits" data-i="${i}" data-k="yt" value="${escH(e.yt||'')}" placeholder="유튜브 주소 (영상 파일을 올리면 없어도 돼요)"><input data-l="edits" data-i="${i}" data-k="len" value="${escH(e.len||'')}" placeholder="길이 (예: 2:31)" class="sm">
+    <div class="ad-vid">${e.thumb?`<img src="${escH(e.thumb)}" alt="">`:''}<label class="ad-file sm">${e.video?'영상 바꾸기':'영상 파일 올리기'}<input type="file" accept="video/mp4,video/webm,video/quicktime" data-up="vid" data-i="${i}" hidden></label>${e.video?`<span>영상 파일이 연결됐어요 (유튜브보다 먼저 재생돼요)</span><button type="button" data-ad="rmvid" data-i="${i}">영상 빼기</button>`:'<span>mp4 · 50MB까지</span>'}</div>
+    <div class="ad-mv"><button type="button" data-ad="up" data-l="edits" data-i="${i}" aria-label="위로">↑</button><button type="button" data-ad="rm" data-l="edits" data-i="${i}">빼기</button></div></div>`).join('')}
+  <button type="button" class="ad-add" data-ad="add" data-l="edits">+ 에딧 추가</button>
+  <h3>커미션 (JUUN GALLERY) <small>작가님 웹 게시 허락 필수</small></h3>
+  ${S.commissions.map((c,i)=>`<div class="ad-item">${c.img?`<img src="${escH(c.img)}" alt="" class="ad-th">`:''}<label class="ad-file sm">이미지 올리기<input type="file" accept="image/*" data-up="comm" data-i="${i}" hidden></label>
+    <input data-l="commissions" data-i="${i}" data-k="title" value="${escH(c.title||'')}" placeholder="작품 제목"><input data-l="commissions" data-i="${i}" data-k="artist" value="${escH(c.artist||'')}" placeholder="작가명">
+    <div class="ad-mv"><button type="button" data-ad="up" data-l="commissions" data-i="${i}" aria-label="위로">↑</button><button type="button" data-ad="rm" data-l="commissions" data-i="${i}">빼기</button></div></div>`).join('')}
+  <button type="button" class="ad-add" data-ad="add" data-l="commissions">+ 커미션 추가</button>
+  <h3>보급품 (굿즈) <small>하나도 없으면 예시 굿즈가 보여요</small></h3>
+  ${S.goods.map((g,i)=>`<div class="ad-item">${g.img?`<img src="${escH(g.img)}" alt="" class="ad-th" style="height:56px">`:''}<label class="ad-file sm">${g.img?'사진 바꾸기':'사진 올리기'}<input type="file" accept="image/*" data-up="good" data-i="${i}" hidden></label>
+    <input data-l="goods" data-i="${i}" data-k="name" value="${escH(g.name||'')}" placeholder="굿즈 이름"><input data-l="goods" data-i="${i}" data-k="price" value="${escH(g.price||'')}" placeholder="가격 (예: ₩5,000 / 무료 나눔)">
+    <textarea data-l="goods" data-i="${i}" data-k="desc" rows="3" class="ad-full" placeholder="상세 설명 (구성, 크기, 수령·배송 방법 등)">${escH(g.desc||'')}</textarea>
+    <input data-l="goods" data-i="${i}" data-k="link" value="${escH(g.link||'')}" class="ad-full" placeholder="구매·신청 링크 (https://…)">
+    <div class="ad-mv"><button type="button" data-ad="up" data-l="goods" data-i="${i}" aria-label="위로">↑</button><button type="button" data-ad="rm" data-l="goods" data-i="${i}">빼기</button></div></div>`).join('')}
+  <button type="button" class="ad-add" data-ad="add" data-l="goods">+ 굿즈 추가</button>
+  <h3>마지막 교신</h3>
+  <label>공개 시각 (한국 시간)<input type="datetime-local" data-f="lastAtLocal" value="${lv}"></label>
+  <label>내용<textarea data-f="lastMsg" rows="3">${escH(S.lastMsg)}</textarea></label>
+  <h3>공유 해시태그</h3><input data-f="tag" value="${escH(S.tag)}">
+  <div class="ad-save"><button class="ad-pri" type="submit">저장하고 사이트에 반영</button><span id="adSaveMsg">${upd?'마지막 저장 '+kstStr(upd):''}</span></div></form>`;
+  const f=$('#adSite');
+  const hpApply=()=>{const im=$('#adHpImg');if(im)im.style.cssText=heroCss(S.heroPos)};
+  const hp=$('#adHp');if(hp){let st=null;hp.addEventListener('pointerdown',e=>{hp.setPointerCapture(e.pointerId);st={x:e.clientX,y:e.clientY,px:S.heroPos.x,py:S.heroPos.y}});
+    hp.addEventListener('pointermove',e=>{if(!st)return;const r=hp.getBoundingClientRect(),z=S.heroPos.z||1,cl=v=>Math.max(0,Math.min(100,Math.round(v)));
+      S.heroPos.x=cl(st.px-(e.clientX-st.x)/r.width*100*1.6/z);S.heroPos.y=cl(st.py-(e.clientY-st.y)/r.height*100*1.6/z);hpApply()});
+    ['pointerup','pointercancel'].forEach(t=>hp.addEventListener(t,()=>{st=null}))}
+  f.addEventListener('input',e=>{const el=e.target;if(el.dataset.f==='heroImg'){S.heroType=/\.(mp4|webm|mov)(\?|$)/i.test(el.value)?'video':'img';S.heroPoster=null}if(el.dataset.hz){S.heroPos.z=el.value/100;hpApply();return}if(el.dataset.l){S[el.dataset.l][+el.dataset.i][el.dataset.k]=el.value}
+    else if(el.dataset.f==='lastAtLocal'){const v=el.value;if(v){const[dt,tm]=v.split('T'),[y,mo,d]=dt.split('-').map(Number),[h,mi]=tm.split(':').map(Number);S.lastAt=Date.UTC(y,mo-1,d,h-9,mi)}}
+    else if(el.dataset.f)S[el.dataset.f]=el.value});
+  f.addEventListener('change',async e=>{const el=e.target;if(!el.dataset.up||!el.files[0])return;const lab=el.parentElement;lab.firstChild.textContent='올리는 중…';
+    try{if(el.dataset.up==='hero'){const f=el.files[0];lab.firstChild.textContent='올리는 중…';AD.heroMB=f.size/1048576;
+        if(/^video\//.test(f.type)){const v=await adUploadVideo(f);S.heroImg=v.video;S.heroType='video';S.heroPoster=v.thumb}
+        else if(f.type==='image/gif'){S.heroImg=await adUploadRaw(f);S.heroType='img';S.heroPoster=null}
+        else{S.heroImg=await adUpload(f);S.heroType='img';S.heroPoster=null}
+        S.heroPos={x:50,y:30,z:1};adSiteRender(upd);return}
+      if(el.dataset.up==='hvid'){lab.firstChild.textContent='올리는 중… 용량에 따라 1~2분';const v=await adUploadVideo(el.files[0]);S.heroVideo=v.video;S.heroThumb=v.thumb;if(v.len)S.heroLen=v.len;adSiteRender(upd);return}
+      if(el.dataset.up==='vid'){lab.firstChild.textContent='올리는 중… 용량에 따라 1~2분';const v=await adUploadVideo(el.files[0]);Object.assign(S.edits[+el.dataset.i],v);adSiteRender(upd);return}
+      const url=await adUpload(el.files[0],el.dataset.up==='ref');if(el.dataset.up==='hero'){S.heroImg=url;S.heroPos={x:50,y:30,z:1}}else if(el.dataset.up==='ref')S.refImg=url;else if(el.dataset.up==='good')S.goods[+el.dataset.i].img=url;else S.commissions[+el.dataset.i].img=url;adSiteRender(upd)}
+    catch(err){lab.firstChild.textContent='실패, 다시 시도';alert('사진을 올리지 못했어요: '+(err.message||err))}});
+  f.onsubmit=async e=>{e.preventDefault();const b=f.querySelector('.ad-pri');b.disabled=true;$('#adSaveMsg').textContent='저장 중…';
+    const data={heroType:S.heroType||'img',heroPoster:S.heroPoster||null,heroKicker:S.heroKicker,heroHeadline:S.heroHeadline,heroSub:S.heroSub,heroBy:S.heroBy,heroVideo:S.heroVideo||null,heroThumb:S.heroThumb||null,heroYt:ytId(S.heroYt),heroLen:S.heroLen||'',heroPos:S.heroPos,refImg:S.refImg||null,heroImg:S.heroImg||null,heroCredit:S.heroCredit,tag:S.tag,lastAt:S.lastAt,lastMsg:S.lastMsg,
+      edits:S.edits.map(x=>({title:x.title||'',by:x.by||'',yt:ytId(x.yt),len:x.len||'',video:x.video||null,thumb:x.thumb||null})),
+      commissions:S.commissions.map(x=>({img:x.img||null,title:x.title||'',artist:x.artist||''})),
+      goods:S.goods.map(x=>({img:x.img||null,name:x.name||'',price:x.price||'',desc:x.desc||'',link:/^https?:\/\//i.test(x.link||'')?x.link:''}))};
+    const r=await sb.from('site_settings').update({data,updated_at:new Date().toISOString()}).eq('id',1);b.disabled=false;
+    if(r.error){$('#adSaveMsg').textContent='저장하지 못했어요: '+r.error.message;return}
+    Object.assign(ARCHIVE,data);$('#adSaveMsg').textContent='저장했어요! 대원들이 새로고침하면 바로 보여요'}}
+async function adUpload(file,png){const im=await new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=fr.result};fr.onerror=rej;fr.readAsDataURL(file)});
+  const k=Math.min(1,1600/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+  const ty=png?'image/png':'image/jpeg',blob=dataBlob(c.toDataURL(ty,.86)),path=`site/${Date.now()}-${Math.random().toString(36).slice(2,7)}.${png?'png':'jpg'}`;
+  const up=await sb.storage.from(BUCKET).upload(path,blob,{contentType:ty,cacheControl:'31536000'});if(up.error)throw up.error;return pubUrl(path)}
+
+/* 에딧 영상 파일 → media 버킷 (썸네일·길이는 자동으로 뽑아요) */
+const mediaUrl=p=>`${SB_URL}/storage/v1/object/public/media/${p}`;
+async function vidMeta(file){const url=URL.createObjectURL(file),v=document.createElement('video');v.muted=true;v.playsInline=true;v.preload='auto';v.src=url;
+  try{await new Promise((res,rej)=>{v.onloadeddata=res;v.onerror=rej;setTimeout(res,8000)});const dur=v.duration||0;
+    v.currentTime=Math.min(1.5,dur/3||0);await new Promise(r=>{v.onseeked=r;setTimeout(r,4000)});
+    let thumb=null;if(v.videoWidth){const k=Math.min(1,720/Math.max(v.videoWidth,v.videoHeight)),c=document.createElement('canvas');c.width=Math.round(v.videoWidth*k);c.height=Math.round(v.videoHeight*k);
+      c.getContext('2d').drawImage(v,0,0,c.width,c.height);thumb=c.toDataURL('image/jpeg',.82)}
+    return{dur,thumb}}catch(e){return{dur:0,thumb:null}}finally{URL.revokeObjectURL(url)}}
+async function adUploadVideo(file){if(!/^video\//.test(file.type))throw new Error('영상 파일(mp4)만 올릴 수 있어요');
+  if(file.size>50*1024*1024)throw new Error(`50MB까지 올릴 수 있어요 (지금 ${Math.round(file.size/1048576)}MB). 해상도를 720p로 줄여서 다시 올려 주세요`);
+  const m=await vidMeta(file),stem=`edits/${Date.now()}-${Math.random().toString(36).slice(2,7)}`,ext=(file.name.split('.').pop()||'mp4').toLowerCase().replace(/[^a-z0-9]/g,'')||'mp4';
+  const up=await sb.storage.from('media').upload(`${stem}.${ext}`,file,{contentType:file.type,cacheControl:'31536000'});if(up.error)throw up.error;
+  let thumb=null;if(m.thumb){const t=await sb.storage.from('media').upload(`${stem}.jpg`,dataBlob(m.thumb),{contentType:'image/jpeg',cacheControl:'31536000'});if(!t.error)thumb=mediaUrl(`${stem}.jpg`)}
+  const len=m.dur?`${Math.floor(m.dur/60)}:${p2(Math.round(m.dur%60))}`:'';
+  return{video:mediaUrl(`${stem}.${ext}`),thumb,...(len?{len}:{})}}
+
+async function adUploadRaw(file){if(file.size>50*1024*1024)throw new Error('50MB까지 올릴 수 있어요');
+  const path=`hero/${Date.now()}-${Math.random().toString(36).slice(2,7)}.gif`;const up=await sb.storage.from('media').upload(path,file,{contentType:'image/gif',cacheControl:'31536000'});if(up.error)throw up.error;return mediaUrl(path)}
+
+/* 현황 */
+async function adStats(){const d=new Date(Date.now()+9*36e5);const today=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate())-9*36e5).toISOString();
+  const T=[['notes','교신'],['gallery','사진관'],['montages','몽타주'],['photos','인증샷'],['fancams','직캠'],['comments','댓글'],['lounge','라운지']];
+  const res=await Promise.all(T.flatMap(([t])=>[sb.from(t).select('id',{count:'exact',head:true}),sb.from(t).select('id',{count:'exact',head:true}).gte('created_at',today)]));
+  const lk=await sb.from('likes').select('item_id',{count:'exact',head:true});
+  $('#adBody').innerHTML=`<div class="ad-stats">${T.map(([t,l],i)=>`<div><small>${l}</small><b>${res[i*2].count??'-'}</b><span>오늘 +${res[i*2+1].count??'-'}</span></div>`).join('')}
+    <div><small>공감</small><b>${lk.count??'-'}</b><span>전체</span></div><div><small>내가 들어간 행성</small><b>#1203-${roomNo}</b><span>${online}명 접속</span></div></div>
+    <p class="ad-note">맵은 행성마다 ${ROOM_SIZE}명씩 나눠 들어가요. 전체 실시간 접속자 수는 Supabase 대시보드 → Realtime → Inspector 에서 볼 수 있어요.</p>
+    <button class="ad-add" data-ad="tab" data-k="stats">새로고침</button>`}
+
+adm.addEventListener('click',e=>{const b=e.target.closest('[data-ad]');if(!b)return;const a=b.dataset.ad;
+  if(a==='close')closeAdmin();else if(a==='logout')adLogout();else if(a==='tab'){AD.filter='all';adGo(b.dataset.k)}
+  else if(a==='filter'){AD.filter=b.dataset.k;adList()}else if(a==='toggle')adToggle(b.dataset.id);else if(a==='del')adDel(b.dataset.id,b);
+  else if(a==='add'){const D={edits:{title:'',by:'',yt:'',len:''},commissions:{img:null,title:'',artist:''},goods:{img:null,name:'',price:'',desc:'',link:''}};AD.site[b.dataset.l].push({...D[b.dataset.l]});adSiteRender()}
+  else if(a==='rm'){AD.site[b.dataset.l].splice(+b.dataset.i,1);adSiteRender()}
+  else if(a==='hpm'){AD.hpPc=b.dataset.k==='pc';adSiteRender()}
+  else if(a==='hpreset'){AD.site.heroPos={x:50,y:30,z:1};adSiteRender()}
+  else if(a==='rmref'){AD.site.refImg='';adSiteRender()}
+  else if(a==='rmhvid'){Object.assign(AD.site,{heroVideo:null,heroThumb:null});adSiteRender()}
+  else if(a==='rmvid'){const e=AD.site.edits[+b.dataset.i];e.video=null;e.thumb=null;adSiteRender()}
+  else if(a==='up'){const L=AD.site[b.dataset.l],i=+b.dataset.i;if(i>0){[L[i-1],L[i]]=[L[i],L[i-1]];adSiteRender()}}});
+document.querySelectorAll('.adminLink').forEach(b=>b.addEventListener('click',openAdmin));
+rp.addEventListener('click',e=>{if(e.target.closest('.adminLink'))openAdmin()});
+if(/[?&#]admin\b/.test(location.search+location.hash))openAdmin();
+
+
+
+/* =====================================================================
+   탑승 게이트 : 파일럿 쭈일리언에게 티켓을 받아서 슬롯에 넣으면 착륙 준비 화면으로
+   ===================================================================== */
+const gate=$('#gate');let gateOpen=false;
+/* 효과음: 첫 터치 뒤부터 나요 (브라우저 정책). 끄면 기억해요 */
+const SFX={ctx:null,mute:store.get('jc_mute',false),
+  on(){if(this.mute)return null;try{if(!this.ctx)this.ctx=new(window.AudioContext||window.webkitAudioContext)();if(this.ctx.state==='suspended')this.ctx.resume();return this.ctx.state==='running'?this.ctx:null}catch(e){return null}},
+  tone(f,d,t=0,type='square',v=.05,f2){const c=this.on();if(!c)return;const o=c.createOscillator(),g=c.createGain(),s=c.currentTime+t;o.type=type;o.frequency.setValueAtTime(f,s);if(f2)o.frequency.exponentialRampToValueAtTime(f2,s+d);
+    g.gain.setValueAtTime(0,s);g.gain.linearRampToValueAtTime(v,s+.005);g.gain.exponentialRampToValueAtTime(.0001,s+d);o.connect(g).connect(c.destination);o.start(s);o.stop(s+d+.02)},
+  chirp(){this.tone(700+Math.random()*700,.045,0,'square',.025)},                         // 삐릿삐릿 말소리
+  print(){for(let i=0;i<7;i++)this.tone(180+i*12,.03,i*.06,'square',.03);this.tone(500,.18,.45,'triangle',.05,1100)},  // 티켓 출력
+  near(){this.tone(1400,.05,0,'sine',.03)},
+  insert(){const c=this.on();if(!c)return;const n=c.createBufferSource(),b=c.createBuffer(1,c.sampleRate*.35,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length);
+    const fl=c.createBiquadFilter(),g=c.createGain();fl.type='bandpass';fl.frequency.setValueAtTime(600,c.currentTime);fl.frequency.exponentialRampToValueAtTime(3000,c.currentTime+.3);g.gain.value=.12;n.buffer=b;n.connect(fl).connect(g).connect(c.destination);n.start()},
+  noise(d,f1,f2,v=.1,type='bandpass'){const c=this.on();if(!c)return;const n=c.createBufferSource(),b=c.createBuffer(1,Math.max(1,c.sampleRate*d|0),c.sampleRate),a=b.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=(Math.random()*2-1)*(1-i/a.length);
+    const fl=c.createBiquadFilter(),g=c.createGain();fl.type=type;fl.frequency.setValueAtTime(f1,c.currentTime);fl.frequency.exponentialRampToValueAtTime(f2,c.currentTime+d);g.gain.value=v;n.buffer=b;n.connect(fl).connect(g).connect(c.destination);n.start()},
+  tick(){this.tone(1100,.025,0,'square',.018)},
+  open(){this.tone(420,.12,0,'triangle',.05,840);this.tone(980,.06,.08,'sine',.03)},
+  close(){this.tone(760,.1,0,'triangle',.04,380)},
+  ping(){this.tone(1320,.06,0,'sine',.035);this.tone(1760,.09,.06,'sine',.03)},
+  step(){this.tone(120+Math.random()*30,.03,0,'triangle',.02)},
+  coin(v){const b=v>=5?1320:v>=3?1100:880;this.tone(b,.05,0,'square',.035);this.tone(b*1.5,.09,.05,'square',.035)},
+  buzz(){this.tone(160,.18,0,'sawtooth',.04,90)},
+  go(){[660,660,990].forEach((f,i)=>this.tone(f,i<2?.06:.14,i*.12,'square',.035))},
+  win(){[523,659,784,1047,1319].forEach((f,i)=>this.tone(f,.16,i*.08,'square',.04))},
+  lose(){[494,440,392,330].forEach((f,i)=>this.tone(f,.18,i*.12,'triangle',.05))},
+  beep(){this.tone(880,.09,0,'square',.04)},
+  shutter(){this.noise(.08,4000,1500,.18,'highpass');this.noise(.12,1200,600,.1);this.tone(1760,.05,0,'sine',.03)},
+  ufo(){this.tone(900,2.2,0,'sine',.035,180);this.tone(905,2.2,0,'sine',.02,185);for(let i=0;i<8;i++)this.tone(500+(i%2)*120,.12,i*.26,'triangle',.018)},
+  beam(){for(let i=0;i<10;i++)this.tone(800+i*110,.08,i*.07,'sine',.025)},
+  pop(){this.tone(600,.04,0,'sine',.035,900)},
+  bloop(){this.tone(300,.14,0,'sine',.05,700)},
+  undo(){this.tone(700,.08,0,'triangle',.035,450)},
+  swish(){this.noise(.25,500,3500,.08)},
+  blip(){this.tone(1000,.05,0,'sine',.03);this.tone(1500,.05,.05,'sine',.025)},
+  join(){[880,1175,1568].forEach((f,i)=>this.tone(f,.08,i*.06,'sine',.025))},
+  done(){[784,988,1175,1568].forEach((f,i)=>this.tone(f,.14,i*.09,'square',.04));this.tone(2093,.3,.4,'triangle',.04)},
+  ok(){this.tone(1200,.08,0,'square',.05);this.tone(1600,.12,.11,'square',.05);[523,659,784,1047].forEach((f,i)=>this.tone(f,.22,.32+i*.09,'triangle',.06))}};
+const sndIcon=()=>SFX.mute?'<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>':'<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 8.5a5 5 0 0 1 0 7M19.5 6a8.5 8.5 0 0 1 0 12"/></svg>';
+gate.addEventListener('pointerdown',()=>SFX.on(),{capture:true});
+function openGate(){gateOpen=true;gate.hidden=false;const sb2=$('#gateSnd');sb2.innerHTML=sndIcon();sb2.setAttribute('aria-label',SFX.mute?'소리 켜기':'소리 끄기');
+  sb2.onclick=e=>{e.stopPropagation();SFX.mute=!SFX.mute;store.set('jc_mute',SFX.mute);try{sndUi()}catch(_){}sb2.innerHTML=sndIcon();sb2.setAttribute('aria-label',SFX.mute?'소리 켜기':'소리 끄기');if(!SFX.mute)SFX.chirp()};
+  $('#gateUfo').src=ART.ufo;$('#tkUfo').src=ART.ufo;$('#tkNo').textContent='1203-'+store.get('jc_no','0000');
+  $('#tkSeat').textContent=(1+Math.floor(Math.random()*24))+'ABCDEF'[Math.floor(Math.random()*6)];
+  let sd=11;const r=()=>(sd=(sd*16807)%2147483647)/2147483647;
+  $('#gateStars').innerHTML=Array.from({length:40},()=>`<i style="left:${(r()*100).toFixed(1)}%;top:${(r()*100).toFixed(1)}%;opacity:${(.3+r()*.7).toFixed(2)}"></i>`).join('');
+  let typing=null;const say=(t,done)=>{clearInterval(typing);const el=$('#gateBub');let i=0;const chars=[...t];el.textContent='';
+    typing=setInterval(()=>{i++;el.textContent=chars.slice(0,i).join('');if(i%2&&chars[i-1]&&chars[i-1].trim())SFX.chirp();if(i>=chars.length){clearInterval(typing);typing=null;done&&done()}},38);
+    el.onclick=()=>{if(typing){clearInterval(typing);typing=null;el.textContent=t;done&&done()}}};
+  const btn=$('#gateBtn'),tk=$('#tk'),zone=$('#gateZone');let step=0;
+  if(isBack()){$('#gateReset').hidden=false;$('#gateReset').onclick=askReset;$('#gateSkip').hidden=false;$('#gateSkip').onclick=()=>{gate.classList.add('bye');openReport('archive');setTimeout(()=>{gate.hidden=true;gateOpen=false},700)};
+    say(`쭈삣쭈삣! 다시 오셨군요, ${me.name} 대원!\n탐험을 다시 하려면 티켓을 넣고, 파티로 가려면 아래 버튼을 눌러 주세요`)}
+  else say('쭈삣쭈삣! 파일럿 쭈일리언입니다!!\n외계행성 탐험에 참여하실 하츄대원은 티켓을 넣어 주세요');
+  const insert=()=>{if(step!==1)return;SFX.insert();step=2;btn.disabled=true;gate.classList.remove('near');
+    const dy=-(tk.offsetTop+tk.offsetHeight+16);tk.classList.remove('drag');tk.classList.add('in');tk.style.transform=`translateY(${dy}px)`;
+    setTimeout(()=>{SFX.ok();$('#gateLed').classList.add('ok');gate.classList.remove('got');
+      say('삐빅! 탑승 확인 완료!\n곧 행성 #1203으로 출발합니다',()=>setTimeout(closeGate,700))},650)};
+  btn.onclick=()=>{if(step===0){step=1;SFX.print();gate.classList.add('got');btn.textContent='티켓 넣기';say('티켓을 위로 쭈욱 밀어서 슬롯에 넣어 주세요!')}else insert()};
+  let st=null;
+  tk.addEventListener('pointerdown',e=>{if(step!==1)return;tk.setPointerCapture(e.pointerId);st={y:e.clientY};tk.classList.add('drag')});
+  tk.addEventListener('pointermove',e=>{if(!st)return;const dy=Math.min(0,e.clientY-st.y);tk.style.transform=`translateY(${dy}px)`;const nr=tk.offsetTop+dy<60;if(nr&&!gate.classList.contains('near'))SFX.near();gate.classList.toggle('near',nr)});
+  const end=e=>{if(!st)return;const dy=Math.min(0,e.clientY-st.y);st=null;if(tk.offsetTop+dy<60)insert();else{tk.classList.remove('drag');tk.style.transform='';gate.classList.remove('near')}};
+  tk.addEventListener('pointerup',end);tk.addEventListener('pointercancel',end)}
+function askReset(){openSheet('처음부터 새로 탐사하기',`<p>이 기기에 남은 <b>탐사 기록</b>(미션 진행, 대원 이름·번호, 점수, 탐사 일지)을 지우고 처음부터 다시 시작해요.</p>
+  <p>이미 올린 교신, 사진, 몽타주, 직캠 글은 축하파티에 그대로 남아요.</p>
+  <label class="f" style="flex-direction:row;align-items:center;gap:8px;font-size:14px"><input type="checkbox" id="rsAll" style="width:20px;height:20px">내가 올린 교신·사진·몽타주·직캠·댓글·라운지 글도 모두 지우기</label>
+  <div class="row"><button class="soft" id="rsNo">그만두기</button><button class="primary" id="rsYes">지우고 처음부터</button></div><p id="rsMsg" class="save"></p>`);
+  $('#rsNo').onclick=closeSheet;$('#rsYes').onclick=async()=>{const b=$('#rsYes');b.disabled=true;
+    if($('#rsAll').checked){$('#rsMsg').textContent='올린 것들을 지우는 중…';try{await deleteAllMine()}catch(e){b.disabled=false;$('#rsMsg').textContent='일부를 지우지 못했어요. 잠시 뒤에 다시 해 주세요';return}}
+    resetMe()}}
+async function deleteAllMine(){
+  if(!sb){['jc_lounge','jc_notes','jc_gallery','jc_montages','jc_photos','jc_fancams','jc_comments','jc_likes','jc_nlikes','jc_flikes'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});return}
+  await pull(true);const paths=['gallery','montages','photos'].flatMap(k=>R[k].filter(x=>x.mine&&x.path).map(x=>x.path));
+  for(const t of ['lounge','comments','fancams','notes','gallery','montages','photos']){const r=await sb.from(t).delete().eq('user_id',uid);if(r.error)throw r.error}
+  await sb.from('likes').delete().eq('user_id',uid);
+  for(let i=0;i<paths.length;i+=50)await sb.storage.from(BUCKET).remove(paths.slice(i,i+50))}
+
+/* ===== 효과음 전역 연결 · 소리 끄기 버튼 · 채팅창 켜고 끄기 ===== */
+function lockSheet(on){const sh=$('#sheetBody')&&$('#sheetBody').parentElement;if(sh)sh.classList.toggle('lock',!!on)}
+document.addEventListener('pointerdown',()=>SFX.on(),{capture:true,passive:true});
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('button,.ad-file,[role=button]');if(!b||b.disabled)return;
+  if(b.closest('#gate,#adm,.dpad')||b.id==='sndBtn')return;SFX.tick()},{capture:true});
+{const f=openSheet;openSheet=function(...a){const was=modalOpen;f.apply(this,a);if(!was)SFX.open()}}
+{const f=closeSheet;closeSheet=function(...a){if(modalOpen)SFX.close();f.apply(this,a)}}
+{const f=markDone;markDone=function(id){const n=!done[id];f(id);if(n)setTimeout(()=>SFX.done(),180)}}
+{const f=addItem;addItem=async function(k,d){const r=await f(k,d);SFX.ok();return r}}
+{const f=addLog;addLog=function(name,text,mine){f(name,text,mine);if(!logOn)return;mine?SFX.pop():SFX.blip()}}
+let logOn=!store.get('jc_logoff',false);
+function logUi(){const b=$('#logBtn');b.textContent=logOn?'💬 채팅 켜짐':'💬 채팅 꺼짐';b.classList.toggle('off',!logOn);b.setAttribute('aria-pressed',logOn);$('#log').classList.toggle('off',!logOn)}
+$('#logBtn').addEventListener('click',()=>{logOn=!logOn;store.set('jc_logoff',!logOn);logUi()});logUi();
+function sndUi(){const b=$('#sndBtn');b.innerHTML=sndIcon();b.setAttribute('aria-label',SFX.mute?'효과음 켜기':'효과음 끄기')}
+$('#sndBtn').addEventListener('click',()=>{SFX.mute=!SFX.mute;store.set('jc_mute',SFX.mute);sndUi();if(!SFX.mute)SFX.ping()});sndUi();
+function resetMe(){['jc_done','jc_end','jc_fin','jc_land','jc_myshot','jc_best2','jc_no','jc_me','jc_ticket'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});location.reload()}
+function closeGate(){store.set('jc_ticket',true);gate.classList.add('bye');setTimeout(()=>{gate.hidden=true;gateOpen=false;try{$('#nameIn').focus()}catch(e){}},700)}
+if(!/[?&#]admin\b/.test(location.search+location.hash))openGate();
+
+/* 디데이 */
+const OPEN=Date.UTC(2026,11,3,3,3),CLOSE=Date.UTC(2026,11,23,15,0);   // 착륙 12월 3일 12:03 ~ 12월 23일 24:00 (한국 시간)
+function tick(){const n=Date.now(),el=$('#dday');
+  if(n<OPEN){const d=OPEN-n,dd=Math.floor(d/864e5),h=Math.floor(d/36e5)%24,m=Math.floor(d/6e4)%60,ss=Math.floor(d/1e3)%60;
+    el.innerHTML=`착륙까지 <b>D-${dd}</b> ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`}
+  else el.innerHTML=n<CLOSE?'<b>행성 개방 중</b>':'탐사 종료 · 고마워요'}
+setInterval(()=>{tick();renderLog();if(rpOpen&&rpView==='archive')updLast()},1000);tick();updateProg();
+
+resize();camX=PAD.x-vw/2;camY=PAD.y-100-VH/2;
+requestAnimationFrame(t=>{last=t;frame(t)});
+})();
+</script>
+
+</body>
+</html>
