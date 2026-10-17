@@ -275,6 +275,7 @@ img{max-width:100%}
 .ad-mv{display:flex;gap:6px;justify-content:flex-end;grid-column:1/-1}
 .ad-mv button{font-size:13px;padding:6px 10px;background:#efe6f5;color:var(--ink)}
 .ad-vid{grid-column:1/-1;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:#5c4f73}.ad-vid img{width:72px;height:44px;object-fit:cover;border-radius:6px}.ad-vid button{font-size:12px;padding:6px 9px;background:#efe6f5;color:var(--ink)}
+.ad-vol{flex-direction:row!important;align-items:center;gap:10px!important}.ad-vol input{flex:1;accent-color:var(--berry)}.ad-vol output{width:44px;text-align:right;font-variant-numeric:tabular-nums;color:var(--ink)}
 .ad-hp{display:flex;flex-direction:column;gap:8px;background:#fff;border:1.5px solid #ece2f2;border-radius:10px;padding:12px}
 .ad-hpm{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.ad-hpm button{font-size:13px;padding:6px 10px;background:#efe6f5;color:var(--ink)}.ad-hpm button.on{background:var(--ink);color:#fff}
 .ad-hpf{position:relative;width:240px;aspect-ratio:390/620;overflow:hidden;border-radius:10px;background:#3a2c63;cursor:grab;touch-action:none;align-self:center}
@@ -1620,7 +1621,7 @@ function vMsgs(){const all=rpNotes(),lk={};all.forEach(n=>{if(isLiked('notes',n.
 
 function heroInfo(){const A=ARCHIVE,v=(k,f)=>A[k]!=null?A[k]:f;
   return{kick:v('heroKicker','JOONI EDIT · 오늘의 에딧'),head:v('heroHeadline','HAPPY\nJUUN DAY'),title:(x=>!x||x==='쭈일리언의 외계탐사'?'To. 아기 백구 쭈니':x)(A.heroSub),by:v('heroBy',''),len:A.heroLen||'',
-    play:{title:!A.heroSub||A.heroSub==='쭈일리언의 외계탐사'?'To. 아기 백구 쭈니':A.heroSub,by:A.heroBy||'',video:A.heroVideo||null,thumb:A.heroThumb||null,yt:A.heroYt||''}}}
+    play:{vol:A.heroVol,title:!A.heroSub||A.heroSub==='쭈일리언의 외계탐사'?'To. 아기 백구 쭈니':A.heroSub,by:A.heroBy||'',video:A.heroVideo||null,thumb:A.heroThumb||null,yt:A.heroYt||''}}}
 const heroCss=p=>{p=p||{};const x=+p.x>=0?+p.x:50,y=+p.y>=0?+p.y:30,z=Math.max(1,+p.z||1);return`object-position:${x}% ${y}%;transform:scale(${z});transform-origin:${x}% ${y}%`};
 /* ---- 최애 직캠 자랑 (링크로만 공유) ---- */
 function camInfo(url){url=String(url||'');const yt=url.match(/(?:youtube\.com\/(?:watch\?(?:[^#]*&)?v=|shorts\/|live\/|embed\/)|youtu\.be\/)([\w-]{11})/);
@@ -1729,7 +1730,7 @@ function galView(items,i){openViewer({items,index:i,ratio:'9/16',title:e=>e.t,im
   extra:e=>{const on=isLiked('gallery',e.id);return`<button class="${on?'primary':'soft'}" id="gaLike">${on?'💜 좋아요 했어요':'💜 좋아요'}</button>`},
   mount:(e,show)=>{$('#gaLike').onclick=()=>toggleLike('gallery',e).then(()=>{show();rpRefresh()},err=>{$('#vmsg').textContent=errMsg(err)})}})}
 function playEdit(i){playItem(ARCHIVE.edits[i])}
-function playItem(e){if(!e)return;bgmPause();const by=e.by?`<p class="by">edit by ${escH(e.by)}</p>`:'';
+function playItem(e){if(!e)return;setTimeout(()=>{const v=document.querySelector('#sheetBody video');if(v){const k=e.vol!=null?Math.max(0,Math.min(100,+e.vol))/100:1;v.volume=k;v.muted=k===0}},0);bgmPause();const by=e.by?`<p class="by">edit by ${escH(e.by)}</p>`:'';
   openSheet(e.title||'쭈니 에딧',e.video?`<video src="${escH(e.video)}"${e.thumb?` poster="${escH(e.thumb)}"`:''} controls playsinline autoplay style="display:block;width:100%;max-height:70vh;border-radius:8px;background:#000"></video>${by}`
     :ytOk(e.yt)?`<div style="position:relative;aspect-ratio:16/9;border-radius:8px;overflow:hidden;background:#000"><iframe src="https://www.youtube-nocookie.com/embed/${e.yt}?autoplay=1&playsinline=1&rel=0" title="${escH(e.title||'쭈니 에딧')}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe></div>
     ${by}<a href="https://youtu.be/${e.yt}" target="_blank" rel="noopener" style="font-family:var(--display);color:var(--berry-deep)">유튜브에서 보기 →</a>`
@@ -1898,7 +1899,7 @@ async function adDel(id,btn){const x=AD.rows.find(r=>r.id===id);if(!x)return;
 
 /* 생카 설정: 저장하면 사이트의 ARCHIVE 값을 덮어써요 */
 async function adSite(){const r=await sb.from('site_settings').select('data,updated_at').eq('id',1).maybeSingle();
-  const d={...ARCHIVE,...((r.data&&r.data.data)||{})};const h0=heroInfo();AD.site=JSON.parse(JSON.stringify({heroType:d.heroType||'img',heroPoster:d.heroPoster||null,goods:d.goods||[],heroKicker:h0.kick,heroHeadline:h0.head,heroSub:h0.title,heroBy:h0.by,heroVideo:d.heroVideo||null,heroThumb:d.heroThumb||null,heroYt:d.heroYt||'',heroLen:d.heroLen||'',heroPos:d.heroPos||{x:50,y:30,z:1},refImg:d.refImg||'',heroImg:d.heroImg||'',heroCredit:d.heroCredit||'',tag:d.tag||'',edits:d.edits||[],lyrics:d.lyrics||[],bgm:d.bgm||[],commissions:d.commissions||[],lastAt:d.lastAt,lastMsg:d.lastMsg||''}));
+  const d={...ARCHIVE,...((r.data&&r.data.data)||{})};const h0=heroInfo();AD.site=JSON.parse(JSON.stringify({heroType:d.heroType||'img',heroPoster:d.heroPoster||null,goods:d.goods||[],heroKicker:h0.kick,heroHeadline:h0.head,heroSub:h0.title,heroBy:h0.by,heroVideo:d.heroVideo||null,heroThumb:d.heroThumb||null,heroYt:d.heroYt||'',heroLen:d.heroLen||'',heroVol:d.heroVol!=null?d.heroVol:100,heroPos:d.heroPos||{x:50,y:30,z:1},refImg:d.refImg||'',heroImg:d.heroImg||'',heroCredit:d.heroCredit||'',tag:d.tag||'',edits:d.edits||[],lyrics:d.lyrics||[],bgm:d.bgm||[],commissions:d.commissions||[],lastAt:d.lastAt,lastMsg:d.lastMsg||''}));
   const ph=v=>/^\[.*\]$/.test(v||'')?'':v;AD.site.edits.forEach(e=>['title','by'].forEach(k=>e[k]=ph(e[k])));AD.site.commissions.forEach(c=>['title','artist'].forEach(k=>c[k]=ph(c[k])));AD.site.lastMsg=ph(AD.site.lastMsg);
   adSiteRender(r.data&&r.data.updated_at)}
 function adSiteRender(upd){const S=AD.site,lk=S.lastAt?kst(S.lastAt):null,lv=lk?`${lk.y}-${p2(lk.mo)}-${p2(lk.d)}T${p2(lk.h)}:${p2(lk.mi)}`:'';
@@ -1913,7 +1914,7 @@ function adSiteRender(upd){const S=AD.site,lk=S.lastAt?kst(S.lastAt):null,lv=lk?
   <h3>재생 버튼 영상 <small>배너의 재생을 누르면 나와요. 아래 쭈니 에딧과 따로예요 (예: 티저)</small></h3>
   <div class="ad-item"><div class="ad-vid">${S.heroThumb?`<img src="${escH(S.heroThumb)}" alt="">`:''}<label class="ad-file sm">${S.heroVideo?'영상 바꾸기':'영상 파일 올리기'}<input type="file" accept="video/mp4,video/webm,video/quicktime" data-up="hvid" hidden></label>${S.heroVideo?'<span>영상 파일이 연결됐어요</span><button type="button" data-ad="rmhvid">영상 빼기</button>':'<span>mp4 · 50MB까지</span>'}</div>
     <input data-f="heroYt" value="${escH(S.heroYt)}" placeholder="또는 유튜브 주소"><input data-f="heroLen" value="${escH(S.heroLen)}" placeholder="길이 (예: 0:30)" class="sm"></div>
-  <p class="ad-note">비워 두면 재생을 눌렀을 때 "영상을 준비하고 있어요"가 나와요.</p>
+  <label class="ad-vol" style="grid-column:1/-1">소리 크기 <input type="range" min="0" max="100" step="5" data-f="heroVol" value="${S.heroVol!=null?S.heroVol:100}"><output>${S.heroVol!=null?S.heroVol:100}%</output></label><p class="ad-note">비워 두면 재생을 눌렀을 때 "영상을 준비하고 있어요"가 나와요.</p>
   ${S.heroImg?`<div class="ad-hp"><div class="ad-hpm"><button type="button" class="${AD.hpPc?'':'on'}" data-ad="hpm" data-k="m">폰에서</button><button type="button" class="${AD.hpPc?'on':''}" data-ad="hpm" data-k="pc">PC에서</button></div>
     <div class="ad-hpf${AD.hpPc?' pc':''}" id="adHp">${heroTag(S.heroImg,S.heroPos,S.heroType,S.heroPoster,'adHpImg')}<div class="ad-hpfade"></div>
       <img class="ad-hpufo" src="${ART.ufo}" alt=""><div class="ad-hptx"><small>${escH(S.heroKicker||'')}</small><b>${escH(S.heroHeadline||'').replace(/\n/g,'<br>')}</b></div></div>
@@ -1925,6 +1926,7 @@ function adSiteRender(upd){const S=AD.site,lk=S.lastAt?kst(S.lastAt):null,lv=lk?
   ${S.edits.map((e,i)=>`<div class="ad-item"><input data-l="edits" data-i="${i}" data-k="title" value="${escH(e.title||'')}" placeholder="에딧 제목"><input data-l="edits" data-i="${i}" data-k="by" value="${escH(e.by||'')}" placeholder="만든 사람">
     <input data-l="edits" data-i="${i}" data-k="yt" value="${escH(e.yt||'')}" placeholder="유튜브 주소 (영상 파일을 올리면 없어도 돼요)"><input data-l="edits" data-i="${i}" data-k="len" value="${escH(e.len||'')}" placeholder="길이 (예: 2:31)" class="sm">
     <div class="ad-vid">${e.thumb?`<img src="${escH(e.thumb)}" alt="">`:''}<label class="ad-file sm">${e.video?'영상 바꾸기':'영상 파일 올리기'}<input type="file" accept="video/mp4,video/webm,video/quicktime" data-up="vid" data-i="${i}" hidden></label>${e.video?`<span>영상 파일이 연결됐어요 (유튜브보다 먼저 재생돼요)</span><button type="button" data-ad="rmvid" data-i="${i}">영상 빼기</button>`:'<span>mp4 · 50MB까지</span>'}</div>
+    <label class="ad-vol" style="grid-column:1/-1">소리 크기 <input type="range" min="0" max="100" step="5" data-l="edits" data-i="${i}" data-k="vol" value="${e.vol!=null?e.vol:100}"><output>${e.vol!=null?e.vol:100}%</output></label>
     <div class="ad-mv"><button type="button" data-ad="up" data-l="edits" data-i="${i}" aria-label="위로">↑</button><button type="button" data-ad="rm" data-l="edits" data-i="${i}">빼기</button></div></div>`).join('')}
   <button type="button" class="ad-add" data-ad="add" data-l="edits">+ 에딧 추가</button>
   <h3>가사로 전하는 마음 (LYRICS FOR JUUN) <small>맨 위가 최신이에요. 생일파티에는 맨 위 1개, 나머지는 전체 보기에서 보여요</small></h3>
@@ -1960,7 +1962,7 @@ function adSiteRender(upd){const S=AD.site,lk=S.lastAt?kst(S.lastAt):null,lv=lk?
     hp.addEventListener('pointermove',e=>{if(!st)return;const r=hp.getBoundingClientRect(),z=S.heroPos.z||1,cl=v=>Math.max(0,Math.min(100,Math.round(v)));
       S.heroPos.x=cl(st.px-(e.clientX-st.x)/r.width*100*1.6/z);S.heroPos.y=cl(st.py-(e.clientY-st.y)/r.height*100*1.6/z);hpApply()});
     ['pointerup','pointercancel'].forEach(t=>hp.addEventListener(t,()=>{st=null}))}
-  f.addEventListener('input',e=>{const el=e.target;if(el.dataset.f==='heroImg'){S.heroType=/\.(mp4|webm|mov)(\?|$)/i.test(el.value)?'video':'img';S.heroPoster=null}if(el.dataset.hz){S.heroPos.z=el.value/100;hpApply();return}if(el.dataset.l){S[el.dataset.l][+el.dataset.i][el.dataset.k]=el.value}
+  f.addEventListener('input',e=>{const el=e.target;if(el.type==='range'&&el.nextElementSibling&&el.nextElementSibling.tagName==='OUTPUT')el.nextElementSibling.textContent=el.value+'%';if(el.dataset.f==='heroImg'){S.heroType=/\.(mp4|webm|mov)(\?|$)/i.test(el.value)?'video':'img';S.heroPoster=null}if(el.dataset.hz){S.heroPos.z=el.value/100;hpApply();return}if(el.dataset.l){S[el.dataset.l][+el.dataset.i][el.dataset.k]=el.value}
     else if(el.dataset.f==='lastAtLocal'){const v=el.value;if(v){const[dt,tm]=v.split('T'),[y,mo,d]=dt.split('-').map(Number),[h,mi]=tm.split(':').map(Number);S.lastAt=Date.UTC(y,mo-1,d,h-9,mi)}}
     else if(el.dataset.f)S[el.dataset.f]=el.value});
   f.addEventListener('change',async e=>{const el=e.target;if(!el.dataset.up||!el.files[0])return;const lab=el.parentElement;lab.firstChild.textContent='올리는 중…';
@@ -1979,8 +1981,8 @@ function adSiteRender(upd){const S=AD.site,lk=S.lastAt?kst(S.lastAt):null,lv=lk?
       const url=await adUpload(el.files[0],el.dataset.up==='ref');if(el.dataset.up==='hero'){S.heroImg=url;S.heroPos={x:50,y:30,z:1}}else if(el.dataset.up==='ref')S.refImg=url;else if(el.dataset.up==='good')S.goods[+el.dataset.i].img=url;else S.commissions[+el.dataset.i].img=url;adSiteRender(upd)}
     catch(err){lab.firstChild.textContent='실패, 다시 시도';alert('사진을 올리지 못했어요: '+(err.message||err))}});
   f.onsubmit=async e=>{e.preventDefault();const b=f.querySelector('.ad-pri');b.disabled=true;$('#adSaveMsg').textContent='저장 중…';
-    const data={heroType:S.heroType||'img',heroPoster:S.heroPoster||null,heroKicker:S.heroKicker,heroHeadline:S.heroHeadline,heroSub:S.heroSub,heroBy:S.heroBy,heroVideo:S.heroVideo||null,heroThumb:S.heroThumb||null,heroYt:ytId(S.heroYt),heroLen:S.heroLen||'',heroPos:S.heroPos,refImg:S.refImg||null,heroImg:S.heroImg||null,heroCredit:S.heroCredit,tag:S.tag,lastAt:S.lastAt,lastMsg:S.lastMsg,
-      edits:S.edits.map(x=>({title:x.title||'',by:x.by||'',yt:ytId(x.yt),len:x.len||'',video:x.video||null,thumb:x.thumb||null})),
+    const data={heroType:S.heroType||'img',heroPoster:S.heroPoster||null,heroKicker:S.heroKicker,heroHeadline:S.heroHeadline,heroSub:S.heroSub,heroBy:S.heroBy,heroVideo:S.heroVideo||null,heroThumb:S.heroThumb||null,heroYt:ytId(S.heroYt),heroLen:S.heroLen||'',heroVol:Math.max(0,Math.min(100,+(S.heroVol!=null?S.heroVol:100))),heroPos:S.heroPos,refImg:S.refImg||null,heroImg:S.heroImg||null,heroCredit:S.heroCredit,tag:S.tag,lastAt:S.lastAt,lastMsg:S.lastMsg,
+      edits:S.edits.map(x=>({title:x.title||'',by:x.by||'',yt:ytId(x.yt),len:x.len||'',video:x.video||null,thumb:x.thumb||null,vol:Math.max(0,Math.min(100,+(x.vol!=null?x.vol:100)))})),
       commissions:S.commissions.map(x=>({img:x.img||null,title:x.title||'',artist:x.artist||''})),
       lyrics:S.lyrics.filter(x=>(x.text||'').trim()||(x.title||'').trim()).map(x=>({title:(x.title||'').slice(0,60),text:(x.text||'').slice(0,4000),note:(x.note||'').slice(0,600)})),
       bgm:(S.bgm||[]).filter(x=>x.url).map(x=>({url:x.url,name:(x.name||'').slice(0,60)})),
