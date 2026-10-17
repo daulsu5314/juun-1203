@@ -393,6 +393,11 @@ img{max-width:100%}
 .rp-lyr-q{font-size:12px;line-height:1.5;color:#6a5d8f;order:3;max-width:100%}
 .lyr-why{background:#f4effc;border-radius:10px;padding:12px 14px;font-size:14px;line-height:1.65;color:#3a2459;white-space:pre-line;margin:0 0 6px}.lyr-why b{display:block;font-family:"Jua",sans-serif;font-weight:400;color:var(--berry-deep);margin-bottom:4px}
 .rp-lyr-ph{opacity:.75}
+.cut-cam{position:relative;width:min(100%,360px);aspect-ratio:3/2;margin:0 auto;background:#170d33;border-radius:10px;overflow:hidden}
+.cut-cam video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.cut-cam video.mir{transform:scaleX(-1)}
+.cut-cam .cd{font-size:90px;z-index:2;pointer-events:none}.cut-cam .bstart{top:50%}
+.cut-no{position:absolute;left:10px;top:8px;z-index:2;font-family:var(--display);font-size:14px;color:#fff;background:rgba(23,13,51,.7);border-radius:6px;padding:2px 8px}.cut-no:empty{display:none}
+.cut-prev{display:flex;justify-content:center;margin:10px 0}.cut-prev canvas,.cut-prev img{width:min(200px,52vw);aspect-ratio:1/3;height:auto;border-radius:4px;box-shadow:0 8px 20px rgba(42,31,61,.25);background:#2a1458}
 .rp-lyr1{padding:6px 18px 0;display:flex}.rp-lyr1 .rp-lyr{width:min(100%,320px);transform:rotate(-1deg)}
 
 .lyv-bgm{position:sticky;top:0;z-index:2;margin:14px 18px 0;display:flex;align-items:center;gap:10px;background:rgba(29,18,64,.92);backdrop-filter:blur(6px);border:1px solid #4a3a7a;border-radius:999px;padding:8px 8px 8px 14px}
@@ -959,9 +964,9 @@ function charScene(seed,color){const W=120,H=190,c=document.createElement('canva
   if(r()<.75){const k=[STK.heart,STK.star][Math.floor(r()*2)];x.drawImage(k,20+Math.floor(r()*34),104,k.width*2,k.height*2)}
   return c}
 function openPhoto(){
-  openSheet('착륙 기록소',`${mTag('photo')}<p>프레임을 고르고 한 장 남겨요. <b>쭈일리언 인형과 찍어도 되고, 주은이와 함께하는 다양한 일상을 찍어 주세요!!</b></p><p>이미 찍어 둔 사진이 있으면 <b>사진 올리기</b>로, 카메라가 없으면 <b>내 캐릭터로 찍기</b>로 남겨도 미션이 끝나요.</p><p class="zhint">내 캐릭터로 찍은 사진은 <b>탐사 일지에만 기록</b>되고, 생일파티 착륙 인증샷에는 걸 수 없어요.</p>
+  openSheet('착륙 기록소',`${mTag('photo')}<p>행성 #1203에 무사히 착륙했다는 증거를 남겨요! <b>내 대원 캐릭터</b>로 프레임을 골라 한 장 찍으면 미션이 끝나요.</p><p class="zhint">찍은 사진은 탐사 일지에 들어가고, <b>생일파티에 걸기</b>를 누르면 축하파티 착륙 인증샷에도 올라가요. 쭈니와 함께한 실제 사진은 생일파티의 <b>쭈니 네컷</b>에서 남겨 주세요!</p>
   <button class="soft" id="phHall">착륙 기록 전시관 구경하기 →</button>
-  <div class="row pmode"><button class="soft pm on" type="button" data-m="cam">카메라로 찍기</button><button class="soft pm" type="button" data-m="up">사진 올리기</button><button class="soft pm" type="button" data-m="char">내 캐릭터로 찍기</button></div>
+  <div class="row pmode" hidden><button class="soft pm" type="button" data-m="cam">카메라로 찍기</button><button class="soft pm" type="button" data-m="up">사진 올리기</button><button class="soft pm on" type="button" data-m="char">내 캐릭터로 찍기</button></div>
   <div class="row fr">${FRAMES.map((f,i)=>`<button class="soft fk${i?'':' on'}" type="button" data-f="${i}">${f.name}</button>`).join('')}</div>
   <div class="booth9" id="bth"><video id="pv" playsinline muted></video><canvas id="pchar" hidden></canvas><img id="pshot" alt="찍은 사진" hidden><canvas id="pov" width="${PW}" height="${PH}"></canvas><div class="cd" id="pcd" hidden></div><div class="flash" id="pfl"></div>
     <button class="primary bstart" id="pgo" type="button">카메라 켜기</button><button class="primary bstart" id="pupBtn" type="button" hidden>앨범에서 사진 고르기</button><input type="file" id="pup" accept="image/*" hidden>
@@ -973,7 +978,7 @@ function openPhoto(){
   <p class="zhint" id="pexInfo">이 사진은 내 탐사 일지에 자동으로 들어가요. <b>생일파티에 걸기</b>를 누르면 축하파티의 착륙 인증샷에도 올라가요.</p><p id="pexMsg" class="save"></p>
   <div class="row" style="justify-content:center"><button class="soft" id="pre">다시 찍기</button><button class="primary" id="pexh">생일파티에 걸기</button></div></div>`);
   const my=token,pv=$('#pv'),pc=$('#pchar'),ov=$('#pov'),oc=ov.getContext('2d');
-  let fi=0,stream=null,raw=null,busy=false,mode='cam',facing='user',seed=(Date.now()%2147483646)+1;
+  let fi=0,stream=null,raw=null,busy=false,mode='char',facing='user',seed=(Date.now()%2147483646)+1;
   const drawOv=()=>{oc.clearRect(0,0,PW,PH);drawFrame(oc,FRAMES[fi],me.name,true)};drawOv();
   const stop=()=>{if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}};
   onClose=stop;
@@ -989,7 +994,7 @@ function openPhoto(){
   function compose(){if(!raw)return;const c=document.createElement('canvas');c.width=PW;c.height=PH;const x=c.getContext('2d');drawFrame(x,FRAMES[fi],me.name,false);
     const r=Math.max(HOLE.w/raw.width,HOLE.h/raw.height),w=raw.width*r,h=raw.height*r;x.save();x.beginPath();x.rect(HOLE.x,HOLE.y,HOLE.w,HOLE.h);x.clip();x.imageSmoothingEnabled=!raw.px;x.drawImage(raw,HOLE.x+(HOLE.w-w)/2,HOLE.y+(HOLE.h-h)/2,w,h);x.restore();
     $('#pimg').src=c.toDataURL('image/jpeg',.88);$('#pshot').src=$('#pimg').src;$('#pafter').hidden=false;
-    $('#pexh').hidden=mode==='char';$('#pexInfo').innerHTML=mode==='char'?'내 캐릭터 사진은 <b>탐사 일지에 기록</b>됐어요. 생일파티 착륙 인증샷에는 걸 수 없어요. 카메라로 찍거나 사진을 올리면 걸 수 있어요.':'이 사진은 내 탐사 일지에 자동으로 들어가요. <b>생일파티에 걸기</b>를 누르면 축하파티의 착륙 인증샷에도 올라가요.';markDone('photo');
+    $('#pexh').hidden=false;$('#pexh').disabled=false;$('#pexh').textContent='생일파티에 걸기';$('#pexMsg').textContent='';markDone('photo');
     try{const sm=document.createElement('canvas');sm.width=360;sm.height=640;sm.getContext('2d').drawImage(c,0,0,360,640);store.set('jc_myshot',{img:sm.toDataURL('image/jpeg',.82),at:Date.now(),char:mode==='char',posted:false})}catch(e){}}
   function takeFrom(src,sw,sh,mirror,px){const c=document.createElement('canvas');c.width=sw;c.height=sh;const x=c.getContext('2d');x.imageSmoothingEnabled=!px;if(mirror){x.translate(sw,0);x.scale(-1,1)}x.drawImage(src,0,0,sw,sh);
     raw=c;raw.px=!!px;compose();$('#pshot').hidden=false;ui();$('#pafter').scrollIntoView({behavior:'smooth',block:'nearest'})}
@@ -1019,11 +1024,11 @@ function openPhoto(){
   $('#pre').onclick=()=>{reset();if(mode==='cam'&&!stream&&!$('#pfileL').hidden)$('#pfile').click()};
   document.querySelectorAll('.fr .fk').forEach(b=>b.onclick=()=>{fi=+b.dataset.f;document.querySelectorAll('.fr .fk').forEach(x=>x.classList.toggle('on',x===b));drawOv();compose()});
   $('#pexh').onclick=async()=>{const b=$('#pexh');
-    if(mode==='char')return;return openStickerEditor($('#pimg').src);   // 얼굴이 나올 수 있어서 스티커 단계를 거쳐요
+    if(mode!=='char')return openStickerEditor($('#pimg').src);   // 얼굴이 나올 수 있어서 스티커 단계를 거쳐요
     if(b.disabled)return;b.disabled=true;b.textContent='거는 중…';   // 캐릭터 사진은 바로 걸어요
     try{await addItem('photos',{img:$('#pimg').src,t:'착륙 성공!',n:me.name});b.textContent='걸었어요!';{const ms=store.get('jc_myshot',null);if(ms){ms.posted=true;store.set('jc_myshot',ms)}}$('#pexMsg').textContent='축하파티 착륙 인증샷에 올라갔어요';setTimeout(openPhotoHall,700)}
     catch(err){b.disabled=false;b.textContent='생일파티에 걸기';$('#pexMsg').textContent=errMsg(err)}};
-  ui();
+  drawChar();ui();
 }
 /* 전시 전에 스티커로 얼굴 가리기 */
 function openStickerEditor(src){
@@ -1308,7 +1313,7 @@ const ROOM_SIZE=5;        // 행성 한 곳에 같이 보이는 대원 수. Pro 
 const BUCKET='uploads';
 
 let sb=null,uid=null,SEND_MS=66,netSend=null,netStarted=false,roomNo=1,netCh=null;
-const R={notes:[],gallery:[],montages:[],photos:[],fancams:[],liked:new Set(),at:0};
+const R={notes:[],gallery:[],montages:[],photos:[],memories:[],fancams:[],liked:new Set(),at:0};
 const pubUrl=p=>`${SB_URL}/storage/v1/object/public/${BUCKET}/${p}`;
 function errMsg(e){const s=String(e&&(e.message||e.code)||e||'');
   if(/rate_limited/.test(s))return'조금 천천히 올려 주세요. 1분 뒤에 다시 해 볼까요?';
@@ -1348,13 +1353,15 @@ async function pull(force){if(!sb)return;const now=Date.now();if(!force&&now-R.a
   if(!g.error)R.gallery=g.data.map(x=>({...base(x),t:x.title,w:x.reason,img:pubUrl(x.image_path),path:x.image_path,likes:x.like_count||0}));
   if(!m.error)R.montages=m.data.map(x=>({...base(x),t:x.title,img:pubUrl(x.image_path),path:x.image_path}));
   if(!p.error)R.photos=p.data.map(x=>({...base(x),t:x.caption,img:pubUrl(x.image_path),path:x.image_path}));
+  const mm=await sel('memories','id,user_id,name,caption,image_path,approved,created_at');
+  if(!mm.error)R.memories=mm.data.filter(x=>x.approved||x.user_id===uid).map(x=>({...base(x),t:x.caption,img:pubUrl(x.image_path),path:x.image_path}));
   const fc=await sel('fancams_ranked','id,user_id,name,url,comment,approved,created_at,like_count,comment_count');
   if(!fc.error)R.fancams=fc.data.filter(x=>x.approved||x.user_id===uid).map(x=>({...base(x),url:x.url,c:x.comment,likes:x.like_count||0,cc:x.comment_count||0}));
   if(!l.error)R.liked=new Set(l.data.map(x=>x.item_type+':'+x.item_id))}
 setInterval(()=>{if(sb&&document.visibilityState==='visible'&&(rpOpen||modalOpen))pull()},60000);
 
 /* 목록 = 서버가 있으면 서버, 없으면 이 기기 + 예시 */
-const LS={notes:'jc_notes',gallery:'jc_gallery',montages:'jc_montages',photos:'jc_photos',fancams:'jc_fancams'};
+const LS={notes:'jc_notes',gallery:'jc_gallery',montages:'jc_montages',photos:'jc_photos',memories:'jc_memories',fancams:'jc_fancams'};
 function localList(k){return store.get(LS[k],[]).map((x,i)=>k==='notes'?{id:x.id||'n'+(x.t||i),n:x.n,m:x.m,t:x.t||0,mine:1}:{...x,mine:1}).reverse()}
 function exList(k){
   if(k==='notes')return sampleNotes.map((x,i)=>({id:'sx'+i,n:x.n,m:x.m,t:0,ex:1}));
@@ -1601,8 +1608,11 @@ ${(()=>{const LY=lyrList(),l=LY[0];return`<section class="rp-sec" style="padding
   <section class="rp-sec" id="rpFan"><div class="rp-sh"><h2>대원들이 자랑하는 쭈니</h2><small>사진관 · 최신순</small></div>
     <div class="rp-row">${gal.slice(0,40).map((e,i)=>`<button class="rp-card" style="width:132px" data-act="gal" data-i="${i}"><span class="rp-th" style="height:190px"><img loading="lazy" src="${e.img}" alt="${escH(e.t)}"></span><span class="rp-ct">「${escH(e.t)}」</span><span class="rp-cs">${escH(e.n)}${e.pending?' · 숨김':''}</span></button>`).join('')}</div></section>
 
+  <section class="rp-sec" style="padding-top:38px"><div class="rp-big"><div><div class="rp-kick">MEMORIES</div><h2>쭈니 네컷</h2><p>하츄들이 쭈니와 함께한 추억 · ${itemsOf('memories').length}장</p></div></div>
+    <div class="rp-row" style="gap:10px"><button class="rp-card rp-cpost" style="width:104px;height:312px" data-act="cutnew"><b>+</b>나도<br>네컷 찍기</button>${itemsOf('memories').slice(0,40).map((p,i)=>`<button class="rp-card" style="width:104px" data-act="cut" data-i="${i}"><span class="rp-th" style="height:312px;border-radius:4px"><img loading="lazy" src="${p.img}" alt="${escH(p.t)}"></span><span class="rp-cs" style="margin:0">${escH(p.n)}${p.pending?' · 숨김':''}</span></button>`).join('')}</div></section>
+
   <section class="rp-sec"><div class="rp-sh"><h2>착륙 인증샷</h2><small>${shots.length}장</small></div>
-    <div class="rp-row">${(()=>{const ms=store.get('jc_myshot',null);return ms&&ms.img&&!ms.char&&!ms.posted&&!shots.some(x=>x.mine)?`<button class="rp-card" style="width:120px" data-act="myshot"><span class="rp-th rp-mys" style="height:213px"><img src="${ms.img}" alt="내 착륙 사진"><b>+ 내 사진 걸기</b></span><span class="rp-cs" style="margin:0">아직 안 건 내 사진</span></button>`:''})()}${shots.slice(0,40).map((p,i)=>`<button class="rp-card" style="width:120px" data-act="shot" data-i="${i}"><span class="rp-th" style="height:213px"><img loading="lazy" src="${p.img}" alt="${escH(p.t)}"></span><span class="rp-cs" style="margin:0">${escH(p.n)} 대원${p.pending?' · 숨김':''}</span></button>`).join('')}</div></section>
+    <div class="rp-row">${shots.slice(0,40).map((p,i)=>`<button class="rp-card" style="width:120px" data-act="shot" data-i="${i}"><span class="rp-th" style="height:213px"><img loading="lazy" src="${p.img}" alt="${escH(p.t)}"></span><span class="rp-cs" style="margin:0">${escH(p.n)} 대원${p.pending?' · 숨김':''}</span></button>`).join('')}</div></section>
 
   <div class="rp-last" id="rpLast"></div>
   <div class="rp-foot"><div>쭈일리언 외계행성 탐사대 · 비영리 팬 이벤트<br>영상·사진 출처는 각 작품에 표기<br><button class="adminLink" type="button">운영진</button></div><div style="display:flex;gap:4px"><img src="${ART.ag}" alt=""><img src="${ART.ap}" alt=""></div></div></div>`}
@@ -1811,6 +1821,10 @@ rp.addEventListener('click',async e=>{const b=e.target.closest('[data-go],[data-
   else if(a==='mon')openViewer({items:rpMons(),index:i,ratio:'1',pixel:true,title:m=>m.t,img:m=>m.img,alt:m=>m.t,back:closeSheet,body:m=>`<p class="by">그린 대원 · ${escH(m.n)}${m.ex?' · 예시 작품':''}</p>`})
   else if(a==='top')galView(rpTop(),i);
   else if(a==='gal')galView(rpGallery(),i);
+  else if(a==='cutnew')openFourCut();
+  else if(a==='cut'){const L=itemsOf('memories');openViewer({items:L,index:i,ratio:'1/3',title:p=>p.t,img:p=>p.img,alt:p=>p.t,back:closeSheet,body:p=>`<p class="by">${escH(p.n)} 대원의 쭈니 네컷</p>`,
+    extra:p=>!p.mine?'':'<button class="soft" id="cutDel">네컷 내리기</button>',
+    mount:p=>{if(!p.mine)return;$('#cutDel').onclick=()=>{const d=$('#cutDel');if(!d.dataset.sure){d.dataset.sure=1;d.textContent='한 번 더 누르면 내려가요';return}removeItem('memories',p).then(()=>{closeSheet();rpRefresh()},err=>{$('#vmsg').textContent=errMsg(err)})}}})}
   else if(a==='shot')openViewer({items:rpShots(),index:i,ratio:'9/16',title:p=>p.t,img:p=>p.img,alt:p=>p.t,back:closeSheet,body:p=>`<p class="by">찍은 대원 · ${escH(p.n)}${p.ex?' · 예시 사진':''}</p>`});
   else if(a==='shop')openShop();
   else if(a==='good')openGoods(i,false);
@@ -1847,9 +1861,9 @@ if(isBack()){$('#startRp').hidden=false}
    ===================================================================== */
 const AD={open:false,tab:'notes',filter:'all',rows:[],msg:'',busy:false,stats:null};
 const adm=$('#adm');
-const AD_TABS=[['notes','교신'],['gallery','사진관'],['montages','몽타주'],['photos','인증샷'],['fancams','직캠'],['comments','댓글'],['lounge','라운지'],['site','생카 설정'],['stats','현황']];
+const AD_TABS=[['notes','교신'],['gallery','사진관'],['montages','몽타주'],['photos','인증샷'],['memories','네컷'],['fancams','직캠'],['comments','댓글'],['lounge','라운지'],['site','생카 설정'],['stats','현황']];
 const AD_COLS={lounge:'id,user_id,name,message,approved,created_at',fancams:'id,user_id,name,url,comment,approved,created_at,like_count,comment_count',comments:'id,user_id,name,message,item_id,approved,created_at',notes:'id,user_id,name,message,approved,created_at',gallery:'id,user_id,name,title,reason,image_path,approved,created_at,like_count',
-  montages:'id,user_id,name,title,image_path,approved,created_at',photos:'id,user_id,name,caption,image_path,approved,created_at'};
+  montages:'id,user_id,name,title,image_path,approved,created_at',photos:'id,user_id,name,caption,image_path,approved,created_at',memories:'id,user_id,name,caption,image_path,approved,created_at'};
 const ytId=v=>{v=String(v||'').trim();if(/^[\w-]{11}$/.test(v))return v;const m=v.match(/(?:v=|youtu\.be\/|shorts\/|embed\/|live\/)([\w-]{11})/);return m?m[1]:''};
 const kstStr=t=>{const k=kst(Date.parse(t));return`${k.mo}.${k.d} ${p2(k.h)}:${p2(k.mi)}`};
 
@@ -1887,7 +1901,7 @@ function adList(){const t=AD.tab,rows=AD.filter==='hidden'?AD.rows.filter(x=>!x.
     <div class="ad-chips"><button class="${AD.filter==='all'?'on':''}" data-ad="filter" data-k="all">전체</button><button class="${AD.filter==='hidden'?'on':''}" data-ad="filter" data-k="hidden">숨긴 것만</button></div></div>
   ${rows.length?`<div class="ad-list">${rows.map(x=>{const img=x.image_path?pubUrl(x.image_path):'';
     const text=t==='fancams'?`<a href="${escH(x.url)}" target="_blank" rel="noopener">${escH(x.url)}</a><br>${escH(x.comment)}<br><small>공감 ${x.like_count||0} · 댓글 ${x.comment_count||0}</small>`:t==='comments'||t==='lounge'?escH(x.message):t==='notes'?escH(x.message):t==='gallery'?`<b>「${escH(x.title)}」</b> ${escH(x.reason)}<br><small>공감 ${x.like_count||0}</small>`:t==='montages'?`<b>${escH(x.title)}</b>`:`<b>${escH(x.caption)}</b>`;
-    return`<div class="ad-row${x.approved?'':' off'}">${img?`<a href="${img}" target="_blank" rel="noopener" class="ad-im${t==='montages'?' px':''}"><img src="${img}" alt="" loading="lazy"></a>`:''}
+    return`<div class="ad-row${x.approved?'':' off'}">${img?`<a href="${img}" target="_blank" rel="noopener" class="ad-im${t==='montages'?' px':''}"${t==='memories'?' style="width:48px;height:144px"':''}><img src="${img}" alt="" loading="lazy"></a>`:''}
       <div class="ad-tx"><div class="ad-meta"><b>${escH(x.name)}</b> · ${kstStr(x.created_at)}${x.approved?'':' · <em>숨김</em>'}</div><div>${text}</div></div>
       <div class="ad-act"><button data-ad="toggle" data-id="${x.id}">${x.approved?'숨기기':'다시 공개'}</button><button class="ad-del" data-ad="del" data-id="${x.id}">삭제</button></div></div>`}).join('')}</div>`:'<p class="ad-empty">아직 없어요</p>'}`}
 async function adToggle(id){const x=AD.rows.find(r=>r.id===id);if(!x)return;const v=!x.approved,r=await sb.from(AD.tab).update({approved:v}).eq('id',id);
@@ -2016,7 +2030,7 @@ async function adUploadRaw(file){if(file.size>50*1024*1024)throw new Error('50MB
 
 /* 현황 */
 async function adStats(){const d=new Date(Date.now()+9*36e5);const today=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate())-9*36e5).toISOString();
-  const T=[['notes','교신'],['gallery','사진관'],['montages','몽타주'],['photos','인증샷'],['fancams','직캠'],['comments','댓글'],['lounge','라운지']];
+  const T=[['notes','교신'],['gallery','사진관'],['montages','몽타주'],['photos','인증샷'],['memories','네컷'],['fancams','직캠'],['comments','댓글'],['lounge','라운지']];
   const res=await Promise.all(T.flatMap(([t])=>[sb.from(t).select('id',{count:'exact',head:true}),sb.from(t).select('id',{count:'exact',head:true}).gte('created_at',today)]));
   const lk=await sb.from('likes').select('item_id',{count:'exact',head:true});
   $('#adBody').innerHTML=`<div class="ad-stats">${T.map(([t,l],i)=>`<div><small>${l}</small><b>${res[i*2].count??'-'}</b><span>오늘 +${res[i*2+1].count??'-'}</span></div>`).join('')}
@@ -2116,9 +2130,9 @@ function askReset(){openSheet('처음부터 새로 탐사하기',`<p>이 기기�
     if($('#rsAll').checked){$('#rsMsg').textContent='올린 것들을 지우는 중…';try{await deleteAllMine()}catch(e){b.disabled=false;$('#rsMsg').textContent='일부를 지우지 못했어요. 잠시 뒤에 다시 해 주세요';return}}
     resetMe()}}
 async function deleteAllMine(){
-  if(!sb){['jc_lounge','jc_notes','jc_gallery','jc_montages','jc_photos','jc_fancams','jc_comments','jc_likes','jc_nlikes','jc_flikes'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});return}
-  await pull(true);const paths=['gallery','montages','photos'].flatMap(k=>R[k].filter(x=>x.mine&&x.path).map(x=>x.path));
-  for(const t of ['lounge','comments','fancams','notes','gallery','montages','photos']){const r=await sb.from(t).delete().eq('user_id',uid);if(r.error)throw r.error}
+  if(!sb){['jc_lounge','jc_notes','jc_gallery','jc_montages','jc_photos','jc_memories','jc_fancams','jc_comments','jc_likes','jc_nlikes','jc_flikes'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});return}
+  await pull(true);const paths=['gallery','montages','photos','memories'].flatMap(k=>R[k].filter(x=>x.mine&&x.path).map(x=>x.path));
+  for(const t of ['lounge','comments','fancams','notes','gallery','montages','photos','memories']){const r=await sb.from(t).delete().eq('user_id',uid);if(r.error&&t!=='memories')throw r.error}
   await sb.from('likes').delete().eq('user_id',uid);
   for(let i=0;i<paths.length;i+=50)await sb.storage.from(BUCKET).remove(paths.slice(i,i+50))}
 
@@ -2139,6 +2153,65 @@ function logUi(){const b=$('#logBtn');b.textContent=logOn?'💬 채팅 켜짐':'
 $('#logBtn').addEventListener('click',()=>{logOn=!logOn;store.set('jc_logoff',!logOn);logUi()});logUi();
 function sndUi(){const b=$('#sndBtn');b.innerHTML=sndIcon();b.setAttribute('aria-label',SFX.mute?'효과음 켜기':'효과음 끄기')}
 $('#sndBtn').addEventListener('click',()=>{SFX.mute=!SFX.mute;store.set('jc_mute',SFX.mute);sndUi();if(!SFX.mute)SFX.ping()});sndUi();
+
+/* ===== 쭈니 네컷 (인생네컷처럼 4컷 찍어 생일파티에 걸기) ===== */
+const CUTF=[{n:'보라',bg:'#2a1458',fg:'#ffd166',sub:'#d9cbff',dot:'#ffd166'},{n:'핑크',bg:'#ff8fab',fg:'#ffffff',sub:'#fff0f5',dot:'#ffffff'},{n:'크림',bg:'#fff7f0',fg:'#6a3fb0',sub:'#9a8db0',dot:'#c4b0ff'}];
+const CW=600,CH=1800,CX=30,CS={w:540,h:360,g:20,y:30};
+function openFourCut(){
+  openSheet('쭈니 네컷',`<p>쭈니 굿즈, 포카, 앨범, 생카 인증… <b>쭈니와 함께한 순간</b>을 네 컷에 담아 생일파티에 걸어요.</p>
+  <div class="row pmode"><button class="soft pm on" type="button" data-q="cam">카메라로 찍기</button><button class="soft pm" type="button" data-q="up">사진 고르기</button></div>
+  <div class="row fr">${CUTF.map((f,i)=>`<button class="soft fk${i?'':' on'}" type="button" data-c="${i}">${f.n}</button>`).join('')}</div>
+  <div class="cut-cam" id="cutCam"><video id="cutV" playsinline muted></video><span class="cut-no" id="cutNo"></span><div class="cd" id="cutCd" hidden></div><div class="flash" id="cutFl"></div>
+    <button class="primary bstart" id="cutGo" type="button">카메라 켜기</button>
+    <div class="bctl" id="cutCtl" hidden><button class="bflip" id="cutFlip" type="button" aria-label="전면·후면 카메라 바꾸기">⟲</button><button class="bshut" id="cutShut" type="button" aria-label="네 컷 연속 촬영"></button><span class="bsp"></span></div></div>
+  <div class="row" id="cutUp" hidden style="justify-content:center"><label class="filebtn">앨범에서 사진 고르기 (최대 4장)<input type="file" id="cutFile" accept="image/*" multiple hidden></label></div>
+  <p class="zhint" id="cutHint"></p><p id="cutErr" class="save"></p>
+  <div class="cut-prev"><canvas id="cutC" width="${CW}" height="${CH}"></canvas><img id="cutImg" alt="쭈니 네컷" hidden></div>
+  <div id="cutAfter" hidden><label class="f" for="cutCap">한 줄 메모<input id="cutCap" maxlength="30" placeholder="예: 생카 다녀온 날"></label>
+    <p class="who-as">✦ <b>${escH(me.name)}</b> 대원 이름으로 올라가요</p>
+    ${saveUI('cutImg','쭈니네컷.jpg')}
+    <div class="row" style="justify-content:center"><button class="soft" id="cutRe" type="button">다시 찍기</button><button class="primary" id="cutPost" type="button">생일파티에 걸기</button></div><p id="cutMsg" class="save"></p></div>`);
+  const my=token,v=$('#cutV'),cv=$('#cutC'),cx=cv.getContext('2d');let fi=0,shots=[null,null,null,null],stream=null,facing='user',busy=false,mode='cam';
+  const stop=()=>{if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}};onClose=stop;
+  const ufo=new Image();ufo.src=ART.ufo;ufo.onload=()=>draw();
+  function draw(){const f=CUTF[fi];cx.fillStyle=f.bg;cx.fillRect(0,0,CW,CH);
+    let sd=7;const r=()=>(sd=(sd*16807)%2147483647)/2147483647;cx.fillStyle=f.dot;for(let i=0;i<40;i++){cx.globalAlpha=.25+r()*.5;cx.fillRect(Math.floor(r()*CW),Math.floor(r()*CH),3,3)}cx.globalAlpha=1;
+    for(let k=0;k<4;k++){const y=CS.y+k*(CS.h+CS.g),im=shots[k];cx.fillStyle=f.bg==='#fff7f0'?'#efe6f5':'rgba(0,0,0,.22)';cx.fillRect(CX,y,CS.w,CS.h);
+      if(im){const sc=Math.max(CS.w/im.width,CS.h/im.height),w=im.width*sc,h=im.height*sc;cx.save();cx.beginPath();cx.rect(CX,y,CS.w,CS.h);cx.clip();cx.drawImage(im,CX+(CS.w-w)/2,y+(CS.h-h)/2,w,h);cx.restore()}
+      else{cx.fillStyle=f.sub;cx.font='bold 54px Anton, sans-serif';cx.textAlign='center';cx.textBaseline='middle';cx.globalAlpha=.6;cx.fillText(String(k+1),CW/2,y+CS.h/2);cx.globalAlpha=1}}
+    const by=CS.y+4*(CS.h+CS.g);cx.textAlign='center';cx.textBaseline='alphabetic';
+    if(ufo.complete&&ufo.naturalWidth){const uw=110,uh=uw*ufo.naturalHeight/ufo.naturalWidth;cx.imageSmoothingEnabled=false;cx.drawImage(ufo,CW/2-uw/2,by-4,uw,uh);cx.imageSmoothingEnabled=true}
+    cx.fillStyle=f.fg;cx.font='64px Anton, Impact, sans-serif';cx.fillText('PLANET #1203',CW/2,by+150);
+    cx.fillStyle=f.sub;cx.font='26px Jua, sans-serif';cx.fillText('HAPPY JUUN DAY · 2026.12.03',CW/2,by+190);
+    cx.font='22px Jua, sans-serif';cx.fillText((me.name&&me.name!=='대원'?me.name+' 대원':'하츄대원')+' × 쭈니',CW/2,by+226)}
+  const full=()=>shots.every(Boolean)||mode==='up'&&shots.some(Boolean);
+  function done(){draw();$('#cutImg').src=cv.toDataURL('image/jpeg',.86);$('#cutImg').hidden=false;cv.hidden=true;$('#cutAfter').hidden=false;$('#cutPost').disabled=false;$('#cutPost').textContent='생일파티에 걸기';$('#cutMsg').textContent='';ui();$('#cutAfter').scrollIntoView({behavior:'smooth',block:'nearest'})}
+  function ui(){const after=!$('#cutAfter').hidden;$('#cutCam').hidden=mode!=='cam'||after;$('#cutUp').hidden=mode!=='up'||after;
+    $('#cutGo').hidden=!!stream;$('#cutCtl').hidden=!stream||busy;
+    $('#cutHint').textContent=after?'':mode==='cam'?(stream?'셔터를 누르면 3초 간격으로 네 컷을 연달아 찍어요':'카메라를 켜고 쭈니 굿즈와 함께 포즈를 잡아 주세요'):'사진을 1~4장 골라 주세요. 고른 순서대로 들어가요'}
+  async function startCam(){stop();$('#cutErr').textContent='';try{const st=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:facing},width:{ideal:1280},height:{ideal:960}},audio:false});
+      if(token!==my){st.getTracks().forEach(t=>t.stop());return}stream=st;v.srcObject=st;v.classList.toggle('mir',facing==='user');await v.play();ui()}
+    catch(e){stream=null;ui();$('#cutErr').textContent='이 화면에서는 카메라를 켤 수 없어요. "사진 고르기"로 앨범 사진을 넣어 주세요.'}}
+  function grab(){const w=v.videoWidth||640,h=v.videoHeight||480,c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');if(facing==='user'){x.translate(w,0);x.scale(-1,1)}x.drawImage(v,0,0,w,h);return c}
+  async function shootAll(){if(busy||!stream)return;busy=true;shots=[null,null,null,null];draw();ui();
+    for(let k=0;k<4;k++){$('#cutNo').textContent=(k+1)+' / 4';for(let n=3;n>0;n--){if(token!==my)return;$('#cutCd').hidden=false;$('#cutCd').textContent=n;SFX.beep();await new Promise(r=>setTimeout(r,800))}
+      if(token!==my)return;$('#cutCd').hidden=true;SFX.shutter();const fl=$('#cutFl');fl.classList.remove('go');void fl.offsetWidth;fl.classList.add('go');shots[k]=grab();draw();await new Promise(r=>setTimeout(r,450))}
+    $('#cutNo').textContent='';busy=false;stop();done()}
+  $('#cutGo').onclick=startCam;$('#cutShut').onclick=shootAll;
+  $('#cutFlip').onclick=()=>{if(busy)return;facing=facing==='user'?'environment':'user';startCam()};
+  document.querySelectorAll('.sheet .pm[data-q]').forEach(b=>b.onclick=()=>{if(busy)return;mode=b.dataset.q;document.querySelectorAll('.sheet .pm[data-q]').forEach(x=>x.classList.toggle('on',x===b));
+    if(mode!=='cam')stop();shots=[null,null,null,null];$('#cutAfter').hidden=true;$('#cutImg').hidden=true;cv.hidden=false;draw();ui();if(mode==='up')$('#cutFile').click()});
+  document.querySelectorAll('.sheet .fk[data-c]').forEach(b=>b.onclick=()=>{fi=+b.dataset.c;document.querySelectorAll('.sheet .fk[data-c]').forEach(x=>x.classList.toggle('on',x===b));draw();if(!$('#cutAfter').hidden)done()});
+  $('#cutFile').addEventListener('change',async e=>{const fs=[...e.target.files].slice(0,4);e.target.value='';if(!fs.length)return;
+    const load=f=>new Promise((res,rej)=>{const rd=new FileReader();rd.onload=()=>{const im=new Image();im.onload=()=>res(im);im.onerror=rej;im.src=rd.result};rd.onerror=rej;rd.readAsDataURL(f)});
+    try{const ims=await Promise.all(fs.map(load));shots=[0,1,2,3].map(k=>ims[k]||null);done()}catch(err){$('#cutErr').textContent='사진을 읽지 못했어요. 다른 사진으로 해 주세요.'}});
+  $('#cutRe').onclick=()=>{shots=[null,null,null,null];$('#cutAfter').hidden=true;$('#cutImg').hidden=true;cv.hidden=false;draw();ui();if(mode==='cam')startCam();else $('#cutFile').click()};
+  $('#cutPost').onclick=async()=>{const b=$('#cutPost');if(b.disabled)return;b.disabled=true;b.textContent='거는 중…';
+    try{await addItem('memories',{img:$('#cutImg').src,t:$('#cutCap').value.trim()||'쭈니와 함께',n:me.name});b.textContent='걸었어요!';$('#cutMsg').textContent='생일파티 쭈니 네컷에 올라갔어요';
+      setTimeout(()=>{if(token===my){closeSheet();if(rpOpen)rpRefresh()}},900)}
+    catch(err){b.disabled=false;b.textContent='생일파티에 걸기';$('#cutMsg').textContent=/relation|does not exist|memories/i.test(err.message||'')?'운영진이 아직 네컷 저장소를 열지 않았어요':errMsg(err)}};
+  draw();ui();
+}
 function resetMe(){['jc_brief','jc_done','jc_end','jc_fin','jc_land','jc_myshot','jc_best2','jc_no','jc_me','jc_ticket'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});location.reload()}
 function closeGate(){store.set('jc_ticket',true);gate.classList.add('bye');setTimeout(()=>{gate.hidden=true;gateOpen=false;try{$('#nameIn').focus()}catch(e){}},700)}
 if(!/[?&#]admin\b/.test(location.search+location.hash))openGate();
