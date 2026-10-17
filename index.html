@@ -397,7 +397,7 @@ img{max-width:100%}
 .cut-cam video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.cut-cam video.mir{transform:scaleX(-1)}
 .cut-cam .cd{font-size:90px;z-index:2;pointer-events:none}.cut-cam .bstart{top:50%}
 .cut-no{position:absolute;left:10px;top:8px;z-index:2;font-family:var(--display);font-size:14px;color:#fff;background:rgba(23,13,51,.7);border-radius:6px;padding:2px 8px}.cut-no:empty{display:none}
-.cut-prev{display:flex;justify-content:center;margin:10px 0}.cut-prev canvas,.cut-prev img{width:min(200px,52vw);aspect-ratio:1/3;height:auto;border-radius:4px;box-shadow:0 8px 20px rgba(42,31,61,.25);background:#2a1458}
+.cut-prev{display:flex;justify-content:center;margin:10px 0}.cut-prev canvas,.cut-prev img{width:min(220px,56vw);height:auto;border-radius:4px;box-shadow:0 8px 20px rgba(42,31,61,.25);background:#2a1458}
 .rp-lyr1{padding:6px 18px 0;display:flex}.rp-lyr1 .rp-lyr{width:min(100%,320px);transform:rotate(-1deg)}
 
 .lyv-bgm{position:sticky;top:0;z-index:2;margin:14px 18px 0;display:flex;align-items:center;gap:10px;background:rgba(29,18,64,.92);backdrop-filter:blur(6px);border:1px solid #4a3a7a;border-radius:999px;padding:8px 8px 8px 14px}
@@ -917,7 +917,7 @@ function openEnding(){endingSeen=true;store.set('jc_end',true);endExplore();open
 let viewerNav=null;
 function openViewer(o){let i=o.index;
   const show=()=>{const it=o.items[i],n=o.items.length;
-    openSheet(o.title(it),`<div class="vw${o.pixel?' px':''}" id="vw" style="aspect-ratio:${o.ratio};width:min(100%,calc(52vh * ${o.ratio}))"><img src="${o.img(it)}" alt="${o.alt(it)}" draggable="false">${n>1?'<button class="vnav l" id="vp" aria-label="이전 작품">◀</button><button class="vnav r" id="vn" aria-label="다음 작품">▶</button>':''}</div>
+    openSheet(o.title(it),`<div class="vw${o.pixel?' px':''}" id="vw" style="aspect-ratio:${typeof o.ratio==='function'?o.ratio(it):o.ratio};width:min(100%,calc(52vh * ${typeof o.ratio==='function'?o.ratio(it):o.ratio}))"><img src="${o.img(it)}" alt="${o.alt(it)}" draggable="false">${n>1?'<button class="vnav l" id="vp" aria-label="이전 작품">◀</button><button class="vnav r" id="vn" aria-label="다음 작품">▶</button>':''}</div>
     <div class="vcount">${i+1} / ${n}${n>1?' · 옆으로 밀어서 넘겨 보세요':''}</div>${o.body(it)}
     <div class="row"><button class="soft" id="vback">← 목록으로</button>${o.extra?o.extra(it):''}</div><p id="vmsg" class="save"></p>`);
     const go=d=>{i=(i+d+n)%n;show()};viewerNav=n>1?go:null;
@@ -1603,13 +1603,13 @@ ${(()=>{const LY=lyrList(),l=LY[0];return`<section class="rp-sec" style="padding
   <section class="rp-sec"><div class="rp-sh"><h2>오늘의 쭈니 TOP 10</h2><small>사진관 공감 순위</small></div>
     <div class="rp-row" style="gap:0">${tops.map((e,i)=>`<button class="rp-top" data-act="top" data-i="${i}" aria-label="${i+1}위 ${escH(e.t)}"><span class="n">${i+1}</span><span class="rp-th"><img src="${e.img}" alt="" width="104" height="150" decoding="sync"></span></button>`).join('')}</div></section>
 
+  <section class="rp-sec" style="padding-top:38px"><div class="rp-big"><div><div class="rp-kick">MEMORIES</div><h2>쭈니 네컷</h2><p>하츄들이 쭈니와 함께한 추억 · 네컷 · 두컷 · 한컷 ${itemsOf('memories').length}장</p></div></div>
+    <div class="rp-row" style="gap:10px;align-items:flex-start"><button class="rp-card rp-cpost" style="width:120px;height:240px" data-act="cutnew"><b>+</b>나도<br>찍으러 가기</button>${itemsOf('memories').slice(0,40).map((p,i)=>`<button class="rp-card" style="width:120px" data-act="cut" data-i="${i}"><span class="rp-th" style="height:auto;border-radius:4px;background:none"><img loading="lazy" src="${p.img}" alt="${escH(p.t)}" style="height:auto" onload="CUTR[this.src]=this.naturalWidth+'/'+this.naturalHeight"></span><span class="rp-cs" style="margin:0">${escH(p.n)}${p.pending?' · 숨김':''}</span></button>`).join('')}</div></section>
+
   <button class="rp-files" data-act="scroll"><img src="${ART.ufo}" alt=""><span class="in"><span class="rp-kick">특집</span><b>ZZUALIEN<br>FILES</b><small>대원들이 자랑하는 쭈니 사진 ${gal.length}장</small></span></button>
 
   <section class="rp-sec" id="rpFan"><div class="rp-sh"><h2>대원들이 자랑하는 쭈니</h2><small>사진관 · 최신순</small></div>
     <div class="rp-row">${gal.slice(0,40).map((e,i)=>`<button class="rp-card" style="width:132px" data-act="gal" data-i="${i}"><span class="rp-th" style="height:190px"><img loading="lazy" src="${e.img}" alt="${escH(e.t)}"></span><span class="rp-ct">「${escH(e.t)}」</span><span class="rp-cs">${escH(e.n)}${e.pending?' · 숨김':''}</span></button>`).join('')}</div></section>
-
-  <section class="rp-sec" style="padding-top:38px"><div class="rp-big"><div><div class="rp-kick">MEMORIES</div><h2>쭈니 네컷</h2><p>하츄들이 쭈니와 함께한 추억 · ${itemsOf('memories').length}장</p></div></div>
-    <div class="rp-row" style="gap:10px"><button class="rp-card rp-cpost" style="width:104px;height:312px" data-act="cutnew"><b>+</b>나도<br>네컷 찍기</button>${itemsOf('memories').slice(0,40).map((p,i)=>`<button class="rp-card" style="width:104px" data-act="cut" data-i="${i}"><span class="rp-th" style="height:312px;border-radius:4px"><img loading="lazy" src="${p.img}" alt="${escH(p.t)}"></span><span class="rp-cs" style="margin:0">${escH(p.n)}${p.pending?' · 숨김':''}</span></button>`).join('')}</div></section>
 
   <section class="rp-sec"><div class="rp-sh"><h2>착륙 인증샷</h2><small>${shots.length}장</small></div>
     <div class="rp-row">${shots.slice(0,40).map((p,i)=>`<button class="rp-card" style="width:120px" data-act="shot" data-i="${i}"><span class="rp-th" style="height:213px"><img loading="lazy" src="${p.img}" alt="${escH(p.t)}"></span><span class="rp-cs" style="margin:0">${escH(p.n)} 대원${p.pending?' · 숨김':''}</span></button>`).join('')}</div></section>
@@ -1729,10 +1729,10 @@ function rpRefresh(){if(!rpOpen||rpView==='lounge'||rpView==='lyrics')return;con
 function openReport(v){if(netCh){sb.removeChannel(netCh);netCh=null;netSend=null;remotes.clear();online=1}rpOpen=true;held.length=0;me.tgt=null;$('#enterBtn').hidden=true;$('#rpBtn').hidden=false;$('#startRp').hidden=false;rp.hidden=false;if(v==='print')SFX.print();rpShow(v||'archive');loungeLoad().then(()=>{if(rpView==='archive')rpRefresh()});pull().then(()=>{if(rpView==='archive'||rpView==='msgs')rpRefresh()})}
 function closeReport(){lyrStop();rpOpen=false;rp.hidden=true;rp.innerHTML='';$('#enterBtn').hidden=!near||modalOpen}
 
-function updLast(){const el=$('#rpLast');if(!el)return;const n=Date.now(),left=ARCHIVE.lastAt-n;
+function updLast(){const el=$('#rpLast');if(!el)return;const END=Date.UTC(2026,11,23,15,0),left=END-Date.now();
   if(left>0){const d=Math.floor(left/864e5),h=Math.floor(left/36e5)%24,m=Math.floor(left/6e4)%60,s=Math.floor(left/1e3)%60;
-    el.innerHTML=`<div><div class="rp-kick">LAST TRANSMISSION</div><div class="t">12.03 23:59</div><div class="s">마지막 교신이 이 시간에 열려요<br>남은 시간 ${d?`D-${d} `:''}${p2(h)}:${p2(m)}:${p2(s)}</div></div><img src="${ART.ufo}" alt="">`}
-  else el.innerHTML=`<div><div class="rp-kick">LAST TRANSMISSION · OPEN</div><div class="t">해독 완료</div><div class="s">${escH(ARCHIVE.lastMsg)}</div></div><img src="${ART.ufo}" alt="" style="opacity:1">`}
+    el.innerHTML=`<div><div class="rp-kick">PLANET #1203 · CLOSING</div><div class="t">12.23 24:00</div><div class="s">행성 #1203은 12월 23일 밤 12시에 문을 닫아요<br>남은 시간 ${d?`D-${d} `:''}${p2(h)}:${p2(m)}:${p2(s)}</div></div><img src="${ART.ufo}" alt="">`}
+  else el.innerHTML=`<div><div class="rp-kick">PLANET #1203 · CLOSED</div><div class="t">탐사 종료</div><div class="s">행성 #1203의 문이 닫혔어요<br>함께해 준 하츄대원들, 고마워요!</div></div><img src="${ART.ufo}" alt="" style="opacity:1">`}
 
 /* 크게 보기 (게임의 넘겨 보기 창을 그대로 씀) */
 function galView(items,i){openViewer({items,index:i,ratio:'9/16',title:e=>e.t,img:e=>e.img,alt:e=>e.t,back:closeSheet,
@@ -1822,7 +1822,7 @@ rp.addEventListener('click',async e=>{const b=e.target.closest('[data-go],[data-
   else if(a==='top')galView(rpTop(),i);
   else if(a==='gal')galView(rpGallery(),i);
   else if(a==='cutnew')openFourCut();
-  else if(a==='cut'){const L=itemsOf('memories');openViewer({items:L,index:i,ratio:'1/3',title:p=>p.t,img:p=>p.img,alt:p=>p.t,back:closeSheet,body:p=>`<p class="by">${escH(p.n)} 대원의 쭈니 네컷</p>`,
+  else if(a==='cut'){const L=itemsOf('memories');openViewer({items:L,index:i,ratio:p=>CUTR[p.img]||'1/3',title:p=>p.t,img:p=>p.img,alt:p=>p.t,back:closeSheet,body:p=>`<p class="by">${escH(p.n)} 대원의 쭈니 네컷</p>`,
     extra:p=>!p.mine?'':'<button class="soft" id="cutDel">네컷 내리기</button>',
     mount:p=>{if(!p.mine)return;$('#cutDel').onclick=()=>{const d=$('#cutDel');if(!d.dataset.sure){d.dataset.sure=1;d.textContent='한 번 더 누르면 내려가요';return}removeItem('memories',p).then(()=>{closeSheet();rpRefresh()},err=>{$('#vmsg').textContent=errMsg(err)})}}})}
   else if(a==='shot')openViewer({items:rpShots(),index:i,ratio:'9/16',title:p=>p.t,img:p=>p.img,alt:p=>p.t,back:closeSheet,body:p=>`<p class="by">찍은 대원 · ${escH(p.n)}${p.ex?' · 예시 사진':''}</p>`});
@@ -1965,9 +1965,6 @@ function adSiteRender(upd){const S=AD.site,lk=S.lastAt?kst(S.lastAt):null,lv=lk?
     <input data-l="goods" data-i="${i}" data-k="link" value="${escH(g.link||'')}" class="ad-full" placeholder="구매·신청 링크 (https://…)">
     <div class="ad-mv"><button type="button" data-ad="up" data-l="goods" data-i="${i}" aria-label="위로">↑</button><button type="button" data-ad="rm" data-l="goods" data-i="${i}">빼기</button></div></div>`).join('')}
   <button type="button" class="ad-add" data-ad="add" data-l="goods">+ 굿즈 추가</button>
-  <h3>마지막 교신</h3>
-  <label>공개 시각 (한국 시간)<input type="datetime-local" data-f="lastAtLocal" value="${lv}"></label>
-  <label>내용<textarea data-f="lastMsg" rows="3">${escH(S.lastMsg)}</textarea></label>
   <h3>공유 해시태그</h3><input data-f="tag" value="${escH(S.tag)}">
   <div class="ad-save"><button class="ad-pri" type="submit">저장하고 사이트에 반영</button><span id="adSaveMsg">${upd?'마지막 저장 '+kstStr(upd):''}</span></div></form>`;
   const f=$('#adSite');
@@ -2155,62 +2152,66 @@ function sndUi(){const b=$('#sndBtn');b.innerHTML=sndIcon();b.setAttribute('aria
 $('#sndBtn').addEventListener('click',()=>{SFX.mute=!SFX.mute;store.set('jc_mute',SFX.mute);sndUi();if(!SFX.mute)SFX.ping()});sndUi();
 
 /* ===== 쭈니 네컷 (인생네컷처럼 4컷 찍어 생일파티에 걸기) ===== */
-const CUTF=[{n:'보라',bg:'#2a1458',fg:'#ffd166',sub:'#d9cbff',dot:'#ffd166'},{n:'핑크',bg:'#ff8fab',fg:'#ffffff',sub:'#fff0f5',dot:'#ffffff'},{n:'크림',bg:'#fff7f0',fg:'#6a3fb0',sub:'#9a8db0',dot:'#c4b0ff'}];
-const CW=600,CH=1800,CX=30,CS={w:540,h:360,g:20,y:30};
+const CUTF=[{n:'보라',bg:'#2a1458',fg:'#ffd166',sub:'#d9cbff',dot:'#ffd166'},{n:'크림',bg:'#fff7f0',fg:'#6a3fb0',sub:'#9a8db0',dot:'#c4b0ff'}];
+const CUTL=[{k:4,n:'네컷',h:360},{k:2,n:'두컷',h:560},{k:1,n:'한컷',h:720}];window.CUTR={};
+const CW=600,CX=30,CS={w:540,g:20,y:30};
 function openFourCut(){
   openSheet('쭈니 네컷',`<p>쭈니 굿즈, 포카, 앨범, 생카 인증… <b>쭈니와 함께한 순간</b>을 네 컷에 담아 생일파티에 걸어요.</p>
   <div class="row pmode"><button class="soft pm on" type="button" data-q="cam">카메라로 찍기</button><button class="soft pm" type="button" data-q="up">사진 고르기</button></div>
+  <div class="row fr">${CUTL.map((l,i)=>`<button class="soft fk${i?'':' on'}" type="button" data-l="${i}">${l.n}</button>`).join('')}</div>
   <div class="row fr">${CUTF.map((f,i)=>`<button class="soft fk${i?'':' on'}" type="button" data-c="${i}">${f.n}</button>`).join('')}</div>
   <div class="cut-cam" id="cutCam"><video id="cutV" playsinline muted></video><span class="cut-no" id="cutNo"></span><div class="cd" id="cutCd" hidden></div><div class="flash" id="cutFl"></div>
     <button class="primary bstart" id="cutGo" type="button">카메라 켜기</button>
     <div class="bctl" id="cutCtl" hidden><button class="bflip" id="cutFlip" type="button" aria-label="전면·후면 카메라 바꾸기">⟲</button><button class="bshut" id="cutShut" type="button" aria-label="네 컷 연속 촬영"></button><span class="bsp"></span></div></div>
-  <div class="row" id="cutUp" hidden style="justify-content:center"><label class="filebtn">앨범에서 사진 고르기 (최대 4장)<input type="file" id="cutFile" accept="image/*" multiple hidden></label></div>
+  <div class="row" id="cutUp" hidden style="justify-content:center"><label class="filebtn" id="cutFileL">앨범에서 사진 고르기<input type="file" id="cutFile" accept="image/*" multiple hidden></label></div>
   <p class="zhint" id="cutHint"></p><p id="cutErr" class="save"></p>
-  <div class="cut-prev"><canvas id="cutC" width="${CW}" height="${CH}"></canvas><img id="cutImg" alt="쭈니 네컷" hidden></div>
+  <div class="cut-prev"><canvas id="cutC" width="${CW}" height="1800"></canvas><img id="cutImg" alt="쭈니 네컷" hidden></div>
   <div id="cutAfter" hidden><label class="f" for="cutCap">한 줄 메모<input id="cutCap" maxlength="30" placeholder="예: 생카 다녀온 날"></label>
     <p class="who-as">✦ <b>${escH(me.name)}</b> 대원 이름으로 올라가요</p>
     ${saveUI('cutImg','쭈니네컷.jpg')}
     <div class="row" style="justify-content:center"><button class="soft" id="cutRe" type="button">다시 찍기</button><button class="primary" id="cutPost" type="button">생일파티에 걸기</button></div><p id="cutMsg" class="save"></p></div>`);
-  const my=token,v=$('#cutV'),cv=$('#cutC'),cx=cv.getContext('2d');let fi=0,shots=[null,null,null,null],stream=null,facing='user',busy=false,mode='cam';
+  const my=token,v=$('#cutV'),cv=$('#cutC'),cx=cv.getContext('2d');let fi=0,li=0,shots=[null,null,null,null],stream=null,facing='user',busy=false,mode='cam';
   const stop=()=>{if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}};onClose=stop;
   const ufo=new Image();ufo.src=ART.ufo;ufo.onload=()=>draw();
-  function draw(){const f=CUTF[fi];cx.fillStyle=f.bg;cx.fillRect(0,0,CW,CH);
-    let sd=7;const r=()=>(sd=(sd*16807)%2147483647)/2147483647;cx.fillStyle=f.dot;for(let i=0;i<40;i++){cx.globalAlpha=.25+r()*.5;cx.fillRect(Math.floor(r()*CW),Math.floor(r()*CH),3,3)}cx.globalAlpha=1;
-    for(let k=0;k<4;k++){const y=CS.y+k*(CS.h+CS.g),im=shots[k];cx.fillStyle=f.bg==='#fff7f0'?'#efe6f5':'rgba(0,0,0,.22)';cx.fillRect(CX,y,CS.w,CS.h);
-      if(im){const sc=Math.max(CS.w/im.width,CS.h/im.height),w=im.width*sc,h=im.height*sc;cx.save();cx.beginPath();cx.rect(CX,y,CS.w,CS.h);cx.clip();cx.drawImage(im,CX+(CS.w-w)/2,y+(CS.h-h)/2,w,h);cx.restore()}
-      else{cx.fillStyle=f.sub;cx.font='bold 54px Anton, sans-serif';cx.textAlign='center';cx.textBaseline='middle';cx.globalAlpha=.6;cx.fillText(String(k+1),CW/2,y+CS.h/2);cx.globalAlpha=1}}
-    const by=CS.y+4*(CS.h+CS.g);cx.textAlign='center';cx.textBaseline='alphabetic';
+  const L=()=>CUTL[li],blank=()=>Array(L().k).fill(null),SH=()=>L().h,CH=()=>CS.y+L().k*(SH()+CS.g)+250;
+  function draw(){const f=CUTF[fi],H=CH();if(cv.height!==H)cv.height=H;cx.fillStyle=f.bg;cx.fillRect(0,0,CW,H);
+    let sd=7;const r=()=>(sd=(sd*16807)%2147483647)/2147483647;cx.fillStyle=f.dot;for(let i=0;i<40;i++){cx.globalAlpha=.25+r()*.5;cx.fillRect(Math.floor(r()*CW),Math.floor(r()*H),3,3)}cx.globalAlpha=1;
+    const sh=SH();for(let k=0;k<L().k;k++){const y=CS.y+k*(sh+CS.g),im=shots[k];cx.fillStyle=f.bg==='#fff7f0'?'#efe6f5':'rgba(0,0,0,.22)';cx.fillRect(CX,y,CS.w,sh);
+      if(im){const sc=Math.max(CS.w/im.width,sh/im.height),w=im.width*sc,h=im.height*sc;cx.save();cx.beginPath();cx.rect(CX,y,CS.w,sh);cx.clip();cx.drawImage(im,CX+(CS.w-w)/2,y+(sh-h)/2,w,h);cx.restore()}
+      else{cx.fillStyle=f.sub;cx.font='bold 54px Anton, sans-serif';cx.textAlign='center';cx.textBaseline='middle';cx.globalAlpha=.6;cx.fillText(String(k+1),CW/2,y+sh/2);cx.globalAlpha=1}}
+    const by=CS.y+L().k*(sh+CS.g);cx.textAlign='center';cx.textBaseline='alphabetic';
     if(ufo.complete&&ufo.naturalWidth){const uw=110,uh=uw*ufo.naturalHeight/ufo.naturalWidth;cx.imageSmoothingEnabled=false;cx.drawImage(ufo,CW/2-uw/2,by-4,uw,uh);cx.imageSmoothingEnabled=true}
     cx.fillStyle=f.fg;cx.font='64px Anton, Impact, sans-serif';cx.fillText('PLANET #1203',CW/2,by+150);
     cx.fillStyle=f.sub;cx.font='26px Jua, sans-serif';cx.fillText('HAPPY JUUN DAY · 2026.12.03',CW/2,by+190);
     cx.font='22px Jua, sans-serif';cx.fillText((me.name&&me.name!=='대원'?me.name+' 대원':'하츄대원')+' × 쭈니',CW/2,by+226)}
-  const full=()=>shots.every(Boolean)||mode==='up'&&shots.some(Boolean);
-  function done(){draw();$('#cutImg').src=cv.toDataURL('image/jpeg',.86);$('#cutImg').hidden=false;cv.hidden=true;$('#cutAfter').hidden=false;$('#cutPost').disabled=false;$('#cutPost').textContent='생일파티에 걸기';$('#cutMsg').textContent='';ui();$('#cutAfter').scrollIntoView({behavior:'smooth',block:'nearest'})}
+    function done(){draw();$('#cutImg').src=cv.toDataURL('image/jpeg',.86);$('#cutImg').hidden=false;cv.hidden=true;$('#cutAfter').hidden=false;$('#cutPost').disabled=false;$('#cutPost').textContent='생일파티에 걸기';$('#cutMsg').textContent='';ui();$('#cutAfter').scrollIntoView({behavior:'smooth',block:'nearest'})}
   function ui(){const after=!$('#cutAfter').hidden;$('#cutCam').hidden=mode!=='cam'||after;$('#cutUp').hidden=mode!=='up'||after;
     $('#cutGo').hidden=!!stream;$('#cutCtl').hidden=!stream||busy;
-    $('#cutHint').textContent=after?'':mode==='cam'?(stream?'셔터를 누르면 3초 간격으로 네 컷을 연달아 찍어요':'카메라를 켜고 쭈니 굿즈와 함께 포즈를 잡아 주세요'):'사진을 1~4장 골라 주세요. 고른 순서대로 들어가요'}
+    $('#cutHint').textContent=after?'':mode==='cam'?(stream?(L().k>1?`셔터를 누르면 3초 간격으로 ${L().n}을 연달아 찍어요`:'셔터를 누르면 3초 뒤에 찍혀요'):'카메라를 켜고 쭈니 굿즈와 함께 포즈를 잡아 주세요'):`사진을 ${L().k>1?'1~'+L().k+'장':'1장'} 골라 주세요. 고른 순서대로 들어가요`;$('#cutFileL').firstChild.textContent=`앨범에서 사진 고르기 (${L().k}장까지)`;$('#cutShut').setAttribute('aria-label',L().n+' 촬영')}
   async function startCam(){stop();$('#cutErr').textContent='';try{const st=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:facing},width:{ideal:1280},height:{ideal:960}},audio:false});
       if(token!==my){st.getTracks().forEach(t=>t.stop());return}stream=st;v.srcObject=st;v.classList.toggle('mir',facing==='user');await v.play();ui()}
     catch(e){stream=null;ui();$('#cutErr').textContent='이 화면에서는 카메라를 켤 수 없어요. "사진 고르기"로 앨범 사진을 넣어 주세요.'}}
   function grab(){const w=v.videoWidth||640,h=v.videoHeight||480,c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');if(facing==='user'){x.translate(w,0);x.scale(-1,1)}x.drawImage(v,0,0,w,h);return c}
-  async function shootAll(){if(busy||!stream)return;busy=true;shots=[null,null,null,null];draw();ui();
-    for(let k=0;k<4;k++){$('#cutNo').textContent=(k+1)+' / 4';for(let n=3;n>0;n--){if(token!==my)return;$('#cutCd').hidden=false;$('#cutCd').textContent=n;SFX.beep();await new Promise(r=>setTimeout(r,800))}
-      if(token!==my)return;$('#cutCd').hidden=true;SFX.shutter();const fl=$('#cutFl');fl.classList.remove('go');void fl.offsetWidth;fl.classList.add('go');shots[k]=grab();draw();await new Promise(r=>setTimeout(r,450))}
+  async function shootAll(){if(busy||!stream)return;busy=true;shots=blank();draw();ui();const K=L().k;
+    for(let k=0;k<K;k++){$('#cutNo').textContent=K>1?(k+1)+' / '+K:'';for(let n=3;n>0;n--){if(token!==my)return;$('#cutCd').hidden=false;$('#cutCd').textContent=n;SFX.beep();await new Promise(r=>setTimeout(r,800))}
+      if(token!==my)return;$('#cutCd').hidden=true;SFX.shutter();const fl=$('#cutFl');fl.classList.remove('go');void fl.offsetWidth;fl.classList.add('go');shots[k]=grab();draw();if(k<K-1)await new Promise(r=>setTimeout(r,450))}
     $('#cutNo').textContent='';busy=false;stop();done()}
   $('#cutGo').onclick=startCam;$('#cutShut').onclick=shootAll;
   $('#cutFlip').onclick=()=>{if(busy)return;facing=facing==='user'?'environment':'user';startCam()};
   document.querySelectorAll('.sheet .pm[data-q]').forEach(b=>b.onclick=()=>{if(busy)return;mode=b.dataset.q;document.querySelectorAll('.sheet .pm[data-q]').forEach(x=>x.classList.toggle('on',x===b));
-    if(mode!=='cam')stop();shots=[null,null,null,null];$('#cutAfter').hidden=true;$('#cutImg').hidden=true;cv.hidden=false;draw();ui();if(mode==='up')$('#cutFile').click()});
+    if(mode!=='cam')stop();shots=blank();$('#cutAfter').hidden=true;$('#cutImg').hidden=true;cv.hidden=false;draw();ui();if(mode==='up')$('#cutFile').click()});
+  document.querySelectorAll('.sheet .fk[data-l]').forEach(b=>b.onclick=()=>{if(busy)return;li=+b.dataset.l;document.querySelectorAll('.sheet .fk[data-l]').forEach(x=>x.classList.toggle('on',x===b));
+    shots=blank();$('#cutAfter').hidden=true;$('#cutImg').hidden=true;cv.hidden=false;draw();ui()});
   document.querySelectorAll('.sheet .fk[data-c]').forEach(b=>b.onclick=()=>{fi=+b.dataset.c;document.querySelectorAll('.sheet .fk[data-c]').forEach(x=>x.classList.toggle('on',x===b));draw();if(!$('#cutAfter').hidden)done()});
-  $('#cutFile').addEventListener('change',async e=>{const fs=[...e.target.files].slice(0,4);e.target.value='';if(!fs.length)return;
+  $('#cutFile').addEventListener('change',async e=>{const fs=[...e.target.files].slice(0,L().k);e.target.value='';if(!fs.length)return;
     const load=f=>new Promise((res,rej)=>{const rd=new FileReader();rd.onload=()=>{const im=new Image();im.onload=()=>res(im);im.onerror=rej;im.src=rd.result};rd.onerror=rej;rd.readAsDataURL(f)});
-    try{const ims=await Promise.all(fs.map(load));shots=[0,1,2,3].map(k=>ims[k]||null);done()}catch(err){$('#cutErr').textContent='사진을 읽지 못했어요. 다른 사진으로 해 주세요.'}});
-  $('#cutRe').onclick=()=>{shots=[null,null,null,null];$('#cutAfter').hidden=true;$('#cutImg').hidden=true;cv.hidden=false;draw();ui();if(mode==='cam')startCam();else $('#cutFile').click()};
+    try{const ims=await Promise.all(fs.map(load));shots=blank().map((_,k)=>ims[k]||null);done()}catch(err){$('#cutErr').textContent='사진을 읽지 못했어요. 다른 사진으로 해 주세요.'}});
+  $('#cutRe').onclick=()=>{shots=blank();$('#cutAfter').hidden=true;$('#cutImg').hidden=true;cv.hidden=false;draw();ui();if(mode==='cam')startCam();else $('#cutFile').click()};
   $('#cutPost').onclick=async()=>{const b=$('#cutPost');if(b.disabled)return;b.disabled=true;b.textContent='거는 중…';
     try{await addItem('memories',{img:$('#cutImg').src,t:$('#cutCap').value.trim()||'쭈니와 함께',n:me.name});b.textContent='걸었어요!';$('#cutMsg').textContent='생일파티 쭈니 네컷에 올라갔어요';
       setTimeout(()=>{if(token===my){closeSheet();if(rpOpen)rpRefresh()}},900)}
     catch(err){b.disabled=false;b.textContent='생일파티에 걸기';$('#cutMsg').textContent=/relation|does not exist|memories/i.test(err.message||'')?'운영진이 아직 네컷 저장소를 열지 않았어요':errMsg(err)}};
-  draw();ui();
+  shots=blank();draw();ui();
 }
 function resetMe(){['jc_brief','jc_done','jc_end','jc_fin','jc_land','jc_myshot','jc_best2','jc_no','jc_me','jc_ticket'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});location.reload()}
 function closeGate(){store.set('jc_ticket',true);gate.classList.add('bye');setTimeout(()=>{gate.hidden=true;gateOpen=false;try{$('#nameIn').focus()}catch(e){}},700)}
