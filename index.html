@@ -1334,10 +1334,10 @@ async function sbInit(){if(!SB_URL||!SB_KEY||!window.supabase)return;
     let{data:{session}}=await c.auth.getSession();
     if(session){const u=await c.auth.getUser();if(u.error&&(u.error.status===401||u.error.status===403||/not.*found|does not exist|invalid/i.test(u.error.message||''))){try{await c.auth.signOut({scope:'local'})}catch(_){}session=null}}
     if(!session){const{data,error}=await c.auth.signInAnonymously({options:{captchaToken:await captchaToken()}});if(error)throw error;session=data.session}
-    sb=c;uid=session.user.id;SEND_MS=700;await pull(true)}
+    sb=c;uid=session.user.id;window.__anon=session.user.is_anonymous!==false;SEND_MS=700;await pull(true)}
   catch(e){console.warn('Supabase에 연결하지 못해서 이 기기 저장으로 동작해요',e);sb=null}}
 const sbReady=sbInit();
-function memberSync(){if(!sb||!uid||!saved.name&&me.name==='대원')return;
+function memberSync(){if(!sb||!uid||!window.__anon||!saved.name&&me.name==='대원')return;
   sb.from('members').upsert({user_id:uid,name:(me.name||'대원').slice(0,16),color:/^#[0-9a-f]{6}$/i.test(me.color)?me.color:null,no:store.get('jc_no','0000'),last_seen:new Date().toISOString()},{onConflict:'user_id'}).then(()=>{},()=>{})}
 sbReady.then(()=>{if(saved.name)memberSync()});
 
