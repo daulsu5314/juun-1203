@@ -275,6 +275,8 @@ img{max-width:100%}
 .ad-mv button{font-size:13px;padding:6px 10px;background:#efe6f5;color:var(--ink)}
 .ad-vid{grid-column:1/-1;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:#5c4f73}.ad-vid img{width:72px;height:44px;object-fit:cover;border-radius:6px}.ad-vid button{font-size:12px;padding:6px 9px;background:#efe6f5;color:var(--ink)}
 .ad-vol{flex-direction:row!important;align-items:center;gap:10px!important}.ad-vol input{flex:1;accent-color:var(--berry)}.ad-vol output{width:44px;text-align:right;font-variant-numeric:tabular-nums;color:var(--ink)}
+.ad-mdot{flex:none;width:14px;height:14px;border-radius:50%;margin-top:4px;box-shadow:0 0 0 2px #fff,0 0 0 3px #e0d6ea}
+.ad-mc{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}.ad-mc span{font-size:12px;background:#f4effc;color:#5c4f73;border-radius:999px;padding:2px 8px}
 .ad-hp{display:flex;flex-direction:column;gap:8px;background:#fff;border:1.5px solid #ece2f2;border-radius:10px;padding:12px}
 .ad-hpm{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.ad-hpm button{font-size:13px;padding:6px 10px;background:#efe6f5;color:var(--ink)}.ad-hpm button.on{background:var(--ink);color:#fff}
 .ad-hpf{position:relative;width:240px;aspect-ratio:390/620;overflow:hidden;border-radius:10px;background:#3a2c63;cursor:grab;touch-action:none;align-self:center}
@@ -875,7 +877,7 @@ $('#startSw').addEventListener('click',e=>{const b=e.target.closest('.sw');if(!b
 $('#nameIn').value=saved.name||'';
 if(saved.name){$('#nameIn').hidden=true;const na=$('#nameAs');na.hidden=false;na.innerHTML='';na.append('탐사대원 ');const nb=document.createElement('b');nb.textContent=saved.name;na.append(nb,' · 우주복 색은 바꿀 수 있어요');
   const sp=document.querySelector('#startForm p');if(sp)sp.textContent='…1203…1203… 다시 행성 #1203으로 착륙합니다.'}
-$('#startForm').addEventListener('submit',e=>{e.preventDefault();if(!store.get('jc_land',null))store.set('jc_land',Date.now());me.name=$('#nameIn').value.trim()||'대원';store.set('jc_me',{name:me.name,color:me.color});
+$('#startForm').addEventListener('submit',e=>{e.preventDefault();if(!store.get('jc_land',null))store.set('jc_land',Date.now());me.name=$('#nameIn').value.trim()||'대원';store.set('jc_me',{name:me.name,color:me.color});saved.name=me.name;sbReady.then(memberSync);
   $('#start').hidden=true;$('#nameIn').blur();SFX.ufo();state='landing';introT=0;$('#skipBtn').hidden=false;me.x=PAD.x;me.y=PAD.y+28;me.dir='down'});
 $('#skipBtn').addEventListener('click',()=>{state='play';firstBrief();ufoAlt=0;me.alpha=1;$('#skipBtn').hidden=true;catSay='#1203 도착! 나한테 와 봐';catSayT=260});
 
@@ -1330,10 +1332,14 @@ function captchaToken(){if(!TURNSTILE_KEY)return Promise.resolve(undefined);
 async function sbInit(){if(!SB_URL||!SB_KEY||!window.supabase)return;
   try{const c=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true}});
     let{data:{session}}=await c.auth.getSession();
+    if(session){const u=await c.auth.getUser();if(u.error&&(u.error.status===401||u.error.status===403||/not.*found|does not exist|invalid/i.test(u.error.message||''))){try{await c.auth.signOut({scope:'local'})}catch(_){}session=null}}
     if(!session){const{data,error}=await c.auth.signInAnonymously({options:{captchaToken:await captchaToken()}});if(error)throw error;session=data.session}
     sb=c;uid=session.user.id;SEND_MS=700;await pull(true)}
   catch(e){console.warn('Supabase에 연결하지 못해서 이 기기 저장으로 동작해요',e);sb=null}}
 const sbReady=sbInit();
+function memberSync(){if(!sb||!uid||!saved.name&&me.name==='대원')return;
+  sb.from('members').upsert({user_id:uid,name:(me.name||'대원').slice(0,16),color:/^#[0-9a-f]{6}$/i.test(me.color)?me.color:null,no:store.get('jc_no','0000'),last_seen:new Date().toISOString()},{onConflict:'user_id'}).then(()=>{},()=>{})}
+sbReady.then(()=>{if(saved.name)memberSync()});
 
 /* 서버에서 목록 불러오기 (공개된 것 + 내가 올린 것) + 운영진이 저장한 생카 설정 */
 async function pull(force){if(!sb)return;const now=Date.now();if(!force&&now-R.at<30000)return;R.at=now;
@@ -1860,7 +1866,7 @@ if(isBack()){$('#startRp').hidden=false}
    ===================================================================== */
 const AD={open:false,tab:'notes',filter:'all',rows:[],msg:'',busy:false,stats:null};
 const adm=$('#adm');
-const AD_TABS=[['notes','교신'],['gallery','사진관'],['montages','몽타주'],['photos','인증샷'],['memories','네컷'],['fancams','직캠'],['comments','댓글'],['lounge','라운지'],['site','생카 설정'],['stats','현황']];
+const AD_TABS=[['members','대원'],['notes','교신'],['gallery','사진관'],['montages','몽타주'],['photos','인증샷'],['memories','네컷'],['fancams','직캠'],['comments','댓글'],['lounge','라운지'],['site','생카 설정'],['stats','현황']];
 const AD_COLS={lounge:'id,user_id,name,message,approved,created_at',fancams:'id,user_id,name,url,comment,approved,created_at,like_count,comment_count',comments:'id,user_id,name,message,item_id,approved,created_at',notes:'id,user_id,name,message,approved,created_at',gallery:'id,user_id,name,title,reason,image_path,approved,created_at,like_count',
   montages:'id,user_id,name,title,image_path,approved,created_at',photos:'id,user_id,name,caption,image_path,approved,created_at',memories:'id,user_id,name,caption,image_path,approved,created_at'};
 const ytId=v=>{v=String(v||'').trim();if(/^[\w-]{11}$/.test(v))return v;const m=v.match(/(?:v=|youtu\.be\/|shorts\/|embed\/|live\/)([\w-]{11})/);return m?m[1]:''};
@@ -1891,7 +1897,7 @@ async function adLogout(){await sb.auth.signOut();location.reload()}
 async function adGo(tab){AD.tab=tab;AD.msg='';
   const nav=`<div class="ad-tabs">${AD_TABS.map(([k,l])=>`<button class="${k===tab?'on':''}" data-ad="tab" data-k="${k}">${l}</button>`).join('')}</div>`;
   adm.innerHTML=`<div class="adw">${adHead('<button class="ad-link" data-ad="logout">로그아웃</button>')}${nav}<div id="adBody"><p class="ad-empty">불러오는 중…</p></div></div>`;
-  if(tab==='site')return adSite();if(tab==='stats')return adStats();
+  if(tab==='site')return adSite();if(tab==='stats')return adStats();if(tab==='members')return adMembers();
   const r=await sb.from(tab==='gallery'?'gallery_ranked':tab==='fancams'?'fancams_ranked':tab).select(AD_COLS[tab]).order('created_at',{ascending:false}).limit(500);
   if(r.error){$('#adBody').innerHTML=`<p class="ad-err">불러오지 못했어요: ${escH(r.error.message)}</p>`;return}
   AD.rows=r.data;adList()}
@@ -1905,6 +1911,32 @@ function adList(){const t=AD.tab,rows=AD.filter==='hidden'?AD.rows.filter(x=>!x.
       <div class="ad-act"><button data-ad="toggle" data-id="${x.id}">${x.approved?'숨기기':'다시 공개'}</button><button class="ad-del" data-ad="del" data-id="${x.id}">삭제</button></div></div>`}).join('')}</div>`:'<p class="ad-empty">아직 없어요</p>'}`}
 async function adToggle(id){const x=AD.rows.find(r=>r.id===id);if(!x)return;const v=!x.approved,r=await sb.from(AD.tab).update({approved:v}).eq('id',id);
   if(r.error)return alert('바꾸지 못했어요: '+r.error.message);x.approved=v;adList();R.at=0}
+const MCOL=[['notes','교신'],['gallery','사진관'],['montages','몽타주'],['photos','인증샷'],['memories','네컷'],['fancams','직캠'],['comments','댓글'],['lounge','라운지']];
+async function adMembers(){const r=await sb.from('members_admin').select('*').order('last_seen',{ascending:false}).limit(2000);
+  if(r.error){$('#adBody').innerHTML=`<p class="ad-err">대원 명단을 불러오지 못했어요: ${escH(r.error.message)}</p><p class="ad-note">Supabase SQL Editor에서 최신 supabase.sql을 한 번 더 실행해 주세요.</p>`;return}
+  AD.mem=r.data;AD.mq=AD.mq||'';
+  $('#adBody').innerHTML=`<div class="ad-bar"><span id="adMc"></span><input id="adMq" placeholder="대원 이름 찾기" value="${escH(AD.mq)}" style="max-width:220px"></div>
+    <p class="ad-note">대원을 삭제하면 그 대원이 올린 교신·사진·몽타주·인증샷·네컷·직캠·댓글·라운지 글과 공감이 <b>전부 함께 지워지고 되돌릴 수 없어요.</b> 지워진 대원이 다시 들어오면 새 대원으로 시작해요.</p>
+    <div class="ad-list" id="adMl"></div>`;
+  $('#adMq').addEventListener('input',e=>{AD.mq=e.target.value;adMemList()});adMemList()}
+function adMemList(){const q=(AD.mq||'').trim().toLowerCase(),L=(AD.mem||[]).filter(m=>!q||(m.name||'').toLowerCase().includes(q)||(m.no||'').includes(q));
+  $('#adMc').textContent=`대원 ${AD.mem.length}명${q?` · 찾은 대원 ${L.length}명`:''}`;
+  $('#adMl').innerHTML=L.length?L.slice(0,500).map(m=>{const tot=MCOL.reduce((a,[k])=>a+(m[k]||0),0);
+    return`<div class="ad-row"><span class="ad-mdot" style="background:${/^#[0-9a-f]{6}$/i.test(m.color||'')?m.color:'#c4b0ff'}"></span>
+      <div class="ad-tx"><div class="ad-meta"><b>${escH(m.name)}</b> · 대원 번호 1203-${escH(m.no||'0000')}</div>
+        <div><small>처음 ${kstStr(m.created_at)} · 최근 ${kstStr(m.last_seen)}</small></div>
+        <div class="ad-mc">${tot?MCOL.filter(([k])=>m[k]).map(([k,l])=>`<span>${l} ${m[k]}</span>`).join(''):'<span>올린 글 없음</span>'}</div></div>
+      <div class="ad-act"><button class="ad-del" data-ad="mdel" data-id="${m.user_id}">대원 삭제</button></div></div>`}).join('')+(L.length>500?'<p class="ad-note">500명까지만 보여요. 이름으로 찾아 주세요.</p>':''):'<p class="ad-empty">아직 대원이 없어요</p>'}
+async function adMemberDel(id,btn){const m=(AD.mem||[]).find(x=>x.user_id===id);if(!m||btn.disabled)return;
+  const tot=MCOL.reduce((a,[k])=>a+(m[k]||0),0);
+  if(!btn.dataset.sure){btn.dataset.sure=1;btn.textContent=tot?`한 번 더 누르면 글 ${tot}개와 함께 삭제`:'한 번 더 누르면 삭제';return}
+  btn.disabled=true;btn.textContent='지우는 중…';
+  try{const ps=(await Promise.all(['gallery','montages','photos','memories'].map(t=>sb.from(t).select('image_path').eq('user_id',id)))).flatMap(r=>r.data||[]).map(x=>x.image_path).filter(Boolean);
+    for(let i=0;i<ps.length;i+=100)await sb.storage.from(BUCKET).remove(ps.slice(i,i+100));
+    const r=await sb.rpc('admin_delete_member',{target:id});
+    if(r.error)throw new Error(/is_admin/.test(r.error.message)?'운영진 계정은 여기서 지울 수 없어요':r.error.message);
+    AD.mem=AD.mem.filter(x=>x.user_id!==id);adMemList();R.at=0}
+  catch(e){btn.disabled=false;btn.dataset.sure='';btn.textContent='대원 삭제';alert('삭제하지 못했어요: '+(e.message||e))}}
 async function adDel(id,btn){const x=AD.rows.find(r=>r.id===id);if(!x)return;
   if(!btn.dataset.sure){btn.dataset.sure=1;btn.textContent='한 번 더 누르면 삭제';return}
   const r=await sb.from(AD.tab).delete().eq('id',id);if(r.error)return alert('삭제하지 못했어요: '+r.error.message);
@@ -2036,7 +2068,7 @@ async function adStats(){const d=new Date(Date.now()+9*36e5);const today=new Dat
 
 adm.addEventListener('click',e=>{const b=e.target.closest('[data-ad]');if(!b)return;const a=b.dataset.ad;
   if(a==='close')closeAdmin();else if(a==='logout')adLogout();else if(a==='tab'){AD.filter='all';adGo(b.dataset.k)}
-  else if(a==='filter'){AD.filter=b.dataset.k;adList()}else if(a==='toggle')adToggle(b.dataset.id);else if(a==='del')adDel(b.dataset.id,b);
+  else if(a==='filter'){AD.filter=b.dataset.k;adList()}else if(a==='toggle')adToggle(b.dataset.id);else if(a==='del')adDel(b.dataset.id,b);else if(a==='mdel')adMemberDel(b.dataset.id,b);
   else if(a==='add'){const D={lyrics:{title:'',text:'',note:''},edits:{title:'',by:'',yt:'',len:''},commissions:{img:null,title:'',artist:''},goods:{img:null,name:'',price:'',desc:'',link:''}};AD.site[b.dataset.l][b.dataset.l==='lyrics'?'unshift':'push']({...D[b.dataset.l]});adSiteRender()}
   else if(a==='rm'){AD.site[b.dataset.l].splice(+b.dataset.i,1);adSiteRender()}
   else if(a==='hpm'){AD.hpPc=b.dataset.k==='pc';adSiteRender()}
