@@ -32,6 +32,11 @@ body{background:var(--space);color:var(--cream);font-family:var(--body);font-siz
 .hud h1 span{color:var(--gold)}
 .hud h1 small{display:block;font-size:12px;color:var(--muted);letter-spacing:1px;margin-top:2px}
 .hud-r{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.chip-btn{cursor:pointer;color:var(--cream)}.chip-btn:hover{border-color:var(--gold)}
+.mis-list{list-style:none;margin:8px 0;padding:0;display:flex;flex-direction:column;gap:6px}.mis-list li{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid #ece2f2;border-radius:10px;padding:10px 12px}
+.mis-list li.ok{background:#eefaf3;border-color:#bfe8cf}.mis-ck{flex:none;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;background:#efe6f5;color:#9a8db0}.mis-list li.ok .mis-ck{background:#2a9d78;color:#fff}
+.mis-tx{flex:1;min-width:0;display:flex;flex-direction:column}.mis-tx b{font-size:14px}.mis-tx small{font-size:12px;color:#9a8db0}.mis-st{flex:none;font-size:12px;font-family:var(--display);color:#9a8db0}.mis-list li.ok .mis-st{color:#2a9d78}
+.mis-bar{height:10px;border-radius:5px;background:#efe6f5;overflow:hidden}.mis-bar i{display:block;height:100%;background:linear-gradient(90deg,#ff8fab,#c4b0ff)}
 .chip{font-family:var(--display);font-size:13px;background:var(--panel);border:1px solid var(--line);color:var(--muted);padding:6px 10px;border-radius:6px;font-variant-numeric:tabular-nums}
 .chip b{color:var(--mint);font-weight:400}
 button{font-family:var(--display);font-size:15px;border:0;cursor:pointer;color:var(--ink);background:var(--cream);border-radius:8px;padding:10px 14px}
@@ -530,7 +535,7 @@ img{max-width:100%}
   <h1>PLANET <span>#1203</span><small>쭈일리언 외계행성 탐사</small></h1>
   <div class="hud-r">
     <span class="chip" id="dday">착륙까지 —</span>
-    <span class="chip">교신 해독 <b id="prog">0/5</b></span>
+    <button class="chip chip-btn" id="misBtn" type="button" aria-label="미션지 보기">📜 미션 <b id="prog">0/5</b></button>
     <span class="chip">접속 <b id="online">1</b>명</span>
     <button class="sndBtn" id="sndBtn" type="button" aria-label="효과음 끄기"></button>
     <button class="ghost" id="rpBtn" hidden>탐사 그만하기</button>
@@ -900,6 +905,13 @@ $('#sheetBody').addEventListener('click',async e=>{const b=e.target.closest('.sa
 const mTag=id=>{const m=MISSIONS.find(x=>x.id===id);return `<div class="mission">MISSION · ${m.label}${done[id]?' · 완료':''}</div>`};
 function openSpot(id){({cat:openCat,photo:openPhoto,game:openGame,draw:openDraw,guest:openGuest,gallery:openGallery,shop:openShop})[id]()}
 
+function openMissions(){const n=doneCount();
+  openSheet('📜 내 미션지',`<p>${escH(me.name)} 대원의 탐사 진행 상황이에요. 지도에서 기지 문 앞에 서면 들어갈 수 있어요.</p>
+  <div class="mis-bar" aria-hidden="true"><i style="width:${n/5*100}%"></i></div><p class="zhint" style="margin:4px 0 0">교신 해독 ${n} / 5</p>
+  <ul class="mis-list">${MISSIONS.map(m=>{const b=booths.find(x=>x.id===m.id);return`<li class="${done[m.id]?'ok':''}"><span class="mis-ck">${done[m.id]?'✓':''}</span><span class="mis-tx"><b>${m.label}</b><small>📍 ${b?b.name:''}</small></span><span class="mis-st">${done[m.id]?'완료':'아직'}</span></li>`}).join('')}</ul>
+  ${n===5&&!endingSeen?'<p><b>다 해독했어요!</b> 쭈콩호 앞 쭈일리언에게 가서 탐사 일지를 보고해 주세요.</p>':n===5?'<p>탐사 일지 보고까지 끝났어요. 생일파티를 즐겨 주세요!</p>':'<p class="zhint">다섯 개를 다 해독하면 쭈콩호 앞 쭈일리언에게 탐사 일지를 보고할 수 있어요.</p>'}
+  <button class="primary" id="misOk" type="button">확인</button>`);$('#misOk').onclick=closeSheet}
+$('#misBtn').addEventListener('click',()=>{if(state!=='play'&&state!=='start')return;openMissions()});
 function openCat(first){
   openSheet(first?'📜 미션지 도착!':'쭈일리언',`<p>안녕, 나는 쭈일리언! 머리 위 친구는 하늘이야. 우주를 탐험하는데 정체불명의 신호가 계속 잡혔어. "…1203…1203…" 신호를 따라와 보니 지도에 없는 작은 행성, 바로 여기 <b>#1203</b>이야.</p>
   <p>${me.name} 대원, 기지 다섯 곳을 조사해서 교신을 해독해 줘. 미션을 하나씩 끝낼 때마다 신호가 조금씩 선명해질 거야.</p>
