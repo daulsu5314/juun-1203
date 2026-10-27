@@ -2771,5 +2771,54 @@ requestAnimationFrame(t=>{last=t;frame(t)});
 })();
 </script>
 
+<script>
+/* =====================================================================
+   쭈일리언 UFO 커서 · 마우스가 있는 컴퓨터에서만 켜져요 (폰·패드는 그림도 안 받아요)
+   cursor 폴더의 그림 6장을 index.html 옆에 두면 돼요. 하나라도 없으면 원래 커서를 써요
+   ===================================================================== */
+(()=>{
+  if(!matchMedia('(hover:hover) and (pointer:fine)').matches)return;
+  const SZ=56,DIR='cursor/',RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // n: 프레임 수, ms: 한 프레임 시간 (원본 .ani 속도 그대로), hx/hy: 클릭되는 지점
+  const C={normal:{n:12,ms:117,hx:1,hy:1},busy:{n:12,ms:83,hx:1,hy:1},link:{n:6,ms:133,hx:1,hy:1},
+           help:{n:12,ms:117,hx:1,hy:1},unavailable:{n:1,ms:0,hx:1,hy:1},text:{n:12,ms:117,hx:6,hy:10}};
+  const el=document.createElement('div');el.id='fcur';el.setAttribute('aria-hidden','true');
+  const st=document.createElement('style');
+  st.textContent=`#fcur{position:fixed;left:0;top:0;width:${SZ}px;height:${SZ}px;pointer-events:none;z-index:2147483647;background-repeat:no-repeat;will-change:transform;display:none}
+html.fcur,html.fcur *{cursor:none!important}`;
+  document.head.append(st);
+  Promise.all(Object.keys(C).map(k=>new Promise(res=>{const im=new Image();im.onload=()=>{C[k].url=im.src;res(true)};im.onerror=()=>res(false);im.src=DIR+k+'.webp'})))
+    .then(r=>{if(r.every(Boolean)){document.body.append(el);start()}});
+
+  function start(){
+    const LINK='a[href],button:not(:disabled),summary,select:not(:disabled),label.ad-file,label.filebtn,.good,.rp-card,.gc-prz,[role=button],input[type=checkbox],input[type=radio],input[type=range],input[type=file],.tk,.sw';
+    const TEXT='input:not([type]):not(:disabled),input[type=text]:not(:disabled),input[type=email],input[type=password],input[type=tel],input[type=url],input[type=number]:not(:disabled),input[type=search],textarea:not(:disabled)';
+    let x=-200,y=-200,state='',frame=0,last=0,shown=false,target=null;
+    const pick=t=>{
+      if(document.querySelector('.gc-mach.spin'))return'busy';          // 가챠가 돌아가는 동안
+      if(!t||!t.closest)return'normal';
+      if(t.closest('button:disabled,input:disabled,textarea:disabled,select:disabled'))return'unavailable';
+      if(t.closest(TEXT))return'text';
+      if(t.closest('summary'))return'help';
+      if(t.closest(LINK))return'link';
+      return'normal'};
+    const place=()=>{const c=C[state]||C.normal;el.style.transform=`translate(${x-c.hx}px,${y-c.hy}px)`};
+    const set=s=>{if(s===state)return;state=s;frame=0;const c=C[s];
+      el.style.backgroundImage=`url("${c.url}")`;el.style.backgroundSize=`${SZ*c.n}px ${SZ}px`;el.style.backgroundPosition='0 0';place()};
+    const hide=()=>{if(!shown)return;shown=false;el.style.display='none';document.documentElement.classList.remove('fcur')};
+    addEventListener('pointermove',e=>{
+      if(e.pointerType!=='mouse'){hide();return}
+      x=e.clientX;y=e.clientY;target=e.target;
+      if(!shown){shown=true;el.style.display='block';document.documentElement.classList.add('fcur')}
+      set(pick(target));place()},{passive:true});
+    document.addEventListener('mouseout',e=>{const r=e.relatedTarget;if(!r||r.tagName==='IFRAME')hide()});  // 창 밖이나 유튜브 영상 위로 가면 원래 커서
+    addEventListener('blur',hide);
+    const tick=t=>{requestAnimationFrame(tick);if(!shown)return;
+      const s=pick(target);if(s!==state)set(s);
+      const c=C[state];if(RM||c.n<2)return;
+      if(t-last>=c.ms){last=t;frame=(frame+1)%c.n;el.style.backgroundPosition=`${-frame*SZ}px 0`}};
+    requestAnimationFrame(tick)}
+})();
+</script>
 </body>
 </html>
