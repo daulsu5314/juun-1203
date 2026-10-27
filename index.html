@@ -513,6 +513,68 @@ img{max-width:100%}
 .rp-mfoot{margin-top:auto;padding:24px 18px 30px;display:flex;flex-direction:column;gap:10px;align-items:center}
 .rp-mfoot small{font-size:11px;color:#8f84ad}
 .rp-mfoot .rp-cta{border-radius:6px!important;box-shadow:none;font-family:"Gothic A1",var(--body)!important;font-weight:800;font-size:16px;height:52px}
+/* ===== 1203 가챠 · 교환소 (이 블록을 스타일 닫는 태그 바로 위에 붙여 넣어요) ===== */
+.r-N{--rc:#b3a5dc}.r-R{--rc:#7fa8ff}.r-SR{--rc:#c77dff}.r-UR{--rc:#ffd166}
+.gc-wrap{display:flex;flex-direction:column;gap:14px;padding:0 18px}
+.gc-stage{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px;padding:20px 16px 18px;border-radius:18px;background:radial-gradient(120% 90% at 50% 0%,#3a2470 0%,#1b1238 70%);border:1px solid #2f2452}
+.gc-chip{font-family:"Jua",sans-serif;font-size:15px;background:#0d0820;border:1px solid #3a2f60;border-radius:999px;padding:6px 14px;color:#fff}.gc-chip b{color:#ffd166;font-weight:400;font-size:19px}
+.gc-mach{position:relative;width:200px}
+.gc-mach.off{filter:grayscale(.75);opacity:.7}
+.gc-dome{position:relative;height:150px;border-radius:100px 100px 16px 16px;background:radial-gradient(70% 60% at 32% 28%,rgba(255,255,255,.4),rgba(255,255,255,.05) 62%),rgba(196,176,255,.16);border:4px solid #c4b0ff;overflow:hidden}
+.gc-dome i{position:absolute;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;box-shadow:inset 0 -5px 0 rgba(0,0,0,.14),0 0 0 2px rgba(42,31,61,.5)}
+.gc-body{position:relative;height:118px;margin-top:-4px;background:#ff6f91;border-radius:10px 10px 16px 16px;box-shadow:inset 0 -10px 0 #d94a72,0 6px 0 #0c0719}
+.gc-lbl{position:absolute;left:18px;top:12px;font-family:"Anton",sans-serif;font-size:26px;color:#fff7f0;letter-spacing:1px}
+.gc-hole{position:absolute;left:18px;bottom:20px;width:56px;height:34px;border-radius:8px;background:#2a1458;box-shadow:inset 0 5px 0 rgba(0,0,0,.45)}
+.rp .gc-knob{position:absolute;right:16px;top:50%;margin-top:-34px;width:64px;height:64px;border-radius:50%!important;background:#fff7f0;box-shadow:0 4px 0 #c99a2e,inset 0 0 0 5px #ffd166;padding:0;transition:transform .9s cubic-bezier(.3,1.4,.5,1)}
+.gc-knob i{position:absolute;left:50%;top:9px;bottom:9px;width:12px;margin-left:-6px;border-radius:6px;background:#d94a72}
+.rp .gc-knob:disabled{opacity:.7;cursor:default}
+.gc-mach.spin{animation:gcRock .16s ease-in-out infinite alternate}
+.gc-mach.spin .gc-knob{transform:rotate(360deg)}
+.gc-mach.spin .gc-dome i{animation:gcShake .2s ease-in-out infinite alternate}
+@keyframes gcRock{from{transform:rotate(-1.5deg)}to{transform:rotate(1.5deg)}}
+@keyframes gcShake{from{translate:0 0}to{translate:3px -7px}}
+.rp .gc-pull{width:100%;max-width:300px;height:52px;border-radius:14px!important;background:#ffd166;color:#2a1f3d;font-family:"Jua",sans-serif!important;font-size:18px;box-shadow:0 5px 0 #c99a2e;padding:0}
+.rp .gc-pull:disabled{background:#3a2c63;color:#b3a5dc;box-shadow:0 5px 0 #1b1238;cursor:default}
+.gc-ex{background:#1b1238;border:1px solid #2f2452;border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.gc-ex h3{margin:0;font-family:"Jua",sans-serif;font-weight:400;font-size:17px}
+.gc-st{font-family:"Jua",sans-serif;font-size:16px;color:#ffd166}.gc-st.ok{color:#7ee07e}
+.gc-sub{margin:0;font-size:13px;color:#cfc4ea;line-height:1.5}
+.rp .gc-btn{height:46px;border-radius:12px!important;background:var(--berry);color:#fff;font-family:"Jua",sans-serif!important;font-size:16px;box-shadow:0 4px 0 var(--berry-deep);padding:0 16px}
+.rp .gc-btn.ghost{background:#2a1d4d;box-shadow:none;border:1px solid #4a3a7a}
+.gc-feed{display:flex;flex-direction:column;gap:6px}
+.gc-feed div{font-size:13px;color:#e6dcfa;background:rgba(255,255,255,.05);border-radius:8px;padding:8px 10px;overflow-wrap:anywhere}.gc-feed b{color:#fff}
+.gc-tag{display:inline-block;font-family:"Anton",sans-serif;font-size:11px;letter-spacing:.5px;padding:1px 6px;border-radius:4px;color:#2a1f3d;margin-right:6px;vertical-align:1px}
+/* 시트 안 (밝은 배경) */
+.gc-drop{display:flex;flex-direction:column;align-items:center;gap:12px;padding:16px 0 6px}
+.gc-cap{position:relative;width:124px;height:124px;border-radius:50%;padding:0;background:linear-gradient(var(--rc) 50%,#fff7f0 50%);box-shadow:inset 0 -10px 0 rgba(0,0,0,.1),0 0 0 4px #2a1f3d,0 12px 26px rgba(42,31,61,.3);animation:gcDrop .7s cubic-bezier(.3,1.5,.5,1) both,gcWob 1.1s .7s ease-in-out infinite}
+.gc-cap i{position:absolute;left:-4px;right:-4px;top:50%;height:8px;margin-top:-4px;background:#2a1f3d;border-radius:4px}
+.gc-cap.open{animation:gcPop .45s ease-in forwards}
+@keyframes gcDrop{from{transform:translateY(-160px) scale(.6);opacity:0}to{transform:none;opacity:1}}
+@keyframes gcWob{0%,100%{transform:rotate(0)}25%{transform:rotate(-9deg)}75%{transform:rotate(9deg)}}
+@keyframes gcPop{to{transform:scale(1.6);opacity:0}}
+.gc-card{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;background:#fff;border-radius:16px;padding:24px 16px 16px;margin-top:12px;border:3px solid var(--rc);box-shadow:0 0 28px var(--rc);animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
+.gc-card.r-UR{background:linear-gradient(160deg,#fffbe8,#fff0f6 50%,#efe4ff)}
+.gc-rar{position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-family:"Anton",sans-serif;font-size:15px;letter-spacing:1px;background:var(--rc);color:#2a1f3d;padding:3px 14px;border-radius:999px;white-space:nowrap}
+.gc-art{width:150px;height:150px;border-radius:12px;background:#f4effc;display:flex;align-items:center;justify-content:center;overflow:hidden;flex:none}
+.gc-art img{width:100%;height:100%;object-fit:contain}
+.gc-ph{font-family:"Anton",sans-serif;font-size:44px;color:var(--rc);text-shadow:0 2px 0 #2a1f3d}
+.gc-card b{font-family:var(--display);font-weight:400;font-size:22px;overflow-wrap:anywhere}.gc-card p{margin:0;font-size:14px}.gc-card small{font-size:12px;color:#9a8db0}
+.gc-secret{white-space:pre-line}
+.gc-book{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.gc-bi{display:flex;flex-direction:column;align-items:center;gap:4px;background:#fff;border:2px solid var(--rc);border-radius:12px;padding:8px;text-align:center;color:var(--ink);font-family:var(--body);min-width:0}
+.gc-bi .gc-art{width:100%;height:auto;aspect-ratio:1}.gc-bi .gc-ph{font-size:28px}
+.gc-bi b{font-family:var(--display);font-weight:400;font-size:13px;overflow-wrap:anywhere}.gc-bi small{font-size:11px;color:#9a8db0}
+.gc-bi.lock{border-style:dashed;opacity:.65}.gc-bi.lock .gc-ph{color:#c9bfe3;text-shadow:none}
+.gc-tk{display:flex;flex-direction:column;align-items:center;gap:4px;background:#fff;border:2px dashed #c4b0ff;border-radius:14px;padding:18px;animation:pop .5s cubic-bezier(.2,1.6,.4,1)}.gc-tk span{font-size:46px;line-height:1}.gc-tk b{font-family:var(--display);font-weight:400;font-size:20px}.gc-tk small{color:#9a8db0}
+.gc-toast{position:fixed;left:50%;top:calc(16px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:40;width:max-content;max-width:calc(100% - 32px);background:#1b1238;color:#fff;border:2px solid var(--rc);border-radius:16px;padding:10px 16px;font-family:"Jua",sans-serif;font-size:15px;box-shadow:0 0 22px var(--rc);text-align:center;animation:pop .4s cubic-bezier(.2,1.6,.4,1)}
+/* 운영진 가챠 탭 */
+.ad-gi{display:grid;grid-template-columns:88px minmax(0,1fr);gap:12px;background:#fff;border:1.5px solid #ece2f2;border-left:6px solid var(--rc);border-radius:10px;padding:10px;margin-bottom:8px}
+.ad-gi.off{opacity:.55}
+.ad-gimg{display:flex;flex-direction:column;gap:6px;align-items:flex-start}.ad-gimg .gc-art{width:88px;height:88px}.ad-gimg .gc-ph{font-size:28px}
+.ad-gf{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.ad-gf .full{grid-column:1/-1}
+.adm select{font-family:var(--body);font-size:16px;padding:9px 11px;border-radius:8px;border:1.5px solid #e0d6ea;background:#fff;color:var(--ink)}
+.ad-mv .ad-del{background:#ffe3ea;color:var(--berry-deep)}
+@media (max-width:520px){.ad-gi{grid-template-columns:minmax(0,1fr)}}
 </style>
 </head>
 <body>
@@ -2259,6 +2321,245 @@ function openFourCut(){
 function resetMe(){['jc_brief','jc_done','jc_end','jc_fin','jc_land','jc_myshot','jc_best2','jc_no','jc_me','jc_ticket'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});location.reload()}
 function closeGate(){store.set('jc_ticket',true);gate.classList.add('bye');setTimeout(()=>{gate.hidden=true;gateOpen=false;try{$('#nameIn').focus()}catch(e){}},700)}
 if(!/[?&#]admin\b/.test(location.search+location.hash))openGate();
+
+/* =====================================================================
+   1203 가챠 · 생일파티 화면의 탐사 일지 교환소 + 캡슐 기계 + 운영진 '가챠' 탭
+   이 블록을 '디데이' 주석 줄 바로 위에 붙여 넣어요
+   탐사 일지 제출 → 교환권 1장 → 캡슐 1회. 뽑기 결과는 서버(pull_gacha)가 정해요
+   서버가 없으면(미리보기) 이 기기에서만 흉내 내요
+   ===================================================================== */
+const GC={cfg:{open:true,need:5,ur:3,sr:12,r:30},items:[],inv:[],secrets:new Set(),tickets:0,submitted:false,ann:[],
+  loaded:false,loading:false,missing:false,busy:false,live:false};
+const GC_RAR={N:{l:'N',n:'노멀',c:'#b3a5dc'},R:{l:'R',n:'레어',c:'#7fa8ff'},SR:{l:'SR',n:'슈퍼 레어',c:'#c77dff'},UR:{l:'UR',n:'울트라 레어',c:'#ffd166'}};
+const GC_SAMPLE=[
+  {id:'g1',rarity:'N',name:'별가루 한 줌',desc:'행성 바닥에서 반짝이던 가루',stock:null},
+  {id:'g2',rarity:'N',name:'하늘이 스티커',desc:'하늘이가 몰래 붙여둔 스티커',stock:null},
+  {id:'g3',rarity:'R',name:'쭈콩호 미니어처',desc:'탐사선 축소 모형',stock:null},
+  {id:'g4',rarity:'R',name:'추억 카드 #1',desc:'사진 + 한 줄 TMI',stock:null},
+  {id:'g5',rarity:'SR',name:'커피 사줌권',desc:'실물 교환권 · 뽑은 사람만 열람 가능',stock:1,secret:'○○ 대원이 커피 한 잔 쏩니다. 이 화면을 캡처해서 보여 주세요!'},
+  {id:'g6',rarity:'SR',name:'하늘이 헬멧',desc:'캐릭터 장착 아이템',stock:null},
+  {id:'g7',rarity:'UR',name:'1203',desc:'이 우주에 단 하나뿐인 카드',stock:1,secret:'여기에 주은이에게 남길 비밀 메시지를 적어요.'}];
+const GC_ERR={not_signed_in:'탐사대 등록이 필요해요. 새로고침 해 주세요',not_ready:'미션을 다 끝내야 교환할 수 있어요',
+  no_ticket:'교환권이 없어요',gacha_closed:'가챠 기계가 아직 잠들어 있어요',pool_empty:'캡슐이 모두 떨어졌어요. 운영진에게 알려 주세요',bad_summary:'탐사 일지를 읽지 못했어요'};
+function gcErr(e){const s=String(e&&(e.message||e.code)||e||'');
+  if(/already_submitted/.test(s)){const x=new Error('이미 교환권을 받은 대원이에요');x.code='already';return x}
+  const k=Object.keys(GC_ERR).find(k=>s.includes(k));return new Error(k?GC_ERR[k]:errMsg(e))}
+const gcImg=p=>!p?null:/^(https?:|data:)/.test(p)?p:pubUrl(p);
+const gcR=r=>GC_RAR[r]||GC_RAR.N;
+const gcArt=it=>`<span class="gc-art">${it.img?`<img src="${escH(it.img)}" alt="">`:`<span class="gc-ph">${gcR(it.rarity).l}</span>`}</span>`;
+const gcLocal=()=>store.get('jc_gc',{t:0,sub:false,inv:[]});
+const gcLocalLeft=it=>it.stock==null?null:Math.max(0,it.stock-gcLocal().inv.filter(x=>x.item_id===it.id).length);
+
+async function gcLoad(){await sbReady;
+  if(!sb){const L=gcLocal();GC.items=GC_SAMPLE.map(x=>({...x,img:null,stock:gcLocalLeft(x)}));GC.tickets=L.t;GC.submitted=L.sub;GC.inv=L.inv;
+    GC.secrets=new Set(GC_SAMPLE.filter(x=>x.secret&&L.inv.some(i=>i.item_id===x.id)).map(x=>x.id));GC.loaded=true;return}
+  const[c,it,w,lg,inv,sc,an]=await Promise.all([
+    sb.from('gacha_config').select('*').eq('id',1).maybeSingle(),
+    sb.from('gacha_items').select('id,rarity,name,description,image_path,stock,sort,active').order('sort').order('created_at'),
+    sb.from('gacha_wallets').select('tickets').eq('user_id',uid).maybeSingle(),
+    sb.from('explore_logs').select('id').eq('user_id',uid).maybeSingle(),
+    sb.from('gacha_inventory').select('item_id,created_at').eq('user_id',uid).order('created_at',{ascending:false}),
+    sb.from('gacha_secrets').select('item_id'),
+    sb.from('gacha_announcements').select('user_id,name,item_name,rarity,created_at').order('created_at',{ascending:false}).limit(8)]);
+  if(c.error){GC.missing=true;GC.loaded=true;return}          // SQL을 아직 안 돌렸으면 가챠 칸을 숨겨요
+  if(c.data)GC.cfg={open:c.data.open,need:c.data.need_missions,ur:+c.data.rate_ur,sr:+c.data.rate_sr,r:+c.data.rate_r};
+  if(!it.error)GC.items=it.data.filter(x=>x.active).map(x=>({id:x.id,rarity:x.rarity,name:x.name,desc:x.description||'',img:gcImg(x.image_path),stock:x.stock}));
+  GC.tickets=w.data?w.data.tickets:0;GC.submitted=!!lg.data;GC.inv=inv.data||[];
+  GC.secrets=new Set((sc.data||[]).map(x=>x.item_id));GC.ann=an.data||[];GC.loaded=true;gcListen()}
+
+/* SR·UR 전체 방송 (생일파티를 보고 있는 사람에게만 토스트) */
+function gcListen(){if(GC.live||!sb)return;GC.live=true;
+  sb.channel('gacha-ann').on('postgres_changes',{event:'INSERT',schema:'public',table:'gacha_announcements'},({new:a})=>{if(!a)return;
+    GC.ann.unshift(a);GC.ann.length=Math.min(GC.ann.length,8);
+    const it=GC.items.find(x=>x.name===a.item_name&&x.stock!=null);if(it&&a.user_id!==uid)it.stock=Math.max(0,it.stock-1);
+    if(a.user_id===uid||!rpOpen)return;
+    gcToast(`🎉 ${a.name} 대원이 [${a.rarity}] 「${a.item_name}」 획득!`,a.rarity);SFX.join();if(rpView==='archive')rpRefresh()}).subscribe()}
+function gcToast(t,r){const d=document.createElement('div');d.className='gc-toast r-'+(GC_RAR[r]?r:'N');d.setAttribute('role','status');d.textContent=t;document.body.append(d);setTimeout(()=>d.remove(),3600)}
+
+/* 생일파티 화면에 들어가는 칸 */
+let gcDomeHtml=null;
+function gcDome(){if(gcDomeHtml)return gcDomeHtml;let s=1203;const r=()=>(s=(s*16807)%2147483647)/2147483647,C=['#ff8fab','#8ff0d2','#ffd166','#c4b0ff','#7fa8ff','#ffb86b'];
+  return gcDomeHtml=Array.from({length:18},(_,i)=>`<i style="left:${Math.round(10+r()*80)}%;top:${Math.round(34+r()*54)}%;background:linear-gradient(${C[i%C.length]} 50%,#fff7f0 50%);transform:rotate(${Math.round(r()*360)}deg)"></i>`).join('')}
+function gcSection(){if(GC.missing)return'';
+  const own=new Set(GC.inv.map(x=>x.item_id)).size,dc=doneCount(),ready=dc>=GC.cfg.need,can=GC.loaded&&GC.cfg.open&&GC.tickets>0&&!GC.busy;
+  let ex;
+  if(!GC.loaded)ex='<p class="gc-sub">교환소를 여는 중…</p>';
+  else if(GC.submitted)ex=`<div class="gc-st ok">✔ 탐사 일지 제출 완료</div><p class="gc-sub">교환권은 대원 한 명당 한 장이에요. ${GC.tickets?'기계에서 캡슐을 뽑아 보세요!':'도감에서 뽑은 캡슐을 다시 볼 수 있어요.'}</p>`;
+  else if(!ready)ex=`<div class="gc-st">교신 해독 ${dc} / ${GC.cfg.need}</div><p class="gc-sub">미션을 다 끝내면 탐사 일지를 교환권 1장으로 바꿀 수 있어요.</p><button class="gc-btn ghost" data-gc="back">탐사하러 가기</button>`;
+  else ex=`<div class="gc-st">탐사 일지 준비 완료!</div><p class="gc-sub">일지를 제출하면 캡슐 교환권 1장을 드려요.</p><button class="gc-btn" data-gc="submit">일지 제출하고 교환권 받기</button>`;
+  const pullTxt=!GC.loaded?'준비 중…':!GC.cfg.open?'가챠 기계 준비 중':GC.busy?'뽑는 중…':GC.tickets?'교환권 1장으로 뽑기':'교환권이 필요해요';
+  const feed=GC.ann.slice(0,3).map(a=>`<div><span class="gc-tag" style="background:${gcR(a.rarity).c}">${escH(a.rarity)}</span><b>${escH(a.name)}</b> 대원이 「${escH(a.item_name)}」 획득!</div>`).join('');
+  return`<section class="rp-sec" id="gcZone"><div class="rp-big"><div><div class="rp-kick" style="color:#ffd166">CAPSULE</div><h2>1203 GACHA</h2><p>탐사 일지를 교환권으로 바꿔 캡슐을 뽑아요</p></div><button class="rp-link" data-gc="book">도감 ${own}/${GC.items.length} &gt;</button></div>
+  <div class="gc-wrap">
+    <div class="gc-stage"><span class="gc-chip">🎟 교환권 <b>${GC.tickets}</b>장</span>
+      <div class="gc-mach${GC.cfg.open?'':' off'}${GC.busy?' spin':''}"><div class="gc-dome" aria-hidden="true">${gcDome()}</div>
+        <div class="gc-body"><span class="gc-lbl">1203</span><span class="gc-hole" aria-hidden="true"></span><button class="gc-knob" data-gc="pull" aria-label="캡슐 뽑기"${can?'':' disabled'}><i></i></button></div></div>
+      <button class="gc-pull" data-gc="pull"${can?'':' disabled'}>${pullTxt}</button></div>
+    <div class="gc-ex"><h3>📮 탐사 일지 교환소</h3>${ex}</div>
+    ${feed?`<div class="gc-feed">${feed}</div>`:''}
+  </div></section>`}
+function gcScroll(){const z=$('#gcZone');if(z)z.scrollIntoView({behavior:'smooth',block:'start'})}
+
+/* 교환: 탐사 일지 제출 → 교환권 1장 */
+async function gcRpcSubmit(sum){
+  if(!sb){const L=gcLocal();if(L.sub)throw gcErr('already_submitted');if(sum.missions<GC.cfg.need)throw gcErr('not_ready');L.sub=true;L.t++;store.set('jc_gc',L);return L.t}
+  const r=await sb.rpc('submit_log',{p_summary:sum});if(r.error)throw gcErr(r.error);return r.data}
+function gcSubmit(){const s=myStats();
+  openSheet('탐사 일지 제출',`<p><b>${escH(s.name)}</b> 대원의 탐사 일지를 교환소에 제출할까요?</p>
+  <ul class="checks"><li><span>교신 해독</span><span>${doneCount()} / 5</span></li><li><span>외계인 수색 최고 점수</span><span>${s.best}점</span></li><li><span>탐사 시간</span><span>${s.mins?s.mins+'분':'—'}</span></li></ul>
+  <p class="zhint">일지는 대원 한 명당 한 번만 제출할 수 있고, 캡슐 교환권 1장으로 바뀌어요. 처음부터 다시 탐사해도 교환권을 또 받을 수는 없어요.</p>
+  <div class="row"><button class="soft" id="gsNo">나중에</button><button class="primary" id="gsYes">제출하고 교환권 받기</button></div><p id="gsMsg" class="save"></p>`);
+  $('#gsNo').onclick=closeSheet;
+  $('#gsYes').onclick=async()=>{const b=$('#gsYes');if(b.disabled)return;b.disabled=true;b.textContent='제출하는 중…';
+    const sum={name:s.name,no:s.no,missions:doneCount(),best:s.best,mins:s.mins,land:store.get('jc_land',null),fin:store.get('jc_fin',null),note:(s.note||'').slice(0,200)};
+    try{GC.tickets=await gcRpcSubmit(sum);GC.submitted=true;SFX.done();
+      openSheet('교환권 획득!',`<div class="gc-tk"><span>🎟</span><b>1203 캡슐 교환권</b><small>대원 번호 1203-${escH(s.no)}</small></div><p style="text-align:center">가챠 기계에서 캡슐을 뽑아 보세요!</p><button class="primary" id="gsGo">뽑으러 가기</button>`);
+      onClose=()=>setTimeout(rpRefresh,0);$('#gsGo').onclick=()=>{closeSheet();setTimeout(gcScroll,80)}}
+    catch(e){if(e.code==='already'){GC.submitted=true;closeSheet();rpRefresh();gcToast(e.message,'N');return}
+      b.disabled=false;b.textContent='제출하고 교환권 받기';$('#gsMsg').textContent=e.message}}}
+
+/* 뽑기 */
+function gcLocalRoll(){const c=GC.cfg,x=Math.random()*100,O=['UR','SR','R','N'],s=x<c.ur?0:x<c.ur+c.sr?1:x<c.ur+c.sr+c.r?2:3;
+  for(let i=s;i<4;i++){const P=GC.items.filter(it=>it.rarity===O[i]&&(it.stock==null||it.stock>0));if(P.length)return P[Math.floor(Math.random()*P.length)]}return null}
+async function gcRpcPull(){
+  if(!sb){const L=gcLocal();if(!GC.cfg.open)throw gcErr('gacha_closed');if(L.t<1)throw gcErr('no_ticket');const it=gcLocalRoll();if(!it)throw gcErr('pool_empty');
+    L.t--;L.inv.unshift({item_id:it.id,created_at:new Date().toISOString()});store.set('jc_gc',L);const src=GC_SAMPLE.find(x=>x.id===it.id);
+    return{id:it.id,rarity:it.rarity,name:it.name,description:it.desc,image_path:null,has_secret:!!(src&&src.secret),tickets_left:L.t}}
+  const r=await sb.rpc('pull_gacha');if(r.error)throw gcErr(r.error);return r.data}
+async function gcPull(){if(GC.busy)return;
+  if(!GC.cfg.open)return gcToast('가챠 기계가 아직 잠들어 있어요','N');
+  if(!GC.tickets)return gcToast(GC.submitted?'교환권을 다 썼어요':'탐사 일지를 제출하면 교환권을 받아요','N');
+  GC.busy=true;const m=rp.querySelector('.gc-mach'),btn=rp.querySelector('.gc-pull');if(m)m.classList.add('spin');if(btn){btn.disabled=true;btn.textContent='뽑는 중…'}SFX.go();
+  let res=null,err=null;try{[res]=await Promise.all([gcRpcPull(),new Promise(r=>setTimeout(r,1400))])}catch(e){err=e}
+  GC.busy=false;if(m)m.classList.remove('spin');
+  if(err){rpRefresh();return gcToast(err.message,'N')}
+  GC.tickets=res.tickets_left;GC.inv.unshift({item_id:res.id,created_at:new Date().toISOString()});if(res.has_secret)GC.secrets.add(res.id);
+  const it=GC.items.find(x=>x.id===res.id);if(it&&it.stock!=null)it.stock=Math.max(0,it.stock-1);
+  if(res.rarity==='SR'||res.rarity==='UR')GC.ann.unshift({user_id:uid,name:me.name,item_name:res.name,rarity:res.rarity});
+  gcReveal({id:res.id,rarity:res.rarity,name:res.name,desc:res.description||'',img:gcImg(res.image_path),stock:it?it.stock:null,secret:!!res.has_secret},true)}
+
+/* 결과 보기 (fresh = 방금 뽑은 캡슐이면 캡슐 열기부터) */
+async function gcSecret(id){if(!sb){const x=GC_SAMPLE.find(x=>x.id===id);return x&&x.secret||null}
+  const r=await sb.from('gacha_secrets').select('content').eq('item_id',id).maybeSingle();return r.data?r.data.content:null}
+function gcReveal(it,fresh){const R=gcR(it.rarity),n=GC.inv.filter(x=>x.item_id===it.id).length;
+  const card=`<div class="gc-card r-${it.rarity}"><span class="gc-rar">${R.l} · ${R.n}</span>${gcArt(it)}<b>${escH(it.name)}</b>${it.desc?`<p>${escH(it.desc)}</p>`:''}<small>${it.rarity==='UR'&&it.stock===0?'이 우주에 단 하나 · ':''}${n>1?`${n}개 보유`:''}</small></div>`;
+  const after=`${it.secret?'<button class="primary" id="gcSecBtn">🔒 비밀 내용 열어 보기</button><div id="gcSecBox"></div>':''}
+    <div class="row" style="justify-content:center"><button class="soft" id="gcBookBtn">도감 보기</button>${fresh&&GC.tickets?`<button class="primary" id="gcMore">한 번 더 뽑기 (${GC.tickets}장)</button>`:''}</div>`;
+  const bind=()=>{onClose=()=>setTimeout(rpRefresh,0);
+    if($('#gcSecBtn'))$('#gcSecBtn').onclick=async()=>{const b=$('#gcSecBtn');b.disabled=true;b.textContent='여는 중…';const t=await gcSecret(it.id);
+      $('#gcSecBox').innerHTML=t?`<blockquote class="why gc-secret">${escH(t)}</blockquote>`:'<p class="zhint">내용을 불러오지 못했어요</p>';b.hidden=true;if(t)SFX.ok()};
+    $('#gcBookBtn').onclick=gcBook;
+    if($('#gcMore'))$('#gcMore').onclick=()=>{closeSheet();setTimeout(()=>{gcScroll();setTimeout(gcPull,350)},80)}};
+  if(!fresh){openSheet(it.name,card+after);bind();return}
+  openSheet('캡슐 도착!',`<div class="gc-drop" id="gcDrop"><button class="gc-cap r-${it.rarity}" id="gcCap" aria-label="캡슐 열기"><i></i></button><p class="zhint">캡슐을 톡 눌러서 열어 보세요</p></div><div id="gcRes" hidden>${card}${after}</div>`);
+  bind();let opened=false;
+  $('#gcCap').onclick=()=>{if(opened)return;opened=true;$('#gcCap').classList.add('open');(it.rarity==='SR'||it.rarity==='UR')?SFX.win():SFX.ok();
+    setTimeout(()=>{const d=$('#gcDrop'),r=$('#gcRes');if(d)d.hidden=true;if(r)r.hidden=false},420)}}
+
+/* 도감 */
+function gcBook(){const cnt={};GC.inv.forEach(x=>{cnt[x.item_id]=(cnt[x.item_id]||0)+1});const own=GC.items.filter(x=>cnt[x.id]).length;
+  openSheet('캡슐 도감',`<p>모은 캡슐 <b>${own}</b> / ${GC.items.length} · 남은 교환권 ${GC.tickets}장</p>
+  <div class="gc-book">${GC.items.map(it=>{const R=gcR(it.rarity),k=cnt[it.id];
+    return k?`<button class="gc-bi r-${it.rarity}" data-gcid="${escH(String(it.id))}">${gcArt(it)}<b>${escH(it.name)}</b><small>${R.l}${k>1?' · ×'+k:''}</small></button>`
+      :`<div class="gc-bi lock r-${it.rarity}"><span class="gc-art"><span class="gc-ph">?</span></span><b>???</b><small>${R.l}${it.stock===0?' · 품절':''}</small></div>`}).join('')}</div>`);
+  onClose=()=>setTimeout(rpRefresh,0);
+  document.querySelectorAll('.gc-bi[data-gcid]').forEach(b=>b.onclick=()=>{const it=GC.items.find(x=>String(x.id)===b.dataset.gcid);if(it)gcReveal({...it,secret:GC.secrets.has(it.id)},false)})}
+
+/* 생일파티 화면에 끼워 넣기: 메인 배너 바로 아래 */
+{const f=VIEWS.archive,K='<section class="rp-sec"><div class="rp-sh"><h2>쭈니 에딧</h2>';
+  VIEWS.archive=()=>{if(!GC.loaded&&!GC.loading){GC.loading=true;gcLoad().catch(()=>{GC.loaded=true}).finally(()=>{GC.loading=false;if(rpOpen&&rpView==='archive')rpRefresh()})}
+    const h=f();return h.includes(K)?h.replace(K,()=>gcSection()+K):h.replace('<div class="rp-last"',()=>gcSection()+'<div class="rp-last"')}}
+{const f=rpRefresh;rpRefresh=function(){if(GC.busy)return;f()}}
+rp.addEventListener('click',e=>{const b=e.target.closest('[data-gc]');if(!b||!rp.contains(b)||b.disabled)return;const a=b.dataset.gc;
+  if(a==='pull')gcPull();else if(a==='submit')gcSubmit();else if(a==='book')gcBook();else if(a==='back')closeReport()});
+
+/* ---------- 운영진: '가챠' 탭 ---------- */
+AD_TABS.splice(Math.max(0,AD_TABS.findIndex(t=>t[0]==='site')),0,['gacha','가챠']);
+{const f=adGo;adGo=async function(tab){if(tab!=='gacha')return f(tab);AD.tab=tab;AD.msg='';
+  adm.innerHTML=`<div class="adw">${adHead('<button class="ad-link" data-ad="logout">로그아웃</button>')}<div class="ad-tabs">${AD_TABS.map(([k,l])=>`<button class="${k===tab?'on':''}" data-ad="tab" data-k="${k}">${l}</button>`).join('')}</div><div id="adBody"><p class="ad-empty">불러오는 중…</p></div></div>`;
+  adGacha()}}
+async function adGacha(){const[c,it,sc,lg,w,inv]=await Promise.all([
+    sb.from('gacha_config').select('*').eq('id',1).maybeSingle(),
+    sb.from('gacha_items').select('*').order('sort').order('created_at'),
+    sb.from('gacha_secrets').select('item_id,content'),
+    sb.from('explore_logs').select('id,user_id,name,summary,created_at').order('created_at',{ascending:false}).limit(1000),
+    sb.from('gacha_wallets').select('user_id,tickets').limit(5000),
+    sb.from('gacha_inventory').select('user_id,item_id,created_at').order('created_at',{ascending:false}).limit(3000)]);
+  if(c.error){$('#adBody').innerHTML=`<p class="ad-err">가챠 설정을 불러오지 못했어요: ${escH(c.error.message)}</p><p class="ad-note">Supabase SQL Editor에서 gacha_schema.sql을 실행해 주세요.</p>`;return}
+  AD.g={cfg:c.data||{open:true,rate_ur:3,rate_sr:12,rate_r:30,need_missions:5},items:it.data||[],
+    sec:Object.fromEntries((sc.data||[]).map(x=>[x.item_id,x.content])),logs:lg.data||[],
+    wal:Object.fromEntries((w.data||[]).map(x=>[x.user_id,x.tickets])),inv:inv.data||[],sub:(AD.g&&AD.g.sub)||'items'};
+  adGachaRender()}
+function adGItem(it){const R=gcR(it.rarity),img=gcImg(it.image_path),got=AD.g.inv.filter(x=>x.item_id===it.id).length;
+  return`<div class="ad-gi r-${it.rarity}${it.active?'':' off'}" data-gid="${it.id}">
+  <div class="ad-gimg">${gcArt({rarity:it.rarity,img})}<label class="ad-file sm">${img?'사진 바꾸기':'사진 올리기'}<input type="file" accept="image/*" data-gup="${it.id}" hidden></label>${img?`<button type="button" class="ad-add" data-g="noimg" data-id="${it.id}" style="font-size:12px;padding:5px 8px">사진 빼기</button>`:''}</div>
+  <div class="ad-gf">
+    <label>등급<select data-gk="rarity">${['N','R','SR','UR'].map(r=>`<option${r===it.rarity?' selected':''}>${r}</option>`).join('')}</select></label>
+    <label>이름<input data-gk="name" maxlength="30" value="${escH(it.name)}"></label>
+    <label class="full">설명<input data-gk="description" maxlength="150" value="${escH(it.description||'')}" placeholder="캡슐을 열면 보이는 한 줄"></label>
+    <label>남은 수량 <small>비우면 무제한</small><input data-gk="stock" type="number" min="0" value="${it.stock==null?'':it.stock}"></label>
+    <label>도감 순서<input data-gk="sort" type="number" value="${it.sort||0}"></label>
+    <label class="full">비밀 내용 <small>뽑은 사람만 볼 수 있어요 (편지·쿠폰 문구)</small><textarea data-gk="secret" rows="2" maxlength="2000">${escH(AD.g.sec[it.id]||'')}</textarea></label>
+    <label class="full" style="flex-direction:row;align-items:center;gap:8px"><input type="checkbox" data-gk="active"${it.active?' checked':''} style="width:18px;height:18px">공개 (끄면 뽑기와 도감에서 빠져요) · 지금까지 뽑힌 수 ${got}</label>
+    <div class="ad-mv full"><span class="ad-note" data-gmsg style="margin-right:auto"></span><button type="button" data-g="save" data-id="${it.id}">저장</button><button type="button" class="ad-del" data-g="del" data-id="${it.id}">삭제</button></div>
+  </div></div>`}
+function adGachaRender(){const G=AD.g,c=G.cfg,names={},pulls={};G.logs.forEach(l=>{names[l.user_id]=l.name});G.inv.forEach(x=>{pulls[x.user_id]=(pulls[x.user_id]||0)+1});
+  const left=Object.values(G.wal).reduce((a,b)=>a+b,0),sub=G.sub,nRate=Math.max(0,100-c.rate_ur-c.rate_sr-c.rate_r);
+  let body='';
+  if(sub==='items')body=`<div class="ad-form"><div class="ad-hp">
+      <label style="flex-direction:row;align-items:center;gap:8px;font-size:15px;color:var(--ink)"><input type="checkbox" id="gOpen"${c.open?' checked':''} style="width:20px;height:20px">가챠 기계 열기</label>
+      <p class="ad-note" style="margin:0">끄면 교환권은 받을 수 있고 뽑기만 잠겨요. 생일 당일에 켜는 용도로 써요.</p>
+      <div class="ad-gf"><label>UR 확률 %<input type="number" min="0" max="100" step="0.5" id="gUR" value="${c.rate_ur}"></label><label>SR 확률 %<input type="number" min="0" max="100" step="0.5" id="gSR" value="${c.rate_sr}"></label>
+        <label>R 확률 %<input type="number" min="0" max="100" step="0.5" id="gR" value="${c.rate_r}"></label><label>N 확률 % <small>나머지</small><input id="gN" value="${nRate}" disabled></label>
+        <label class="full">교환에 필요한 미션 수 <small>0이면 바로 교환 가능</small><select id="gNeed">${[0,1,2,3,4,5].map(n=>`<option${n===+c.need_missions?' selected':''}>${n}</option>`).join('')}</select></label></div>
+      <p class="ad-note" style="margin:0">${['UR','SR','R','N'].map(r=>`${r} ${G.items.filter(x=>x.rarity===r&&x.active).length}종`).join(' · ')} · 뽑힌 등급에 남은 캡슐이 없으면 한 단계 아래 등급이 나와요</p>
+      <div class="ad-hpm"><button class="ad-pri" id="gCfgSave" type="button">설정 저장</button><span id="gCfgMsg" class="ad-note"></span></div></div>
+    <h3>캡슐 <small>사진을 올리거나 지우면 아직 저장 안 한 다른 캡슐의 수정이 사라지니 먼저 저장해 주세요</small></h3>
+    ${G.items.map(adGItem).join('')}<button class="ad-add" data-g="add" type="button">+ 캡슐 추가</button></div>`;
+  else if(sub==='logs')body=G.logs.length?`<div class="ad-list">${G.logs.map(l=>{const s=l.summary||{};
+    return`<div class="ad-row"><div class="ad-tx"><div class="ad-meta"><b>${escH(l.name)}</b> · 대원 번호 1203-${escH(String(s.no||'0000'))} · ${kstStr(l.created_at)}</div>
+      <div>교신 해독 ${+s.missions||0}/5 · 수색 ${+s.best||0}점 · 탐사 ${s.mins?escH(String(s.mins))+'분':'—'}</div>${s.note?`<div><small>“${escH(String(s.note))}”</small></div>`:''}
+      <div class="ad-mc"><span>남은 교환권 ${G.wal[l.user_id]||0}</span><span>뽑기 ${pulls[l.user_id]||0}회</span></div></div>
+      <div class="ad-act"><button data-g="give" data-uid="${l.user_id}">교환권 +1</button></div></div>`}).join('')}</div>`:'<p class="ad-empty">아직 제출된 탐사 일지가 없어요</p>';
+  else body=G.inv.length?`<div class="ad-list">${G.inv.slice(0,500).map(x=>{const it=G.items.find(i=>i.id===x.item_id)||{name:'(삭제된 캡슐)',rarity:'N'};
+    return`<div class="ad-row"><div class="ad-tx"><div class="ad-meta"><b>${escH(names[x.user_id]||'대원')}</b> · ${kstStr(x.created_at)}</div><div><span class="gc-tag" style="background:${gcR(it.rarity).c}">${it.rarity}</span>${escH(it.name)}</div></div></div>`}).join('')}</div>`:'<p class="ad-empty">아직 뽑은 사람이 없어요</p>';
+  $('#adBody').innerHTML=`<div class="ad-stats"><div><small>제출된 탐사 일지</small><b>${G.logs.length}</b><span>= 지급한 교환권</span></div><div><small>뽑기</small><b>${G.inv.length}</b><span>회</span></div><div><small>안 쓴 교환권</small><b>${left}</b><span>장</span></div><div><small>가챠 기계</small><b>${c.open?'ON':'OFF'}</b><span>${c.open?'뽑기 가능':'뽑기 잠김'}</span></div></div>
+    <div class="ad-chips" style="margin-bottom:12px">${[['items','설정 · 캡슐'],['logs','탐사 일지 '+G.logs.length],['pulls','뽑기 기록 '+G.inv.length]].map(([k,l])=>`<button class="${sub===k?'on':''}" data-g="sub" data-k="${k}">${l}</button>`).join('')}</div>${body}`;
+  ['gUR','gSR','gR'].forEach(id=>{const el=$('#'+id);if(el)el.oninput=()=>{$('#gN').value=Math.max(0,100-(+$('#gUR').value||0)-(+$('#gSR').value||0)-(+$('#gR').value||0))}});
+  if($('#gCfgSave'))$('#gCfgSave').onclick=adGSaveCfg}
+async function adGSaveCfg(){const ur=+$('#gUR').value||0,sr=+$('#gSR').value||0,r=+$('#gR').value||0,msg=$('#gCfgMsg');
+  if(ur<0||sr<0||r<0||ur+sr+r>100){msg.textContent='UR·SR·R 확률의 합이 100 이하여야 해요';return}
+  const row={open:$('#gOpen').checked,rate_ur:ur,rate_sr:sr,rate_r:r,need_missions:+$('#gNeed').value,updated_at:new Date().toISOString()};
+  msg.textContent='저장 중…';const q=await sb.from('gacha_config').update(row).eq('id',1);
+  if(q.error){msg.textContent='저장하지 못했어요: '+q.error.message;return}
+  Object.assign(AD.g.cfg,row);GC.loaded=false;adGachaRender();$('#gCfgMsg').textContent='저장했어요! 대원들이 새로고침하면 반영돼요'}
+async function adGSave(id,btn){const row=adm.querySelector(`[data-gid="${id}"]`),v=k=>row.querySelector(`[data-gk="${k}"]`),msg=row.querySelector('[data-gmsg]'),st=v('stock').value.trim();
+  const d={rarity:v('rarity').value,name:v('name').value.trim().slice(0,30)||'캡슐',description:v('description').value.trim()||null,
+    stock:st===''?null:Math.max(0,parseInt(st,10)||0),sort:parseInt(v('sort').value,10)||0,active:v('active').checked},sec=v('secret').value.trim();
+  btn.disabled=true;msg.textContent='저장 중…';
+  let e=(await sb.from('gacha_items').update(d).eq('id',id)).error;
+  if(!e)e=(sec?await sb.from('gacha_secrets').upsert({item_id:id,content:sec}):await sb.from('gacha_secrets').delete().eq('item_id',id)).error;
+  btn.disabled=false;if(e){msg.textContent='실패: '+e.message;return}
+  Object.assign(AD.g.items.find(x=>x.id===id),d);if(sec)AD.g.sec[id]=sec;else delete AD.g.sec[id];
+  row.className=`ad-gi r-${d.rarity}${d.active?'':' off'}`;msg.textContent='저장했어요';GC.loaded=false}
+async function adGAdd(){const r=await sb.from('gacha_items').insert({rarity:'N',name:'새 캡슐',sort:AD.g.items.reduce((a,x)=>Math.max(a,x.sort||0),0)+1}).select().single();
+  if(r.error)return alert('추가하지 못했어요: '+r.error.message);AD.g.items.push(r.data);GC.loaded=false;adGachaRender();
+  const el=adm.querySelector(`[data-gid="${r.data.id}"]`);if(el)el.scrollIntoView({block:'center'})}
+async function adGDel(id,btn){const got=AD.g.inv.filter(x=>x.item_id===id).length;
+  if(!btn.dataset.sure){btn.dataset.sure=1;btn.textContent=got?`한 번 더 누르면 삭제 (뽑은 대원 도감에서도 사라져요 · 숨기려면 공개를 끄세요)`:'한 번 더 누르면 삭제';return}
+  const r=await sb.from('gacha_items').delete().eq('id',id);if(r.error)return alert('삭제하지 못했어요: '+r.error.message);
+  AD.g.items=AD.g.items.filter(x=>x.id!==id);AD.g.inv=AD.g.inv.filter(x=>x.item_id!==id);GC.loaded=false;adGachaRender()}
+async function adGGive(u,btn){btn.disabled=true;const r=await sb.rpc('admin_give_tickets',{target:u,amount:1});btn.disabled=false;
+  if(r.error)return alert('지급하지 못했어요: '+r.error.message);AD.g.wal[u]=r.data;adGachaRender()}
+adm.addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(!b||!AD.g||AD.tab!=='gacha')return;const a=b.dataset.g;
+  if(a==='sub'){AD.g.sub=b.dataset.k;adGachaRender()}
+  else if(a==='add')adGAdd();else if(a==='save')adGSave(b.dataset.id,b);else if(a==='del')adGDel(b.dataset.id,b);else if(a==='give')adGGive(b.dataset.uid,b);
+  else if(a==='noimg')(async()=>{const r=await sb.from('gacha_items').update({image_path:null}).eq('id',b.dataset.id);if(r.error)return alert(r.error.message);AD.g.items.find(x=>x.id===b.dataset.id).image_path=null;GC.loaded=false;adGachaRender()})()});
+adm.addEventListener('change',async e=>{const el=e.target;if(!el.dataset||!el.dataset.gup||!el.files[0])return;const id=el.dataset.gup,lab=el.parentElement;lab.firstChild.textContent='올리는 중…';
+  try{const url=await adUpload(el.files[0],true),r=await sb.from('gacha_items').update({image_path:url}).eq('id',id);if(r.error)throw r.error;
+    AD.g.items.find(x=>x.id===id).image_path=url;GC.loaded=false;adGachaRender()}
+  catch(err){lab.firstChild.textContent='실패, 다시 시도';alert('사진을 올리지 못했어요: '+(err.message||err))}});
+
 
 /* 디데이 */
 const OPEN=Date.UTC(2026,11,3,3,3),CLOSE=Date.UTC(2026,11,23,15,0);   // 착륙 12월 3일 12:03 ~ 12월 23일 24:00 (한국 시간)
