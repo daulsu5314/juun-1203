@@ -525,9 +525,9 @@ img{max-width:100%}
 .gc-body{position:relative;height:98px;margin-top:-4px;background:#ff6f91;border-radius:10px 10px 14px 14px;box-shadow:inset 0 -9px 0 #d94a72,0 5px 0 #0c0719}
 .gc-lbl{position:absolute;left:15px;top:10px;font-family:"Anton",sans-serif;font-size:22px;color:#fff7f0;letter-spacing:1px}
 .gc-hole{position:absolute;left:15px;bottom:17px;width:48px;height:28px;border-radius:7px;background:#2a1458;box-shadow:inset 0 5px 0 rgba(0,0,0,.45)}
-.rp .gc-knob{position:absolute;right:14px;top:50%;margin-top:-29px;width:54px;height:54px;border-radius:50%!important;background:#fff7f0;box-shadow:0 4px 0 #c99a2e,inset 0 0 0 5px #ffd166;padding:0}
+.gc-knob{position:absolute;right:14px;top:50%;margin-top:-29px;width:54px;height:54px;border-radius:50%!important;background:#fff7f0;box-shadow:0 4px 0 #c99a2e,inset 0 0 0 5px #ffd166;padding:0}
 .gc-knob i{position:absolute;left:50%;top:8px;bottom:8px;width:10px;margin-left:-5px;border-radius:5px;background:#d94a72}
-.rp .gc-knob:disabled{opacity:.75;cursor:default}
+.gc-knob:disabled{opacity:.75;cursor:default}
 /* 돌아가는 연출 */
 .gc-mach.spin{animation:gcRock .14s ease-in-out infinite alternate}
 .gc-mach.spin .gc-knob{animation:gcTurn .55s linear infinite}
@@ -546,8 +546,8 @@ img{max-width:100%}
 .gc-burst i{position:absolute;left:-4px;top:-4px;width:8px;height:8px;background:var(--rc);border-radius:2px;opacity:0;transform:rotate(var(--a)) translateY(0);animation:gcSpark .7s .45s ease-out forwards}
 .gc-burst i:nth-child(even){background:#fff;width:6px;height:6px}
 @keyframes gcSpark{0%{opacity:1;transform:rotate(var(--a)) translateY(0) scale(1)}100%{opacity:0;transform:rotate(var(--a)) translateY(-78px) scale(.4)}}
-.rp .gc-pull{width:100%;max-width:280px;height:48px;border-radius:14px!important;background:#ffd166;color:#2a1f3d;font-family:"Jua",sans-serif!important;font-size:17px;box-shadow:0 5px 0 #c99a2e;padding:0}
-.rp .gc-pull:disabled{background:#3a2c63;color:#b3a5dc;box-shadow:0 5px 0 #1b1238;cursor:default}
+.gc-pull{width:100%;max-width:280px;height:48px;border-radius:14px!important;background:#ffd166;color:#2a1f3d;font-family:"Jua",sans-serif!important;font-size:17px;box-shadow:0 5px 0 #c99a2e;padding:0}
+.gc-pull:disabled{background:#3a2c63;color:#b3a5dc;box-shadow:0 5px 0 #1b1238;cursor:default}
 .gc-ship{margin:0;font-size:12px;color:#b3a5dc;text-align:center}
 .gc-ex{background:#1b1238;border:1px solid #2f2452;border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
 .gc-ex h3{margin:0;font-family:"Jua",sans-serif;font-weight:400;font-size:16px}
@@ -562,6 +562,16 @@ img{max-width:100%}
 .gc-feed{display:flex;flex-direction:column;gap:6px}
 .gc-feed div{font-size:13px;color:#e6dcfa;background:rgba(255,255,255,.05);border-radius:8px;padding:8px 10px;overflow-wrap:anywhere}.gc-feed b{color:#fff}
 .gc-tag{display:inline-block;font-family:"Anton",sans-serif;font-size:11px;letter-spacing:.5px;padding:1px 6px;border-radius:4px;color:#2a1f3d;margin-right:6px;vertical-align:1px}
+/* 생일파티 화면의 작은 입구 */
+.gc-entry{display:flex;align-items:center;gap:12px;background:radial-gradient(120% 140% at 0% 0%,#2f1d5c 0%,#1b1238 70%);border:1px solid #2f2452;border-radius:16px;padding:12px 14px}
+.gc-mini{position:relative;flex:none;width:46px;height:46px;border-radius:50%;border:3px solid #c4b0ff;background:rgba(196,176,255,.16);overflow:hidden}
+.gc-mini i{position:absolute;width:18px;height:18px;border-radius:50%;box-shadow:0 0 0 2px rgba(42,31,61,.5)}
+.gc-mini i:nth-child(1){left:3px;top:18px;background:linear-gradient(#ff8fab 50%,#fff7f0 50%);transform:rotate(-20deg)}
+.gc-mini i:nth-child(2){left:18px;top:21px;background:linear-gradient(#ffd166 50%,#fff7f0 50%);transform:rotate(30deg)}
+.gc-mini i:nth-child(3){left:11px;top:5px;background:linear-gradient(#8ff0d2 50%,#fff7f0 50%);transform:rotate(80deg)}
+.gc-entry-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.gc-entry-tx b{font-family:"Jua",sans-serif;font-weight:400;font-size:16px;color:#fff}.gc-entry-tx small{font-size:12px;color:#b3a5dc;line-height:1.4}
+.gc-entry .gc-btn{flex:none}
 /* 상품 목록 */
 .gc-prz{position:relative;flex:none;width:128px;display:flex;flex-direction:column;gap:5px;background:none;color:#fff;padding:0;text-align:left}
 .gc-prz .gc-art{width:128px;height:128px;border-radius:10px;background:#f6f1fb;box-shadow:inset 0 0 0 3px var(--rc)}
@@ -2420,7 +2430,7 @@ let gcDomeHtml=null;
 function gcDome(){if(gcDomeHtml)return gcDomeHtml;let s=1203;const r=()=>(s=(s*16807)%2147483647)/2147483647,C=['#ff8fab','#8ff0d2','#ffd166','#c4b0ff','#7fa8ff','#ffb86b'];
   return gcDomeHtml=Array.from({length:16},(_,i)=>`<i style="left:${Math.round(12+r()*76)}%;top:${Math.round(36+r()*52)}%;background:linear-gradient(${C[i%C.length]} 50%,#fff7f0 50%);transform:rotate(${Math.round(r()*360)}deg)"></i>`).join('')}
 function gcSection(){if(GC.missing)return'';
-  const dc=doneCount(),ready=dc>=GC.cfg.need,can=GC.loaded&&GC.cfg.open&&GC.tickets>0&&!GC.busy;
+  const dc=doneCount(),ready=dc>=GC.cfg.need;
   let ex='';
   if(!GC.loaded)ex='<div class="gc-ex"><p class="gc-sub">교환소를 여는 중…</p></div>';
   else if(!GC.submitted)ex=`<div class="gc-ex"><h3>📮 탐사 일지 교환소</h3>${ready
@@ -2430,20 +2440,30 @@ function gcSection(){if(GC.missing)return'';
     const st=!w.ship?'<span class="ok">당첨</span>':!c?'<span class="need">배송 정보 필요</span>':c.status==='sent'?'<span class="ok">발송 완료</span>':'<span class="wait">접수 완료</span>';
     const bt=!w.ship?`<button data-gc="view" data-inv="${escH(String(w.inv))}">보기</button>`:c&&c.status==='sent'?'':`<button data-gc="claim" data-inv="${escH(String(w.inv))}">${c?'수정':'입력하기'}</button>`;
     return`<div class="gc-win"><span class="gc-tag" style="background:${gcR(w.rarity).c}">${escH(w.rarity)}</span><b>${escH(w.name)}</b>${st}${bt}</div>`}).join('')}</div>`:'';
-  const pullTxt=!GC.loaded?'준비 중…':!GC.cfg.open?'가챠 기계 준비 중':GC.busy?'돌아가는 중…':GC.tickets?'교환권 1장으로 뽑기':GC.submitted?'교환권을 모두 썼어요':'교환권이 필요해요';
   const feed=GC.ann.slice(0,3).map(a=>`<div><span class="gc-tag" style="background:${gcR(a.rarity).c}">${escH(a.rarity)}</span><b>${escH(a.name)}</b> 대원이 「${escH(a.item_name)}」 당첨!</div>`).join('');
   const prz=GC.items.length?`<div class="rp-sh" style="margin-top:4px"><h2>상품 목록</h2><small>${GC.items.length}종 · 꽝도 있어요</small></div>
     <div class="rp-row">${GC.items.map(it=>{const out=it.stock===0;
       return`<button class="gc-prz r-${it.rarity}${out?' out':''}" data-gc="item" data-id="${escH(String(it.id))}">${gcArt(it)}<span class="gc-tag" style="background:${gcR(it.rarity).c}">${escH(it.rarity)}</span><b>${escH(it.name)}</b><small>${out?'모두 나갔어요':it.stock==null?escH(it.desc||''):`남은 수량 ${it.stock}개`}</small></button>`}).join('')}</div>`:'';
   return`<section class="rp-sec" id="gcZone" style="padding-top:40px"><div class="rp-big"><div><div class="rp-kick" style="color:#ffd166">CAPSULE</div><h2>1203 GACHA</h2><p>탐사 일지 교환권으로 캡슐을 뽑아요</p></div></div>
-  <div class="gc-wrap"><div class="gc-stage"><span class="gc-chip">🎟 교환권 <b>${GC.tickets}</b>장</span>
-      <div class="gc-mach${GC.cfg.open?'':' off'}"><div class="gc-dome" aria-hidden="true">${gcDome()}</div>
-        <div class="gc-body"><span class="gc-lbl">1203</span><span class="gc-hole" aria-hidden="true"></span><button class="gc-knob" data-gc="pull" aria-label="캡슐 뽑기"${can?'':' disabled'}><i></i></button></div></div>
-      <button class="gc-pull" data-gc="pull"${can?'':' disabled'}>${pullTxt}</button>
-      <p class="gc-ship">📦 당첨 상품은 GS25 편의점 택배로만 보내 드려요</p></div></div>
+  <div class="gc-wrap"><div class="gc-entry"><span class="gc-mini" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="gc-entry-tx"><b>🎟 교환권 ${GC.tickets}장</b><small>📦 당첨 상품은 GS25 편의점 택배로만 보내 드려요</small></span>
+      <button class="gc-btn" data-gc="open"${GC.loaded?'':' disabled'}>${GC.tickets&&GC.cfg.open?'가챠 뽑기':'가챠 보기'}</button></div></div>
   ${prz}
   ${ex||wins||feed?`<div class="gc-wrap" style="margin-top:14px">${ex}${wins}${feed?`<div class="gc-feed">${feed}</div>`:''}</div>`:''}</section>`}
 function gcScroll(){const z=$('#gcZone');if(z)z.scrollIntoView({behavior:'smooth',block:'start'})}
+
+/* 가챠 기계 창 (버튼을 누르면 떠요) */
+function gcMachHtml(){const can=GC.loaded&&GC.cfg.open&&GC.tickets>0&&!GC.busy;
+  const pullTxt=!GC.cfg.open?'가챠 기계 준비 중':GC.busy?'돌아가는 중…':GC.tickets?'교환권 1장으로 뽑기':GC.submitted?'교환권을 모두 썼어요':'교환권이 필요해요';
+  const hint=!GC.cfg.open?'아직 기계가 잠들어 있어요. 조금만 기다려 주세요!':GC.tickets?'손잡이나 아래 버튼을 눌러 돌려 보세요':GC.submitted?'교환권은 대원 한 명당 한 장이에요':'생일파티의 탐사 일지 교환소에서 교환권을 받아 오세요';
+  return`<div class="gc-stage"><span class="gc-chip">🎟 교환권 <b>${GC.tickets}</b>장</span>
+    <div class="gc-mach${GC.cfg.open?'':' off'}"><div class="gc-dome" aria-hidden="true">${gcDome()}</div>
+      <div class="gc-body"><span class="gc-lbl">1203</span><span class="gc-hole" aria-hidden="true"></span><button class="gc-knob" id="gcKnob" aria-label="캡슐 뽑기"${can?'':' disabled'}><i></i></button></div></div>
+    <button class="gc-pull" id="gcPullBtn"${can?'':' disabled'}>${pullTxt}</button>
+    <p class="gc-ship">${hint}</p></div>
+  <p class="zhint" style="text-align:center">📦 당첨 상품은 한국 GS25 편의점 택배로만 보내 드려요</p>`}
+function gcSheet(){openSheet('1203 가챠',gcMachHtml());onClose=()=>setTimeout(rpRefresh,0);
+  $('#gcKnob').onclick=gcPull;$('#gcPullBtn').onclick=gcPull}
 
 /* 교환: 탐사 일지 제출 → 교환권 1장 */
 async function gcRpcSubmit(sum){
@@ -2459,7 +2479,7 @@ function gcSubmit(){const s=myStats();
     const sum={name:s.name,no:s.no,missions:doneCount(),best:s.best,mins:s.mins,land:store.get('jc_land',null),fin:store.get('jc_fin',null),note:(s.note||'').slice(0,200)};
     try{GC.tickets=await gcRpcSubmit(sum);GC.submitted=true;SFX.done();
       openSheet('교환권 획득!',`<div class="gc-tk"><span>🎟</span><b>1203 캡슐 교환권</b><small>대원 번호 1203-${escH(s.no)}</small></div><p style="text-align:center">가챠 기계에서 캡슐을 뽑아 보세요!</p><button class="primary" id="gsGo">뽑으러 가기</button>`);
-      onClose=()=>setTimeout(rpRefresh,0);$('#gsGo').onclick=()=>{closeSheet();setTimeout(gcScroll,80)}}
+      onClose=()=>setTimeout(rpRefresh,0);$('#gsGo').onclick=gcSheet}
     catch(e){if(e.code==='already'){GC.submitted=true;closeSheet();rpRefresh();gcToast(e.message,'N');return}
       b.disabled=false;b.textContent='제출하고 교환권 받기';$('#gsMsg').textContent=e.message}}}
 
@@ -2478,7 +2498,7 @@ function gcConsent(){
   <div class="row"><button class="soft" id="agNo">다음에 할게요</button><button class="primary" id="agGo" disabled>동의하고 뽑기</button></div>`);
   const upd=()=>{$('#agGo').disabled=!($('#ag1').checked&&$('#ag2').checked)};$('#ag1').onchange=upd;$('#ag2').onchange=upd;
   $('#agNo').onclick=closeSheet;
-  $('#agGo').onclick=()=>{if($('#agGo').disabled)return;GC.agreed=true;store.set('jc_gc_agree',Date.now());closeSheet();setTimeout(()=>{gcScroll();setTimeout(gcPull,450)},80)}}
+  $('#agGo').onclick=()=>{if($('#agGo').disabled)return;GC.agreed=true;store.set('jc_gc_agree',Date.now());gcSheet();setTimeout(gcPull,350)}}
 
 /* 뽑기 */
 function gcLocalRoll(){const c=GC.cfg,x=Math.random()*100,O=['UR','SR','R','N'];
@@ -2494,12 +2514,13 @@ async function gcPull(){if(GC.busy)return;
   if(!GC.cfg.open)return gcToast('가챠 기계가 아직 잠들어 있어요','N');
   if(!GC.tickets)return gcToast(GC.submitted?'교환권을 모두 썼어요':'탐사 일지를 제출하면 교환권을 받아요','N');
   if(!GC.agreed)return gcConsent();
-  GC.busy=true;const m=rp.querySelector('.gc-mach'),btn=rp.querySelector('.gc-pull');
-  if(m)m.classList.add('spin');if(btn){btn.disabled=true;btn.textContent='돌아가는 중…'}
+  if(!$('#sheetBody .gc-mach'))gcSheet();
+  GC.busy=true;const m=$('#sheetBody .gc-mach'),btn=$('#gcPullBtn'),kn=$('#gcKnob');
+  if(m)m.classList.add('spin');if(btn){btn.disabled=true;btn.textContent='돌아가는 중…'}if(kn)kn.disabled=true;
   SFX.go();const tick=setInterval(()=>SFX.tick(),120);
   let res=null,err=null;try{[res]=await Promise.all([gcRpcPull(),new Promise(r=>setTimeout(r,1900))])}catch(e){err=e}
   clearInterval(tick);if(m)m.classList.remove('spin');
-  if(err){GC.busy=false;if(err.code==='need_agree'){GC.agreed=false;try{localStorage.removeItem('jc_gc_agree')}catch(_){}}rpRefresh();return gcToast(err.message,'N')}
+  if(err){GC.busy=false;if(err.code==='need_agree'){GC.agreed=false;try{localStorage.removeItem('jc_gc_agree')}catch(_){}}if($('#sheetBody .gc-mach'))gcSheet();return gcToast(err.message,'N')}
   const rar=res.miss?'X':res.rarity;
   if(m){const pop=document.createElement('span');pop.className='gc-pop r-'+rar;
     const bu=document.createElement('span');bu.className='gc-burst r-'+rar;bu.innerHTML=Array.from({length:12},(_,i)=>`<i style="--a:${i*30}deg"></i>`).join('');
@@ -2525,7 +2546,7 @@ function gcReveal(r,fresh){const rar=r.miss?'X':r.rarity,R=gcR(r.rarity);
     if($('#gcClaimBtn'))$('#gcClaimBtn').onclick=()=>gcClaim(r.inv);
     if($('#gcSecBtn'))$('#gcSecBtn').onclick=async()=>{const b=$('#gcSecBtn');b.disabled=true;b.textContent='여는 중…';const t=await gcSecret(r.item_id);
       $('#gcSecBox').innerHTML=t?`<blockquote class="why gc-secret">${escH(t)}</blockquote>`:'<p class="zhint">내용을 불러오지 못했어요</p>';b.hidden=true};
-    if($('#gcMore'))$('#gcMore').onclick=()=>{closeSheet();setTimeout(()=>{gcScroll();setTimeout(gcPull,450)},80)}};
+    if($('#gcMore'))$('#gcMore').onclick=()=>{gcSheet();setTimeout(gcPull,350)}};
   if(!fresh){openSheet(r.name,card+after);bind();return}
   openSheet('캡슐 도착!',`<div class="gc-drop" id="gcDrop"><button class="gc-cap r-${rar}" id="gcCap" aria-label="캡슐 열기"><i></i></button><p class="zhint">캡슐을 톡 눌러서 열어 보세요</p></div><div id="gcRes" hidden>${card}${after}</div>`);
   bind();let opened=false;
@@ -2569,7 +2590,7 @@ function gcItem(id){const it=GC.items.find(x=>String(x.id)===String(id));if(!it)
     const h=f();return h.includes(K)?h.replace(K,()=>gcSection()+K):h.replace('<div class="rp-last"',()=>gcSection()+'<div class="rp-last"')}}
 {const f=rpRefresh;rpRefresh=function(){if(GC.busy)return;f()}}
 rp.addEventListener('click',e=>{const b=e.target.closest('[data-gc]');if(!b||!rp.contains(b)||b.disabled)return;const a=b.dataset.gc;
-  if(a==='pull')gcPull();else if(a==='submit')gcSubmit();else if(a==='back')closeReport();else if(a==='item')gcItem(b.dataset.id);
+  if(a==='open')gcSheet();else if(a==='submit')gcSubmit();else if(a==='back')closeReport();else if(a==='item')gcItem(b.dataset.id);
   else if(a==='claim')gcClaim(b.dataset.inv);
   else if(a==='view'){const w=GC.wins.find(x=>String(x.inv)===b.dataset.inv);if(w)gcReveal({...w,miss:false},false)}});
 
@@ -2639,13 +2660,31 @@ function adGachaRender(){const G=AD.g,c=G.cfg,names={},pulls={};G.logs.forEach(l
       <div>교신 해독 ${+s.missions||0}/5 · 수색 ${+s.best||0}점 · 탐사 ${s.mins?escH(String(s.mins))+'분':'—'}</div>${s.note?`<div><small>“${escH(String(s.note))}”</small></div>`:''}
       <div class="ad-mc"><span>남은 교환권 ${G.wal[l.user_id]||0}</span><span>뽑기 ${pulls[l.user_id]||0}회</span></div></div>
       <div class="ad-act"><button data-g="give" data-uid="${l.user_id}">교환권 +1</button></div></div>`}).join('')}</div>`:'<p class="ad-empty">아직 제출된 탐사 일지가 없어요</p>';
-  else body=G.inv.length?`<div class="ad-list">${G.inv.slice(0,500).map(x=>{const it=G.items.find(i=>i.id===x.item_id);const rr=x.is_miss?null:(it?it.rarity:'N');
-    return`<div class="ad-row"><div class="ad-tx"><div class="ad-meta"><b>${escH(names[x.user_id]||'대원')}</b> · ${kstStr(x.created_at)}</div><div>${x.is_miss?'<span class="gc-tag" style="background:#d9d2e6">꽝</span>':`<span class="gc-tag" style="background:${gcR(rr).c}">${rr}</span>`}${escH(x.is_miss?'꽝':(it?it.name:x.item_name||'(지운 상품)'))}</div></div></div>`}).join('')}</div>`:'<p class="ad-empty">아직 뽑은 사람이 없어요</p>';
+  else{const q=(G.pq||'').trim().toLowerCase(),L=G.inv.filter(x=>!q||(names[x.user_id]||'대원').toLowerCase().includes(q)||(x.item_name||'').toLowerCase().includes(q));
+    const opts=sel=>`<option value=""${sel?'':' selected'}>꽝</option>${G.items.map(i=>`<option value="${i.id}"${i.id===sel?' selected':''}>${i.rarity} · ${escH(i.name)}${i.stock==null?'':` (남은 ${i.stock})`}${i.active?'':' · 숨김'}</option>`).join('')}`;
+    body=`<div class="ad-bar"><span>뽑기 기록 ${L.length}건</span><input id="gPq" placeholder="대원 이름이나 상품으로 찾기" value="${escH(G.pq||'')}" style="max-width:240px"></div>
+    <p class="ad-note">결과를 바꾸면 재고가 맞춰지고(원래 상품 +1, 바꾼 상품 -1), 꽝이나 택배 없는 상품으로 바꾸면 그 당첨의 배송 정보는 지워져요. 바뀐 결과는 대원이 새로고침하면 '내 당첨 상품'에 보여요.</p>
+    ${L.length?`<div class="ad-list">${L.slice(0,500).map(x=>{const cl=G.claims.find(c=>c.inventory_id===x.id);
+      return`<div class="ad-row${x.is_miss?' off':''}" data-pid="${x.id}"><div class="ad-tx"><div class="ad-meta"><b>${escH(names[x.user_id]||'대원')}</b> · ${kstStr(x.created_at)}${cl?` · <em>배송 정보 ${cl.status==='sent'?'발송 완료':'있음'}</em>`:''}</div>
+        <label style="margin-top:4px">뽑은 결과<select data-pk>${opts(x.is_miss?'':x.item_id)}</select></label><span class="ad-note" data-pmsg></span></div>
+        <div class="ad-act"><button data-g="psave" data-id="${x.id}">결과 바꾸기</button><button class="ad-del" data-g="pdel" data-id="${x.id}">기록 삭제</button></div></div>`}).join('')}</div>`:'<p class="ad-empty">아직 뽑은 사람이 없어요</p>'}`}
   const wins=G.inv.filter(x=>!x.is_miss).length;
   $('#adBody').innerHTML=`<div class="ad-stats"><div><small>제출된 탐사 일지</small><b>${G.logs.length}</b><span>= 지급한 교환권</span></div><div><small>뽑기</small><b>${G.inv.length}</b><span>당첨 ${wins} · 꽝 ${G.inv.length-wins}</span></div><div><small>안 쓴 교환권</small><b>${left}</b><span>장</span></div><div><small>배송 대기</small><b>${pend}</b><span>미입력 ${noInfo.length}명</span></div><div><small>가챠 기계</small><b>${c.open?'ON':'OFF'}</b><span>${c.open?'뽑기 가능':'뽑기 잠김'}</span></div></div>
     <div class="ad-chips" style="margin-bottom:12px;flex-wrap:wrap">${[['items','설정 · 상품'],['claims','배송 정보 '+G.claims.length],['logs','탐사 일지 '+G.logs.length],['pulls','뽑기 기록 '+G.inv.length]].map(([k,l])=>`<button class="${sub===k?'on':''}" data-g="sub" data-k="${k}">${l}</button>`).join('')}</div>${body}`;
   ['gUR','gSR','gR','gNn'].forEach(id=>{const el=$('#'+id);if(el)el.oninput=()=>{$('#gMiss').value=Math.max(0,100-['gUR','gSR','gR','gNn'].reduce((a,k)=>a+(+$('#'+k).value||0),0))}});
-  if($('#gCfgSave'))$('#gCfgSave').onclick=adGSaveCfg}
+  if($('#gCfgSave'))$('#gCfgSave').onclick=adGSaveCfg;
+  if($('#gPq'))$('#gPq').oninput=e=>{G.pq=e.target.value;const p=e.target.selectionStart;adGachaRender();const n=$('#gPq');n.focus();n.setSelectionRange(p,p)}}
+async function adPullSave(id,btn){const row=adm.querySelector(`[data-pid="${id}"]`),sel=row.querySelector('[data-pk]').value||null,msg=row.querySelector('[data-pmsg]');
+  btn.disabled=true;msg.textContent='바꾸는 중…';
+  const r=await sb.rpc('admin_edit_pull',{p_inv:id,p_item:sel});btn.disabled=false;
+  if(r.error){msg.textContent=/out_of_stock/.test(r.error.message)?'그 상품은 재고가 없어요. 상품 탭에서 수량을 늘린 뒤 바꿔 주세요':'바꾸지 못했어요: '+r.error.message;return}
+  if(r.data&&r.data.changed===false){msg.textContent='이미 그 결과예요';return}
+  GC.loaded=false;await adGacha()}
+async function adPullDel(id,btn){if(!btn.dataset.sure){btn.dataset.sure=1;btn.textContent='한 번 더 누르면 삭제';return}
+  const refund=confirm('이 대원에게 교환권 1장을 돌려줄까요?\n\n확인: 기록을 지우고 교환권도 돌려줘요 (다시 뽑을 수 있어요)\n취소: 기록만 지워요');
+  btn.disabled=true;const r=await sb.rpc('admin_delete_pull',{p_inv:id,p_refund:refund});
+  if(r.error){btn.disabled=false;return alert('지우지 못했어요: '+r.error.message)}
+  GC.loaded=false;await adGacha()}
 async function adGSaveCfg(){const v=k=>+$('#'+k).value||0,ur=v('gUR'),sr=v('gSR'),r=v('gR'),n=v('gNn'),msg=$('#gCfgMsg');
   if([ur,sr,r,n].some(x=>x<0)||ur+sr+r+n>100){msg.textContent='UR·SR·R·N 확률의 합이 100 이하여야 해요';return}
   const row={open:$('#gOpen').checked,rate_ur:ur,rate_sr:sr,rate_r:r,rate_n:n,need_missions:+$('#gNeed').value,miss_text:$('#gMissText').value.trim()||'아쉽지만 꽝!',updated_at:new Date().toISOString()};
@@ -2677,6 +2716,7 @@ adm.addEventListener('click',async e=>{const b=e.target.closest('[data-g]');if(!
   else if(a==='add')adGAdd();else if(a==='save')adGSave(b.dataset.id,b);else if(a==='del')adGDel(b.dataset.id,b);else if(a==='give')adGGive(b.dataset.uid,b);
   else if(a==='noimg'){const r=await sb.from('gacha_items').update({image_path:null}).eq('id',b.dataset.id);if(r.error)return alert(r.error.message);G.items.find(x=>x.id===b.dataset.id).image_path=null;GC.loaded=false;adGachaRender()}
   else if(a==='nomiss'){const r=await sb.from('gacha_config').update({miss_image:null}).eq('id',1);if(r.error)return alert(r.error.message);G.cfg.miss_image=null;GC.loaded=false;adGachaRender()}
+  else if(a==='psave')adPullSave(b.dataset.id,b);else if(a==='pdel')adPullDel(b.dataset.id,b);
   else if(a==='copy'){const x=G.claims.find(y=>y.id===b.dataset.id);if(x)adCopy(adClaimTxt(x),b)}
   else if(a==='copyall')adCopy(G.claims.filter(x=>x.status!=='sent').map(adClaimTxt).join('\n'),b);
   else if(a==='sent'){const x=G.claims.find(y=>y.id===b.dataset.id);if(!x)return;const st=x.status==='sent'?'pending':'sent';
