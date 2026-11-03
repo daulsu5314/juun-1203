@@ -967,6 +967,8 @@ img{max-width:100%}
 .rc-tip{font-size:12px!important;color:#9a8db0!important}
 .rc-prev{aspect-ratio:auto!important;width:100%!important;max-height:58vh;overflow-y:auto;overscroll-behavior:contain}
 .rc-prev img{height:auto!important}
+.rp .rp-share{flex:none;height:30px;padding:0 12px;margin-top:2px;border-radius:999px!important;background:rgba(255,143,171,.9);color:#fff;font-family:"Gothic A1",var(--body);font-size:12px;font-weight:800;white-space:nowrap}
+.rc-btns button{flex:1}
 </style>
 </head>
 <body>
@@ -2036,7 +2038,7 @@ function vArchive(){
   return`<div class="rpv rp-arc">
   <div class="rp-hero"${hero}>
     ${ARCHIVE.heroImg?heroTag(ARCHIVE.heroImg,ARCHIVE.heroPos,ARCHIVE.heroType,ARCHIVE.heroPoster):'<div class="rp-hph">[주은이 사진]<br>세로 사진 · 얼굴이 위쪽 1/3에 오게</div>'}
-    <div class="rp-nav"><div class="rp-logo">PLANET <span>#1203</span></div>
+    <div class="rp-nav"><div class="rp-logo">PLANET <span>#1203</span></div><button class="rp-share" data-rcgo="1">📸 내 파티 자랑하기</button>
       </div>
     <img class="rp-float" src="${ART.ufo}" alt="">
     <div class="rp-fade"></div>
@@ -4068,9 +4070,9 @@ async function rcRender(){if(RC.busy){RC.again=true;return}RC.busy=true;const ms
   RC.busy=false;if(RC.again){RC.again=false;rcRender()}}
 function rcOpen(){RC.mets=null;const D=rcData(),chips=RC_SEC.filter(([k])=>D.d[k].length||k==='met');
   openSheet('내 파티 자랑 카드',`<p>종류마다 가장 최근 것 하나씩 한 장에 모았어요. 빼고 싶은 건 눌러서 끌 수 있어요.</p>
+  <div class="row rc-btns"><button class="primary" id="rcShare" type="button">𝕏 자랑하기</button><button class="soft" id="rcSave" type="button">이미지 저장</button></div>
   <div class="rc-chips">${chips.map(([k,l])=>`<button type="button" class="${RC.on[k]===false?'':'on'}" data-rc="${k}" aria-pressed="${RC.on[k]!==false}">${l}</button>`).join('')}</div>
   <div class="rc-prev"><img id="rcImg" alt="내 파티 자랑 카드"></div><p class="save" id="rcMsg">카드 만드는 중…</p>
-  <div class="row"><button class="primary" id="rcShare" type="button">𝕏 자랑하기</button><button class="soft" id="rcSave" type="button">이미지 저장</button></div>
   <p class="rc-tip">폰에서는 공유 창에서 X를 고르면 이미지가 바로 붙어요. 컴퓨터에서는 이미지를 저장한 뒤 열리는 X 창에 첨부해 주세요. 미리보기를 길게 눌러 저장해도 돼요. 종류마다 가장 최근 것 하나씩 담겨요.</p>`);
   rcRender().then(()=>{const c=$('#sheetBody .rc-chips');if(c&&RC.mets&&!RC.mets.length){const b=c.querySelector('[data-rc=met]');b&&b.remove()}})}
 const rcText=()=>`행성 #1203에서 쭈니 생일파티 즐기고 왔어요 🛸💜\n${rcSite()}\n${RC_TAGS}`;
