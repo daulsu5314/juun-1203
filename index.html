@@ -724,6 +724,10 @@ img{max-width:100%}
 .vwrap .vw{flex:0 1 auto;min-width:0;margin:0}
 .vwrap .vnav{position:static;transform:none;flex:none;width:36px;height:56px;background:#2a1f3d;color:#fff}
 .vwrap .vnav:active{transform:scale(.94)}
+/* ===== JUUN GALLERY 전체 보기 ===== */
+.gl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:22px 12px;padding:18px 18px 40px}
+.gl-card{width:auto!important}
+.gl-card .rp-th{width:100%;aspect-ratio:3/4;height:auto!important;border-radius:8px!important;background:#f6f1fb;color:#5a4d80}
 </style>
 </head>
 <body>
@@ -1806,7 +1810,7 @@ function vArchive(){
   <section class="rp-sec"><div class="rp-sh"><h2>쭈니 에딧</h2><small>하츄들이 만든 팬 편집 영상</small></div>
     <div class="rp-row">${E.map((e,i)=>`<button class="rp-card" style="width:220px" data-act="play" data-i="${i}"><span class="rp-th" style="height:124px">${th(e)}${e.len?`<span class="rp-dur">${escH(e.len)}</span>`:''}</span><span class="rp-ct">${escH(e.title)}</span>${e.by?`<span class="rp-cs">edit by ${escH(e.by)}</span>`:''}</button>`).join('')}</div></section>
 
-  <section class="rp-sec" style="padding-top:38px"><div class="rp-big"><div><div class="rp-kick">COMMISSION</div><h2>JUUN GALLERY</h2><p>작가님들의 쭈니 작품</p></div></div>
+  <section class="rp-sec" style="padding-top:38px"><div class="rp-big"><div><div class="rp-kick">COMMISSION</div><h2>JUUN GALLERY</h2><p>작가님들의 쭈니 작품</p></div>${ARCHIVE.commissions.length?'<button class="rp-link" data-go="gallery">전체 보기 &gt;</button>':''}</div>
     <div class="rp-row" style="gap:10px">${ARCHIVE.commissions.map((c,i)=>`<button class="rp-card" style="width:176px" data-act="comm" data-i="${i}"><span class="rp-th" style="height:252px;border-radius:8px;background:#f6f1fb;color:#5a4d80">${c.img?`<img src="${escH(c.img)}" alt="${escH(c.title)}" loading="lazy">`:'[커미션 작품]'}<span class="rp-no">No.${p2(i+1)}</span></span><span class="rp-ct" style="font-weight:800">${escH(c.title)}</span><span class="rp-cs">illust. ${escH(c.artist)}</span></button>`).join('')}</div></section>
 
 ${(()=>{const LY=lyrList(),l=LY[0];return`<section class="rp-sec" style="padding-top:38px"><div class="rp-big"><div><div class="rp-kick">TO. JUUN</div><h2>LYRICS FOR JUUN</h2><p>가사로 전하는 마음${LY.length>1?` · ${LY.length}곡`:''}</p></div>${LY.length?`<button class="rp-link" data-act="lyrgo" data-i="0">전체 보기 &gt;</button>`:''}</div>
@@ -3404,11 +3408,22 @@ adm.addEventListener('click',async e=>{if(AD.tab!=='cds'||!AD.cds)return;const z
     AD.cds=AD.cds.filter(x=>x.id!==c.id);CD.loaded=false;adCdsRender()}});
 
 /* =====================================================================
+   JUUN GALLERY 전체 보기
+   ===================================================================== */
+/* ---------- JUUN GALLERY 전체 보기 ---------- */
+function vGallery(){const C=ARCHIVE.commissions||[],artists=new Set(C.map(c=>c.artist).filter(Boolean));
+  return`<div class="rpv rp-msgs">
+  <div class="rp-mtop"><button class="rp-ib" data-go="archive" aria-label="뒤로">${SVG.back}</button><div class="rp-logo" style="font-size:20px">PLANET <span>#1203</span></div></div>
+  <div class="rp-mhead"><div class="rp-kick">COMMISSION</div><h1>JUUN GALLERY</h1><p>작가님들의 쭈니 작품 <b>${C.length}점</b>${artists.size?` · 작가님 ${artists.size}명`:''}</p></div>
+  <div class="gl-grid">${C.length?C.map((c,i)=>`<button class="rp-card gl-card" data-act="comm" data-i="${i}"><span class="rp-th">${c.img?`<img src="${escH(c.img)}" alt="${escH(c.title)}" loading="lazy">`:'[커미션 작품]'}<span class="rp-no">No.${p2(i+1)}</span></span><span class="rp-ct" style="font-weight:800">${escH(c.title)}</span><span class="rp-cs">illust. ${escH(c.artist)}</span></button>`).join(''):'<p class="cdf-empty">작품을 준비하고 있어요</p>'}</div></div>`}
+VIEWS.gallery=vGallery;
+
+/* =====================================================================
    휴대폰 · 브라우저 '뒤로가기'를 사이트 안에서 한 단계씩 처리해요
    창이 떠 있으면 창 닫기 → 가사 · 교신 · 직캠 · 라운지 · 레코드샵 전체 보기면 생일파티로 → 생일파티면 행성 맵으로
    (맵에서 한 번 더 누르면 원래처럼 사이트를 나가요)
    ===================================================================== */
-{let guard=false;const SUB=new Set(['lyrics','msgs','cams','lounge','cds']);
+{let guard=false;const SUB=new Set(['lyrics','msgs','cams','lounge','cds','gallery']);
   const deep=()=>modalOpen||rpOpen;
   const arm=()=>{if(!guard&&deep()){try{history.pushState({jc:1},'')}catch(e){}guard=true}};
   addEventListener('popstate',()=>{guard=false;
