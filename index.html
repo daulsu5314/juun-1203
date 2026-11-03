@@ -728,6 +728,141 @@ img{max-width:100%}
 .gl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:22px 12px;padding:18px 18px 40px}
 .gl-card{width:auto!important}
 .gl-card .rp-th{width:100%;aspect-ratio:3/4;height:auto!important;border-radius:8px!important;background:#f6f1fb;color:#5a4d80}
+/* ===== JUUN UNIVERSE · 궤도 지도 ===== */
+.un-k{color:#7fd8ff!important}
+.un-map{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:0 0 4px;
+  background:radial-gradient(1px 1px at 12% 20%,#fff8,transparent),radial-gradient(1px 1px at 37% 78%,#fff6,transparent),radial-gradient(1.5px 1.5px at 63% 12%,#fff9,transparent),radial-gradient(1px 1px at 81% 64%,#fff7,transparent),radial-gradient(1px 1px at 92% 30%,#fff5,transparent)}
+.un-map::-webkit-scrollbar{display:none}
+.un-map.un-wait{height:250px}
+.un-track{position:relative}
+.un-orbit{position:absolute;inset:0;pointer-events:none}
+.un-orbit path{fill:none;stroke:#7d6ac0;stroke-width:1.5;stroke-dasharray:4 7;opacity:.75;animation:unDash 30s linear infinite}
+@keyframes unDash{to{stroke-dashoffset:-220}}
+.un-pl{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center}
+.rp .un-pb{background:none;padding:0;border-radius:50%!important;position:relative;z-index:1;display:block;transition:transform .25s}
+.rp .un-pb:hover,.rp .un-pb:focus-visible{transform:scale(1.08)}
+.un-sp{position:relative;display:block;border-radius:50%;
+  background:radial-gradient(circle at 32% 28%,#fff 0%,color-mix(in srgb,var(--c) 55%,#fff) 14%,var(--c) 45%,color-mix(in srgb,var(--c) 45%,#140a2e) 100%);
+  box-shadow:0 0 22px color-mix(in srgb,var(--c) 60%,transparent),inset -8px -10px 16px rgba(10,4,30,.45)}
+.un-ring{position:absolute;left:-26%;top:38%;width:152%;height:26%;border-radius:50%;border:2px solid color-mix(in srgb,var(--c) 40%,#fff);transform:rotate(-14deg);opacity:.85;
+  -webkit-mask:linear-gradient(#000 0 50%,transparent 50%);mask:linear-gradient(#000 0 50%,transparent 50%)}
+.un-lb{position:absolute;top:100%;margin-top:8px;display:flex;flex-direction:column;align-items:center;gap:1px;white-space:nowrap;pointer-events:none;text-align:center}
+.un-lb b{font-family:"Anton",sans-serif;font-weight:400;font-size:17px;letter-spacing:.5px;color:#fff}
+.un-lb span{font-family:"Anton",sans-serif;font-size:11px;letter-spacing:1px;color:#cfc4ea}
+.un-lb small{font-size:11px;color:#36f5b0;font-weight:700}
+.un-lb .un-ml{font-style:normal;font-size:10px;color:#ffb3d9}
+.un-orb{position:absolute;left:50%;top:50%;border-radius:50%;border:1px dashed rgba(255,255,255,.18);transform:translate(-50%,-50%);animation:unSpin 16s linear infinite;pointer-events:none}
+@keyframes unSpin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+.rp .un-moon{position:absolute;left:50%;top:-11px;margin-left:-11px;width:22px;height:22px;padding:0;border-radius:50%!important;pointer-events:auto;
+  background:radial-gradient(circle at 35% 30%,#fff,var(--c) 55%,color-mix(in srgb,var(--c) 50%,#1a0d3a));box-shadow:0 0 10px var(--c)}
+.rp .un-moon::after{content:"";position:absolute;inset:-10px}
+.un-orb:hover,.un-pl:focus-within .un-orb{animation-play-state:paused}
+.un-ship{position:absolute;width:40px;left:62%;top:-34px;z-index:2;pointer-events:none;animation:unBob 2.6s ease-in-out infinite;filter:drop-shadow(0 0 8px #7fd8ff)}
+@keyframes unBob{50%{transform:translateY(-6px) rotate(6deg)}}
+.un-star{display:flex;width:56px;height:56px;border-radius:50%;align-items:center;justify-content:center;font-size:28px;
+  background:radial-gradient(circle,#fff6c9 0%,#ffd36e 40%,rgba(255,211,110,0) 72%);animation:unGlow 2.4s ease-in-out infinite}
+@keyframes unGlow{50%{box-shadow:0 0 34px 6px rgba(255,214,110,.55)}}
+.un-end .un-lb b{color:#ffd36e}
+.un-hint{margin:2px 18px 0;font-size:11px;color:#8f84ad}.un-hint em{font-style:normal;color:#ffb3d9}
+
+/* ===== 행성 화면 ===== */
+.un-v{padding-bottom:40px}
+.un-hero{position:relative;margin:14px 18px 0;min-height:200px;border-radius:18px;overflow:hidden;display:flex;align-items:flex-end;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--c) 30%,#1a0f3d),#120a2b 70%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+.un-big{position:absolute;right:-60px;top:-50px;width:240px;height:240px;border-radius:50%;
+  background:radial-gradient(circle at 32% 28%,#fff 0%,color-mix(in srgb,var(--c) 55%,#fff) 12%,var(--c) 45%,color-mix(in srgb,var(--c) 40%,#140a2e) 100%);box-shadow:0 0 60px color-mix(in srgb,var(--c) 55%,transparent)}
+.un-big::after{content:"";position:absolute;left:-30%;top:44%;width:160%;height:24%;border-radius:50%;border:2px solid rgba(255,255,255,.5);transform:rotate(-16deg)}
+.un-ht{position:relative;padding:18px;max-width:78%}
+.un-hk{font-family:"Anton",sans-serif;font-size:11px;letter-spacing:2.5px;color:#fff;opacity:.85}
+.un-ht h1{margin:4px 0 6px;font-family:"Anton",sans-serif;font-weight:400;font-size:clamp(38px,12vw,58px);line-height:.95;text-shadow:0 2px 18px rgba(0,0,0,.4);overflow-wrap:anywhere}
+.un-ht p{margin:0;font-size:13px;line-height:1.5;color:#efe8ff;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.un-chips{display:flex;gap:8px;flex-wrap:wrap;padding:14px 18px 0}
+.un-chips span{font-family:"Anton",sans-serif;font-size:13px;letter-spacing:1px;padding:6px 12px;border-radius:999px;border:1px solid #3a2f60;color:#cfc4ea}
+.un-chips b{font-weight:400;color:#fff}
+.un-list{display:flex;flex-direction:column;gap:12px;padding:16px 18px 0}
+.rp .un-card{display:flex;gap:14px;align-items:center;text-align:left;background:none;padding:0;color:#fff;border-radius:12px!important;font-family:"Gothic A1",var(--body)}
+.un-card.pend{opacity:.7}
+.un-th{position:relative;flex:none;width:44%;max-width:220px;aspect-ratio:16/10;border-radius:10px;overflow:hidden;background:#1d1440}
+.un-th img{width:100%;height:100%;object-fit:cover;display:block}
+.un-th::after{content:"";position:absolute;inset:0;background:linear-gradient(160deg,color-mix(in srgb,var(--c) 30%,transparent),transparent 50%,rgba(0,0,0,.35))}
+.un-obs{position:absolute;left:7px;top:6px;z-index:1;font-style:normal;font-family:"Anton",sans-serif;font-size:10px;letter-spacing:1px;color:#36f5b0;text-shadow:0 1px 3px #000}
+.un-cn{position:absolute;inset:6px;z-index:1;border:solid #36f5b0;border-width:0;pointer-events:none;
+  background:linear-gradient(#36f5b0,#36f5b0) right top/10px 2px no-repeat,linear-gradient(#36f5b0,#36f5b0) right top/2px 10px no-repeat,linear-gradient(#36f5b0,#36f5b0) left bottom/10px 2px no-repeat,linear-gradient(#36f5b0,#36f5b0) left bottom/2px 10px no-repeat}
+.un-plb{position:absolute;left:50%;top:50%;z-index:1;width:36px;height:36px;margin:-18px 0 0 -18px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(13,8,32,.55);border:1.5px solid rgba(255,255,255,.85);color:#fff}
+.un-ci{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.un-ci small{font-family:"Anton",sans-serif;font-size:11px;letter-spacing:1px}
+.un-ci b{font-size:15px;font-weight:800;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.un-ci em{font-style:normal;font-size:12px;color:#b3a5dc}
+.un-empty{display:flex;flex-direction:column;align-items:center;gap:6px;padding:40px 0;color:#b3a5dc;text-align:center}
+.un-empty span{font-size:34px}.un-empty b{color:#fff}.un-empty p{margin:0;font-size:13px}
+.un-foot{padding:24px 18px 0;display:flex;flex-direction:column;gap:14px}
+.rp .un-sub{height:46px;border-radius:12px!important;background:#2a1d4d;border:1px dashed #6b55b8;color:#c4b0ff;font-family:"Gothic A1",var(--body);font-weight:800;font-size:14px}
+.un-nav{display:flex;justify-content:space-between;gap:10px}
+.rp .un-nav button{background:none;color:#cfc4ea;font-family:"Anton",sans-serif;font-size:15px;letter-spacing:.5px;padding:6px 0}
+
+/* ===== 플레이어 (우주선 모니터) ===== */
+.sheet.un-dark{background:#0f0a24;color:#f5f0ff}
+.sheet.un-dark .sheet-h h2{font-family:"Gothic A1",var(--body);font-weight:800;font-size:17px;line-height:1.3}
+.sheet.un-dark .x{background:#251a48;color:#fff}
+.sheet.un-dark p{color:#b3a5dc}
+.sheet.un-dark label.f{color:#b3a5dc}
+.sheet.un-dark input{background:#1a1238;border-color:#3a2f60;color:#fff}
+.sheet.un-dark .soft{background:#251a48;color:#fff}
+.un-mon{border-radius:14px;padding:10px 10px 8px;background:linear-gradient(180deg,#1b1340,#120c2c);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 45%,#3a2f60),0 0 24px color-mix(in srgb,var(--c) 18%,transparent)}
+.un-mtop{display:flex;justify-content:space-between;align-items:center;font-family:"Anton",sans-serif;font-size:11px;letter-spacing:1.5px;color:#9cc4ff;padding:0 2px 8px}
+.un-mtop b{font-weight:400;color:#ff6f91;animation:unBlink 1.6s steps(1) infinite}
+@keyframes unBlink{50%{opacity:.35}}
+.un-scr{position:relative;aspect-ratio:16/9;border-radius:8px;overflow:hidden;background:#000}
+.un-scr #unPl,.un-scr iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.un-scr #unPl img{width:100%;height:100%;object-fit:cover;opacity:.6}
+.un-prog{padding:12px 2px 0}
+.un-bar{position:relative;height:4px;border-radius:2px;background:rgba(255,255,255,.15)}
+.un-bar>i{position:absolute;left:0;top:0;bottom:0;border-radius:2px;background:linear-gradient(90deg,#7fd8ff,var(--c))}
+.un-mk{position:absolute;top:50%;width:22px;height:22px;margin:-11px 0 0 -11px;padding:0;background:none!important;font-size:13px;line-height:22px;border-radius:50%;filter:drop-shadow(0 0 4px #ffd36e);transition:transform .15s}
+.un-mk:hover{transform:scale(1.35)}
+.un-tm{display:flex;justify-content:space-between;font-family:"Anton",sans-serif;font-size:11px;color:#8f84ad;margin-top:8px;font-variant-numeric:tabular-nums}
+.un-catch{height:52px;border-radius:12px;font-family:"Gothic A1",var(--body);font-weight:800;font-size:16px;color:#2a1240;background:linear-gradient(90deg,#ffd36e,#ffb3d9);box-shadow:0 4px 18px rgba(255,180,200,.25)}
+.un-catch:active{transform:translateY(1px)}
+.un-mf{display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:12px;background:#1a1238;border:1px solid #3a2f60}
+.un-mf[hidden]{display:none}
+.un-mfr{display:flex;gap:8px}
+.un-mh{font-size:12px;color:#b3a5dc;margin-top:4px}.un-mh b{font-family:"Anton",sans-serif;font-weight:400;font-size:15px;letter-spacing:1.5px;color:#ffd36e}
+.un-ml{display:flex;flex-direction:column;gap:8px}
+.un-mt{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:#17102f;border:1px solid #2c2252}
+.un-mt.off{opacity:.5}
+.un-mt.new{animation:unNew 1.2s ease-out}
+@keyframes unNew{from{background:#4a3a20;border-color:#ffd36e}}
+.un-mtt{flex:none;min-width:54px;padding:4px 0;background:none;font-family:"Anton",sans-serif;font-size:17px;color:#ffd36e;font-variant-numeric:tabular-nums;text-align:left}
+.un-mtx{flex:1;min-width:0;display:flex;flex-direction:column}
+.un-mtx b{font-family:"Gothic A1",var(--body);font-size:14px;font-weight:700;overflow-wrap:anywhere;color:#fff}
+.un-mtx small{font-size:11px;color:#8f84ad}
+.un-hb{flex:none;padding:6px 8px;background:none;font-family:"Gothic A1",var(--body);font-weight:800;font-size:13px;color:#8f84ad}
+.un-hb.on{color:#ff6f91}
+.un-del{flex:none;padding:4px 6px;background:none;color:#6f6496;font-size:12px;font-family:"Gothic A1",var(--body)}
+.un-tip{font-size:12px;text-align:center}
+.un-tip a{color:#9cc4ff}
+.sheet .un-prev img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:8px;display:block}
+.un-thx{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;padding:14px 0}
+.un-thx>span{font-size:42px}.un-thx>b{font-family:var(--display);font-weight:400;font-size:20px}
+
+/* ===== 운영진 ===== */
+.un-adnav{margin-bottom:12px}
+.un-adim{width:96px!important;height:54px!important}
+.un-ad{gap:8px}
+.un-ad input,.un-ad select,.un-ad textarea,.un-adr select{font-family:var(--body);font-size:15px;padding:8px 10px;border-radius:8px;border:1.5px solid #e0d6ea;background:#fff;color:var(--ink);width:100%;min-width:0}
+.un-adr{display:flex;gap:8px;align-items:center}
+.un-adr .ad-add{flex:none}
+.un-adg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.un-ad label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:#5c4f73}
+.un-ad label.un-ck{flex-direction:row;align-items:center;gap:6px;font-size:13px}.un-ad label.un-ck input{width:auto}
+.un-ad input[type=color]{height:40px;padding:2px}
+.un-adh{font-family:var(--display);font-weight:400;font-size:18px;margin:18px 0 8px}.un-adh small{font-family:var(--body);font-size:12px;color:#9a8db0;margin-left:6px}
+.un-bulk{display:flex;flex-direction:column;gap:6px}
+.un-bi{display:flex;gap:8px;align-items:center}
+.un-bi img{width:72px;height:40px;object-fit:cover;border-radius:6px;flex:none}
+.un-bi select{flex:0 0 84px;width:84px}
+.un-bi button{flex:none;font-size:13px;padding:7px 10px}
+@media (prefers-reduced-motion:reduce){.un-orbit path,.un-orb,.un-ship,.un-star,.un-mtop b{animation:none}}
 </style>
 </head>
 <body>
@@ -3419,11 +3554,271 @@ function vGallery(){const C=ARCHIVE.commissions||[],artists=new Set(C.map(c=>c.a
 VIEWS.gallery=vGallery;
 
 /* =====================================================================
+   JUUN UNIVERSE · 쭈니 관측소
+   활동 시기 = 행성 · 영상 = 관측 기록 · 명장면 타임스탬프 = 유성
+   ===================================================================== */
+const UNI_SEED=[
+  {id:'chase',name:'THE CHASE',sub:'DEBUT SINGLE',date:'2025-02-24',color:'#ff6fae',descr:'쭈니가 처음 우주에 나타난 날. 하츠투하츠의 시작 · 수록곡 Butterflies',parent:null,sort:1,active:true},
+  {id:'style',name:'STYLE',sub:'DIGITAL SINGLE',date:'2025-06-18',color:'#4fe0d6',descr:'여름에 도착한 디지털 싱글',parent:null,sort:2,active:true},
+  {id:'focus',name:'FOCUS',sub:'1ST MINI ALBUM',date:'2025-10-20',color:'#a98bff',descr:'첫 미니앨범 · 선공개곡 Pretty Please가 위성으로 돌고 있어요',parent:null,sort:3,active:true},
+  {id:'pretty',name:'Pretty Please',sub:'PRE-RELEASE',date:'2025-09-24',color:'#ffb3d9',descr:'FOCUS보다 먼저 도착한 선공개곡',parent:'focus',sort:4,active:true},
+  {id:'rude',name:'RUDE!',sub:'DIGITAL SINGLE',date:'2026-02-20',color:'#ff7a59',descr:'2026년을 연 디지털 싱글 · LEMON TANG에도 실렸어요',parent:null,sort:5,active:true},
+  {id:'lemon',name:'LEMON TANG',sub:'2ND MINI ALBUM',date:'2026-06-22',color:'#ffe066',descr:'Lemon Tang · 15-Love · Baby Steps · Heart Emoji · Secret Recipe · Rude!',parent:null,sort:6,active:true},
+  {id:'iconic',name:'ICONIC HEART',sub:'JAPAN DEBUT · KOR',date:'2026-08-12',color:'#ff4d6d',descr:'일본 데뷔 싱글 (2026.08.12) · 한국어 버전 2026.10.05',parent:null,sort:7,active:true}];
+const UNI_KIND={mv:'뮤비',stage:'무대',fancam:'직캠',content:'자컨',pre:'선공개'},UNI_KEN={mv:'MV',stage:'STAGE',fancam:'FANCAM',content:'CONTENT',pre:'PRE-RELEASE'};
+const UNI={planets:[],videos:[],counts:{},loaded:false,loading:false,cur:null,tab:'all',noDb:false};
+const unDate=d=>d?String(d).slice(0,10).replace(/-/g,'.'):'';
+const unTime=s=>{s=Math.max(0,Math.floor(+s||0));const h=Math.floor(s/3600),m=Math.floor(s/60)%60,x=s%60;return h?`${h}:${p2(m)}:${p2(x)}`:`${m}:${p2(x)}`};
+const unParseT=v=>{v=String(v||'').trim();if(!v)return NaN;const p=v.split(':').map(Number);if(p.some(n=>!isFinite(n)||n<0))return NaN;return p.reduce((a,n)=>a*60+n,0)};
+const unThumb=y=>`https://i.ytimg.com/vi/${y}/hqdefault.jpg`;
+const unRoots=()=>UNI.planets.filter(p=>!p.parent&&p.active!==false);
+const unMoons=id=>UNI.planets.filter(p=>p.parent===id&&p.active!==false);
+const unP=id=>UNI.planets.find(p=>p.id===id);
+/* 한 행성의 영상 = 그 행성 + 위성들 (위성 영상은 '선공개' 탭으로) */
+function unVids(pid){const ids=new Set([pid,...unMoons(pid).map(m=>m.id)]);
+  return UNI.videos.filter(v=>ids.has(v.planet_id)).map(v=>({...v,k:unP(v.planet_id)?.parent?'pre':v.kind}))
+    .sort((a,b)=>((b.planet_id===pid)-(a.planet_id===pid))||a.sort-b.sort||String(a.at).localeCompare(String(b.at)))}
+function unOff(){return{v:store.get('jc_uni_v',[]),m:store.get('jc_uni_m',{})}}
+async function unLoad(){
+  if(!sb){UNI.planets=UNI_SEED.slice();UNI.videos=unOff().v;UNI.counts={};const M=unOff().m;Object.keys(M).forEach(k=>UNI.counts[k]=M[k].length);UNI.loaded=true;return}
+  const[p,v,c]=await Promise.all([sb.from('uni_planets').select('*').order('sort').order('date'),
+    sb.from('uni_videos').select('id,planet_id,yt,title,kind,sort,approved,user_id,name,created_at').order('sort').order('created_at').limit(2000),
+    sb.rpc('uni_counts')]);
+  if(p.error){UNI.noDb=true;UNI.planets=UNI_SEED.slice();UNI.videos=[];UNI.loaded=true;return}
+  UNI.noDb=false;UNI.planets=p.data;UNI.videos=(v.data||[]).map(x=>({id:x.id,planet_id:x.planet_id,yt:x.yt,title:x.title,kind:x.kind,sort:x.sort,approved:x.approved,mine:x.user_id===uid,n:x.name,at:x.created_at}));
+  UNI.counts={};(c.data||[]).forEach(r=>UNI.counts[r.video_id]=+r.n);UNI.loaded=true}
+function unEnsure(after){if(UNI.loaded||UNI.loading)return;UNI.loading=true;unLoad().catch(()=>{UNI.planets=UNI_SEED.slice();UNI.loaded=true}).finally(()=>{UNI.loading=false;after&&after()})}
+const unShown=v=>v.approved!==false;
+
+/* ---------- 생일파티 화면: 궤도 지도 ---------- */
+function unSphere(c,sz,ring){return`<span class="un-sp" style="--c:${escH(c)};width:${sz}px;height:${sz}px">${ring?'<i class="un-ring"></i>':''}</span>`}
+function unSection(){
+  if(!UNI.loaded)return`<section class="rp-sec un-sec" style="padding-top:38px"><div class="rp-big"><div><div class="rp-kick un-k">OBSERVATORY</div><h2>JUUN UNIVERSE</h2><p>관측소를 여는 중…</p></div></div><div class="un-map un-wait"></div></section>`;
+  const R=unRoots(),today=new Date().toISOString().slice(0,10);let here=-1;R.forEach((p,i)=>{if(!p.date||String(p.date)<=today)here=i});
+  const W=150,X0=78,H=250,ys=[96,150,74,140,92,156,80],w=X0+R.length*W+90;
+  const pts=R.map((p,i)=>[X0+i*W,ys[i%ys.length]]),end=[X0+R.length*W+10,112];
+  const all=[[10,ys[0]+40],...pts,end];let d=`M${all[0][0]} ${all[0][1]}`;for(let i=1;i<all.length;i++){const[a,b]=all[i-1],[x,y]=all[i],m=(a+x)/2;d+=` C${m} ${b} ${m} ${y} ${x} ${y}`}
+  const cnt=p=>unVids(p.id).filter(unShown).length;
+  return`<section class="rp-sec un-sec" id="unZone" style="padding-top:38px"><div class="rp-big"><div><div class="rp-kick un-k">OBSERVATORY</div><h2>JUUN UNIVERSE</h2><p>쭈콩호가 지나온 행성들 · 눌러서 관측 기록 보기</p></div><button class="rp-link" data-un="submit">관측 제보 &gt;</button></div>
+  <div class="un-map" role="list" aria-label="하츠투하츠 활동 행성 지도"><div class="un-track" style="width:${w}px;height:${H}px">
+    <svg class="un-orbit" width="${w}" height="${H}" aria-hidden="true"><path d="${d}"/></svg>
+    ${R.map((p,i)=>{const[x,y]=pts[i],sz=54+Math.min(cnt(p),12)*1.5,M=unMoons(p.id);return`<div class="un-pl" role="listitem" style="left:${x}px;top:${y}px;--c:${escH(p.color)}">
+      <button class="un-pb" data-un="planet" data-id="${escH(p.id)}" aria-label="${escH(p.name)} 행성 열기">${unSphere(p.color,sz,i%2===0)}</button>
+      ${M.map((m,k)=>`<span class="un-orb" style="width:${sz+44+k*22}px;height:${sz+44+k*22}px;animation-duration:${14+k*5}s"><button class="un-moon" data-un="moon" data-id="${escH(p.id)}" data-m="${escH(m.id)}" style="--c:${escH(m.color)}" aria-label="${escH(m.name)} 위성 (${escH(p.name)})" title="${escH(m.name)}"></button></span>`).join('')}
+      ${i===here?`<img class="un-ship" src="${ART.ufo}" alt="쭈콩호 현재 위치">`:''}
+      <div class="un-lb"><b>${escH(p.name)}</b><span>${unDate(p.date)}</span>${M.length?`<em class="un-ml">+ ${M.map(m=>escH(m.name)).join(', ')}</em>`:''}<small>관측 기록 ${cnt(p)}</small></div></div>`}).join('')}
+    <div class="un-pl un-end" style="left:${end[0]}px;top:${end[1]}px"><button class="un-pb" data-un="bday" aria-label="12월 3일 생일 별"><span class="un-star">🎂</span></button><div class="un-lb"><b>12.03</b><span>쭈니 생일 별</span></div></div>
+  </div></div>
+  <p class="un-hint">옆으로 밀면 궤도를 따라 다음 행성이 나와요${UNI.noDb?' · <em>관측소 준비 중</em>':''}</p></section>`}
+
+/* ---------- 행성 화면 ---------- */
+function unCard(v,i,p){const n=UNI.counts[v.id]||0,pend=!unShown(v);
+  return`<button class="un-card${pend?' pend':''}" data-un="play" data-id="${v.id}"><span class="un-th"><img src="${unThumb(v.yt)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><i class="un-obs">OBS-${String(i+1).padStart(3,'0')}</i><i class="un-cn" aria-hidden="true"></i><span class="un-plb" aria-hidden="true">${SVG.play||'▶'}</span></span>
+    <span class="un-ci"><small style="color:${escH(p.color)}">${UNI_KEN[v.k]||''}${v.planet_id!==p.id?` · ${escH(unP(v.planet_id)?.name||'')}`:''}</small><b>${escH(v.title)}</b><em>${pend?'🕓 운영진 확인 중 · 나만 보여요':`🌠 유성 포착 ${n}`}</em></span></button>`}
+function vUni(){const p=UNI.cur&&unP(UNI.cur);if(!p)return VIEWS.archive();
+  const R=unRoots(),ri=R.findIndex(x=>x.id===p.id),prev=R[ri-1],next=R[ri+1],all=unVids(p.id),shown=all.filter(v=>unShown(v)||v.mine);
+  const kinds=Object.keys(UNI_KIND).filter(k=>shown.some(v=>v.k===k)),tab=kinds.includes(UNI.tab)?UNI.tab:'all',L=tab==='all'?shown:shown.filter(v=>v.k===tab);
+  return`<div class="rpv rp-msgs un-v" style="--c:${escH(p.color)}">
+  <div class="rp-mtop"><button class="rp-ib" data-go="archive" aria-label="뒤로">${SVG.back}</button><div class="rp-logo" style="font-size:20px">PLANET <span>#1203</span></div></div>
+  <div class="un-hero"><span class="un-big" aria-hidden="true"></span><div class="un-ht"><div class="un-hk">PLANET ${p2(ri+1)} · ${escH(p.sub||'')}</div><h1>${escH(p.name)}</h1><p>${escH(p.descr||'')}</p></div></div>
+  <div class="un-chips">${p.date?`<span>${unDate(p.date)}</span>`:''}${p.sub?`<span>${escH(p.sub)}</span>`:''}<span>관측 기록 <b>${all.filter(unShown).length}</b></span></div>
+  ${kinds.length>1?`<div class="rp-tabs" role="tablist">${[['all','전체'],...kinds.map(k=>[k,UNI_KIND[k]])].map(([k,l])=>`<button role="tab" aria-selected="${k===tab}" class="${k===tab?'on':''}" data-un="tab" data-k="${k}">${l}</button>`).join('')}</div>`:''}
+  <div class="un-list">${L.length?L.map((v,i)=>unCard(v,i,p)).join(''):`<div class="un-empty"><span>🔭</span><b>아직 관측 기록이 없어요</b><p>이 행성에서 본 영상을 제보해 주세요</p></div>`}</div>
+  <div class="un-foot"><button class="un-sub" data-un="submit" data-id="${escH(p.id)}">🔭 관측 기록 제보하기</button>
+    <div class="un-nav">${prev?`<button data-un="planet" data-id="${escH(prev.id)}">&lt; ${escH(prev.name)}</button>`:'<span></span>'}${next?`<button data-un="planet" data-id="${escH(next.id)}">${escH(next.name)} &gt;</button>`:'<button data-un="bday">🎂 12.03 &gt;</button>'}</div></div></div>`}
+VIEWS.uni=vUni;
+function unOpen(id,tab){UNI.cur=id;UNI.tab=tab||'all';SFX.ufo?SFX.ufo():SFX.open&&SFX.open();rpShow('uni')}
+
+/* ---------- 영상 + 유성 포착 ---------- */
+let unYTP=null;
+function unYtApi(){if(window.YT&&YT.Player)return Promise.resolve();if(unYTP)return unYTP;
+  unYTP=new Promise((res,rej)=>{const prev=window.onYouTubeIframeAPIReady;window.onYouTubeIframeAPIReady=()=>{try{prev&&prev()}catch(e){}res()};
+    const s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';s.async=true;s.onerror=()=>{unYTP=null;rej(new Error('yt'))};document.head.appendChild(s);setTimeout(()=>rej(new Error('timeout')),9000)});return unYTP}
+const UP={v:null,pl:null,timer:null,dur:0,list:[],tk:0};
+function unPlay(id){const v=UNI.videos.find(x=>x.id===id);if(!v)return;const p=unP(v.planet_id)||{},root=p.parent?unP(p.parent)||p:p;
+  const idx=unVids(root.id).filter(x=>unShown(x)||x.mine).findIndex(x=>x.id===id);
+  openSheet(v.title,`<div class="un-mon" style="--c:${escH(root.color||'#a98bff')}"><div class="un-mtop"><span>OBS-${String(idx+1).padStart(3,'0')} · ${escH(root.name||'')}</span><b>● LIVE VIEW</b></div>
+    <div class="un-scr"><div id="unPl"><img src="${unThumb(v.yt)}" alt=""></div></div>
+    <div class="un-prog"><div class="un-bar" id="unBar"><i id="unFill"></i><span id="unMk"></span></div><div class="un-tm"><span id="unCur">0:00</span><span id="unDur">--:--</span></div></div></div>
+  <button class="un-catch" id="unCatch" type="button">🌠 지금 장면 유성 포착!</button>
+  <form id="unMf" class="un-mf" hidden><div class="un-mfr"><label class="f" style="flex:0 0 96px">시간<input id="unMt" inputmode="numeric" maxlength="8" placeholder="1:20" required></label>
+    <label class="f">어떤 장면이에요?<input id="unMm" maxlength="40" placeholder="손 하트 하는 순간 ㅠㅠ" required></label></div>
+    <div class="row"><button class="primary" type="submit" id="unMs">유성 남기기</button><button class="soft" type="button" id="unMc">취소</button><span class="ad-err" id="unMe"></span></div></form>
+  <div class="un-mh"><b>CAUGHT METEORS</b> · 대원들이 포착한 명장면</div>
+  <div id="unMl" class="un-ml"><p class="un-tip">불러오는 중…</p></div>
+  <p class="un-tip">🌠나 시간을 누르면 그 장면부터 재생돼요 · <a href="https://youtu.be/${v.yt}" target="_blank" rel="noopener">유튜브에서 보기 →</a></p>`);
+  const sh=$('#sheetBody').parentElement;sh.classList.add('un-dark');
+  const tk=++UP.tk;Object.assign(UP,{v,pl:null,dur:0,list:[]});clearInterval(UP.timer);
+  onClose=()=>{sh.classList.remove('un-dark');clearInterval(UP.timer);UP.tk++;try{UP.pl&&UP.pl.destroy()}catch(e){}UP.pl=null;UP.v=null;$('#sheetBody').innerHTML='';setTimeout(rpRefresh,0)};
+  unYtApi().then(()=>{if(tk!==UP.tk)return;UP.pl=new YT.Player('unPl',{videoId:v.yt,host:'https://www.youtube-nocookie.com',playerVars:{playsinline:1,rel:0,modestbranding:1},
+      events:{onReady:()=>{if(tk!==UP.tk)return;UP.timer=setInterval(unTick,400);unTick()}}})})
+    .catch(()=>{if(tk!==UP.tk)return;const el=$('#unPl');if(el)el.innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${v.yt}?playsinline=1&rel=0" title="${escH(v.title)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;UP.pl=null});
+  unMLoad(tk)}
+function unNow(){try{return UP.pl&&UP.pl.getCurrentTime?UP.pl.getCurrentTime()||0:0}catch(e){return 0}}
+function unTick(){if(!UP.pl||!UP.pl.getDuration)return;let d=0;try{d=UP.pl.getDuration()||0}catch(e){}const t=unNow(),f=$('#unFill');if(!f)return;
+  if(d&&d!==UP.dur){UP.dur=d;$('#unDur').textContent=unTime(d);unMarks()}
+  f.style.width=d?Math.min(100,t/d*100)+'%':'0';$('#unCur').textContent=unTime(t)}
+function unMarks(){const m=$('#unMk');if(!m)return;const d=UP.dur||Math.max(60,...UP.list.map(x=>x.t+10));
+  m.innerHTML=UP.list.filter(x=>x.t<=d).map(x=>`<button type="button" class="un-mk" style="left:${x.t/d*100}%" data-t="${x.t}" title="${unTime(x.t)} ${escH(x.memo)}" aria-label="${unTime(x.t)} ${escH(x.memo)}">🌠</button>`).join('')}
+async function unMLoad(tk){let L=[];
+  if(!sb)L=(unOff().m[UP.v.id]||[]).map(x=>({...x,mine:true}));
+  else{const r=await sb.rpc('uni_meteor_list',{vid:UP.v.id});if(tk!==UP.tk)return;if(r.error){const el=$('#unMl');if(el)el.innerHTML=`<p class="un-tip">유성을 불러오지 못했어요</p>`;return}L=r.data.map(x=>({id:x.id,n:x.name,t:x.t,memo:x.memo,hearts:+x.hearts,liked:x.liked,mine:x.mine,approved:x.approved}))}
+  UP.list=L;unMRender()}
+function unMRender(){const el=$('#unMl');if(!el)return;const L=UP.list.slice().sort((a,b)=>a.t-b.t),top=Math.max(0,...L.map(x=>x.hearts||0));
+  el.innerHTML=L.length?L.map(x=>`<div class="un-mt${x.approved===false?' off':''}"><button type="button" class="un-mtt" data-t="${x.t}" aria-label="${unTime(x.t)}부터 재생">${unTime(x.t)}</button>
+    <div class="un-mtx"><b>${escH(x.memo)}</b><small>by ${escH(x.n||'')} 대원${x.mine?' · 나':''}${x.approved===false?' · 숨겨짐':''}</small></div>
+    <button type="button" class="un-hb${x.liked?' on':''}" data-h="${x.id}" aria-pressed="${!!x.liked}" aria-label="하트 ${x.hearts||0}">${top&&x.hearts===top?'👑':'♥'} ${x.hearts||0}</button>
+    ${x.mine?`<button type="button" class="un-del" data-del="${x.id}" aria-label="내 유성 지우기">✕</button>`:''}</div>`).join(''):'<p class="un-tip">아직 포착된 유성이 없어요. 첫 번째 유성을 남겨 주세요!</p>';
+  unMarks()}
+function unSeek(t){if(UP.pl&&UP.pl.seekTo){try{UP.pl.seekTo(t,true);UP.pl.playVideo();SFX.blip&&SFX.blip()}catch(e){}}}
+document.addEventListener('click',async e=>{if(!UP.v||!modalOpen)return;const sbd=$('#sheetBody');if(!sbd.contains(e.target))return;
+  const s=e.target.closest('[data-t]');if(s){unSeek(+s.dataset.t);return}
+  if(e.target.closest('#unCatch')){const t=Math.floor(unNow());try{UP.pl&&UP.pl.pauseVideo()}catch(_){}$('#unMt').value=unTime(t);$('#unMf').hidden=false;$('#unCatch').hidden=true;SFX.shutter?SFX.shutter():SFX.ping&&SFX.ping();setTimeout(()=>$('#unMm').focus(),30);return}
+  if(e.target.closest('#unMc')){$('#unMf').hidden=true;$('#unCatch').hidden=false;$('#unMe').textContent='';return}
+  const h=e.target.closest('[data-h]');if(h){const x=UP.list.find(y=>y.id===h.dataset.h);if(!x||h.disabled)return;h.disabled=true;const on=!x.liked;
+    try{if(sb){const r=on?await sb.from('uni_hearts').insert({meteor_id:x.id}):await sb.from('uni_hearts').delete().eq('meteor_id',x.id).eq('user_id',uid);if(r.error&&!/duplicate/.test(r.error.message))throw r.error}
+      x.liked=on;x.hearts=Math.max(0,(x.hearts||0)+(on?1:-1));if(!sb)unOffSaveM();on&&SFX.pop&&SFX.pop();unMRender()}catch(err){h.disabled=false;alert(errMsg(err))}return}
+  const d=e.target.closest('[data-del]');if(d){if(!d.dataset.sure){d.dataset.sure=1;d.textContent='지울까요?';return}
+    if(sb){const r=await sb.from('uni_meteors').delete().eq('id',d.dataset.del);if(r.error)return alert(errMsg(r.error))}
+    UP.list=UP.list.filter(y=>y.id!==d.dataset.del);if(!sb)unOffSaveM();UNI.counts[UP.v.id]=Math.max(0,(UNI.counts[UP.v.id]||1)-1);unMRender()}});
+function unOffSaveM(){const M=unOff().m;M[UP.v.id]=UP.list.map(({mine,...x})=>x);store.set('jc_uni_m',M);UNI.counts[UP.v.id]=UP.list.length}
+document.addEventListener('submit',async e=>{if(e.target.id!=='unMf')return;e.preventDefault();const t=unParseT($('#unMt').value),memo=$('#unMm').value.trim(),msg=$('#unMe'),b=$('#unMs');
+  if(!isFinite(t)||t>36000){msg.textContent='시간은 1:20처럼 적어 주세요';return}if(!memo){msg.textContent='어떤 장면인지 적어 주세요';return}
+  if(UP.dur&&t>UP.dur+1){msg.textContent='영상 길이보다 뒤예요';return}
+  b.disabled=true;msg.textContent='';const nm=String(me.name||'하츄').slice(0,16);
+  try{let row;if(sb){const r=await sb.from('uni_meteors').insert({video_id:UP.v.id,name:nm,t:Math.floor(t),memo}).select('id').single();if(r.error)throw r.error;row={id:r.data.id,n:nm,t:Math.floor(t),memo,hearts:0,liked:false,mine:true,approved:true}}
+    else row={id:'m'+Date.now(),n:nm,t:Math.floor(t),memo,hearts:0,liked:false,mine:true};
+    UP.list.push(row);if(!sb)unOffSaveM();else UNI.counts[UP.v.id]=(UNI.counts[UP.v.id]||0)+1;
+    $('#unMf').reset();$('#unMf').hidden=true;$('#unCatch').hidden=false;SFX.coin?SFX.coin():SFX.ok&&SFX.ok();unMRender();
+    const r=$('#unMl').querySelector(`[data-h="${row.id}"]`);r&&r.closest('.un-mt').classList.add('new');try{UP.pl&&UP.pl.playVideo()}catch(_){}}
+  catch(err){msg.textContent=errMsg(err)}b.disabled=false});
+
+/* ---------- 관측 기록 제보 ---------- */
+async function unTitle(id){try{const r=await fetch(`https://noembed.com/embed?url=${encodeURIComponent('https://www.youtube.com/watch?v='+id)}`);const j=await r.json();return j&&j.title?String(j.title).slice(0,100):''}catch(e){return''}}
+function unSubmit(pid){const P=UNI.planets.filter(p=>p.active!==false);
+  openSheet('관측 기록 제보',`<p>쭈니가 빛나는 영상을 알려 주세요. ${sb?'운영진이 확인하면 행성에 올라가요.':'이 기기에만 저장돼요.'}</p>
+  <form id="unSf" class="gb"><div class="row"><label class="f">행성<select id="unSp">${P.map(p=>`<option value="${escH(p.id)}"${p.id===pid?' selected':''}>${p.parent?'　└ ':''}${escH(p.name)}${p.date?` (${unDate(p.date)})`:''}</option>`).join('')}</select></label>
+    <label class="f">종류<select id="unSk">${Object.entries(UNI_KIND).map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select></label></div>
+    <label class="f">유튜브 링크<input id="unSu" type="url" inputmode="url" maxlength="300" placeholder="https://youtu.be/…" required></label>
+    <div class="un-prev" id="unSv" hidden></div>
+    <label class="f">제목<input id="unSt" maxlength="100" placeholder="링크를 넣으면 자동으로 채워져요" required></label>
+    <div class="row"><button class="primary" type="submit" id="unSb">🔭 제보하기</button><span class="ad-err" id="unSe"></span></div></form>`)}
+document.addEventListener('input',async e=>{if(e.target.id!=='unSu')return;const id=ytId(e.target.value),pv=$('#unSv');if(!pv)return;
+  if(!id){pv.hidden=true;return}if(pv.dataset.id===id)return;pv.dataset.id=id;pv.hidden=false;pv.innerHTML=`<img src="${unThumb(id)}" alt="">`;
+  const t=$('#unSt');if(!t.value||t.dataset.auto){t.placeholder='제목 불러오는 중…';const ti=await unTitle(id);if(pv.dataset.id!==id)return;if(ti&&(!t.value||t.dataset.auto)){t.value=ti;t.dataset.auto=1}t.placeholder='제목을 적어 주세요'}});
+document.addEventListener('submit',async e=>{if(e.target.id!=='unSf')return;e.preventDefault();const id=ytId($('#unSu').value),title=$('#unSt').value.trim(),pid=$('#unSp').value,kind=$('#unSk').value,msg=$('#unSe'),b=$('#unSb');
+  if(!id){msg.textContent='유튜브 링크를 확인해 주세요';return}if(!title){msg.textContent='제목을 적어 주세요';return}
+  if(UNI.videos.some(v=>v.planet_id===pid&&v.yt===id)){msg.textContent='이미 이 행성에 있는 영상이에요';return}
+  b.disabled=true;msg.textContent='';const nm=String(me.name||'하츄').slice(0,16);
+  try{let row;if(sb){const r=await sb.from('uni_videos').insert({planet_id:pid,yt:id,title,kind,name:nm}).select('id,created_at').single();if(r.error)throw /uni_videos_once|duplicate/.test(r.error.message)?new Error('이미 제보된 영상이에요'):r.error;
+      row={id:r.data.id,planet_id:pid,yt:id,title,kind,sort:999,approved:false,mine:true,n:nm,at:r.data.created_at}}
+    else{row={id:'v'+Date.now(),planet_id:pid,yt:id,title,kind,sort:999,approved:true,mine:true,n:nm,at:new Date().toISOString()};store.set('jc_uni_v',[...unOff().v,row])}
+    UNI.videos.push(row);SFX.done&&SFX.done();
+    $('#sheetBody').innerHTML=`<div class="un-thx"><span>📡</span><b>관측 기록을 보냈어요!</b><p>${sb?'운영진이 확인하면 모두에게 보여요. 그 전까지는 나에게만 보여요.':'이 기기의 행성에 추가했어요.'}</p><div class="row" style="justify-content:center"><button class="primary" data-un2="go" data-id="${escH(unP(pid)?.parent||pid)}">행성 보러 가기</button><button class="soft" data-un2="more">하나 더 제보</button></div></div>`}
+  catch(err){msg.textContent=err.message==='이미 제보된 영상이에요'?err.message:errMsg(err);b.disabled=false}});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-un2]');if(!b||!$('#sheetBody').contains(b))return;
+  if(b.dataset.un2==='go'){const id=b.dataset.id;closeSheet();unOpen(id)}else unSubmit(UNI.cur)});
+
+/* ---------- 생일파티 화면에 끼워 넣기: 갤러리 아래 · 가사 위 ---------- */
+{const f=VIEWS.archive,K='<section class="rp-sec" style="padding-top:38px"><div class="rp-big"><div><div class="rp-kick">TO. JUUN</div>';
+  VIEWS.archive=()=>{unEnsure(()=>{if(rpOpen&&(rpView==='archive'||rpView==='uni'))rpRefresh()});const h=f();
+    return h.includes(K)?h.replace(K,()=>unSection()+K):h.replace('<div class="rp-last"',()=>unSection()+'<div class="rp-last"')}}
+rp.addEventListener('click',e=>{const b=e.target.closest('[data-un]');if(!b||!rp.contains(b))return;const a=b.dataset.un;
+  if(a==='planet')unOpen(b.dataset.id);
+  else if(a==='moon')unOpen(b.dataset.id,'pre');
+  else if(a==='tab'){UNI.tab=b.dataset.k;SFX.tick&&SFX.tick();rpRefresh()}
+  else if(a==='play')unPlay(b.dataset.id);
+  else if(a==='submit')unSubmit(b.dataset.id||UNI.cur);
+  else if(a==='bday'){SFX.win&&SFX.win();openSheet('🎂 12.03 생일 별',`<div class="un-thx"><span>🎂</span><b>쭈콩호의 목적지</b><p>모든 행성을 지나 도착한 곳, 12월 3일 쭈니의 생일 별이에요.<br>생일 축하해 주은아! 💗</p></div>`)}});
+
+/* '올린 것도 모두 지우기'에 관측소 기록 포함 */
+{const f=deleteAllMine;deleteAllMine=async function(){await f();
+  if(!sb){try{localStorage.removeItem('jc_uni_v');localStorage.removeItem('jc_uni_m')}catch(e){}UNI.loaded=false;return}
+  await sb.from('uni_hearts').delete().eq('user_id',uid);await sb.from('uni_meteors').delete().eq('user_id',uid);await sb.from('uni_videos').delete().eq('user_id',uid).eq('approved',false);UNI.loaded=false}}
+
+/* ---------- 운영진: '관측소' 탭 ---------- */
+AD_TABS.splice(Math.max(0,AD_TABS.findIndex(t=>t[0]==='site')),0,['uni','관측소']);
+{const f=adGo;adGo=async function(tab){if(tab!=='uni')return f(tab);AD.tab=tab;AD.msg='';
+  adm.innerHTML=`<div class="adw">${adHead('<button class="ad-link" data-ad="logout">로그아웃</button>')}<div class="ad-tabs">${AD_TABS.map(([k,l])=>`<button class="${k===tab?'on':''}" data-ad="tab" data-k="${k}">${l}</button>`).join('')}</div><div id="adBody"><p class="ad-empty">불러오는 중…</p></div></div>`;
+  adUni()}}
+const AU={sec:'pend',pid:null,bulk:[],mets:null};
+async function adUni(){const[p,v]=await Promise.all([sb.from('uni_planets').select('*').order('sort').order('date'),sb.from('uni_videos').select('*').order('sort').order('created_at').limit(3000)]);
+  if(p.error||v.error){$('#adBody').innerHTML=`<p class="ad-err">관측소를 불러오지 못했어요: ${escH((p.error||v.error).message)}</p><p class="ad-note">Supabase SQL Editor에서 universe.sql을 실행해 주세요.</p>`;return}
+  AD.uniP=p.data;AD.uniV=v.data;if(!AU.pid||!AD.uniP.some(x=>x.id===AU.pid))AU.pid=AD.uniP[0]?.id||null;UNI.loaded=false;adUniRender()}
+const auPn=id=>(AD.uniP.find(p=>p.id===id)||{}).name||id;
+function adUniRender(){const pend=AD.uniV.filter(v=>!v.approved),S=AU.sec;
+  const nav=`<div class="ad-hpm un-adnav">${[['pend',`제보 확인${pend.length?` (${pend.length})`:''}`],['add','영상 넣기'],['planet','행성 · 영상 관리'],['met','유성 관리']].map(([k,l])=>`<button class="${k===S?'on':''}" data-au="sec" data-k="${k}">${l}</button>`).join('')}</div>`;
+  let body='';
+  if(S==='pend')body=pend.length?`<div class="ad-list">${pend.map(v=>`<div class="ad-row"><a class="ad-im un-adim" href="https://youtu.be/${v.yt}" target="_blank" rel="noopener"><img src="${unThumb(v.yt)}" alt="" loading="lazy"></a><div class="ad-tx">
+      <div class="ad-meta"><b>${escH(v.name||'대원')}</b> · ${kstStr(v.created_at)}</div><div><b>${escH(v.title)}</b></div><div><small>${escH(auPn(v.planet_id))} · ${UNI_KIND[v.kind]}</small></div></div>
+      <div class="ad-act"><button data-au="ok" data-id="${v.id}">승인</button><button class="ad-del" data-au="vdel" data-id="${v.id}">삭제</button></div></div>`).join('')}</div>`:'<p class="ad-empty">확인할 제보가 없어요</p>';
+  else if(S==='add')body=`<div class="ad-hp un-ad"><b>영상 한꺼번에 넣기</b><p class="ad-note" style="margin:0">유튜브 링크를 한 줄에 하나씩 붙여 넣으세요. 제목은 자동으로 불러와요. 링크 뒤에 <b>| 제목</b>을 붙이면 그 제목으로 들어가요.</p>
+      <div class="un-adr"><select id="auP">${AD.uniP.map(p=>`<option value="${escH(p.id)}"${p.id===AU.pid?' selected':''}>${p.parent?'└ ':''}${escH(p.name)}</option>`).join('')}</select>
+      <select id="auK">${Object.entries(UNI_KIND).map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select></div>
+      <textarea id="auT" rows="6" placeholder="https://youtu.be/xxxxxxxxxxx&#10;https://www.youtube.com/watch?v=xxxxxxxxxxx | 음악방송 데뷔 무대"></textarea>
+      <div class="ad-hpm"><button data-au="parse">불러오기</button><span class="ad-note" id="auMsg"></span></div>
+      ${AU.bulk.length?`<div class="un-bulk">${AU.bulk.map((b,i)=>`<div class="un-bi"><img src="${unThumb(b.yt)}" alt=""><input data-bi="${i}" value="${escH(b.title)}" maxlength="100" placeholder="제목"><select data-bk="${i}">${Object.entries(UNI_KIND).map(([k,l])=>`<option value="${k}"${k===b.kind?' selected':''}>${l}</option>`).join('')}</select><button class="ad-del" data-au="bx" data-i="${i}" aria-label="빼기">✕</button></div>`).join('')}</div>
+      <div class="ad-hpm"><button class="on" data-au="bulkgo">${AU.bulk.length}개 모두 넣기 → ${escH(auPn(AU.bulk[0].planet_id))}</button></div>`:''}</div>`;
+  else if(S==='planet'){const p=AD.uniP.find(x=>x.id===AU.pid),V=p?AD.uniV.filter(v=>v.planet_id===p.id&&v.approved):[];
+    body=`<div class="un-adr" style="margin-bottom:10px"><select id="auSel">${AD.uniP.map(x=>`<option value="${escH(x.id)}"${x.id===AU.pid?' selected':''}>${x.parent?'└ ':''}${escH(x.name)}${x.active?'':' (숨김)'}</option>`).join('')}</select><button class="ad-add" data-au="pnew">+ 새 행성</button></div>
+    ${p?`<form class="ad-hp un-ad" id="auPf"><b>행성 정보</b>
+      <div class="un-adg"><label>이름<input name="name" value="${escH(p.name)}" maxlength="24" required></label><label>작은 글씨<input name="sub" value="${escH(p.sub||'')}" maxlength="30"></label>
+      <label>발매일<input name="date" type="date" value="${escH(p.date||'')}"></label><label>색<input name="color" type="color" value="${escH(p.color)}"></label>
+      <label>순서<input name="sort" type="number" value="${p.sort}"></label><label>위성이면 도는 행성<select name="parent"><option value="">— 행성 —</option>${AD.uniP.filter(x=>x.id!==p.id&&!x.parent).map(x=>`<option value="${escH(x.id)}"${x.id===p.parent?' selected':''}>${escH(x.name)}</option>`).join('')}</select></label></div>
+      <label>소개 (120자)<input name="descr" value="${escH(p.descr||'')}" maxlength="120"></label>
+      <label class="un-ck"><input name="active" type="checkbox"${p.active?' checked':''}> 생일파티에 보이기</label>
+      <div class="ad-hpm"><button class="on" type="submit">행성 저장</button><button type="button" class="ad-del" data-au="pdel">행성 삭제</button><span class="ad-note" id="auPm"></span></div></form>
+    <h3 class="un-adh">관측 기록 ${V.length}개 <small>위아래로 순서를 바꿀 수 있어요</small></h3>
+    ${V.length?`<div class="ad-list">${V.map((v,i)=>`<div class="ad-row"><a class="ad-im un-adim" href="https://youtu.be/${v.yt}" target="_blank" rel="noopener"><img src="${unThumb(v.yt)}" alt="" loading="lazy"></a><div class="ad-tx un-ad">
+      <input data-vt="${v.id}" value="${escH(v.title)}" maxlength="100"><div class="un-adr"><select data-vk="${v.id}">${Object.entries(UNI_KIND).map(([k,l])=>`<option value="${k}"${k===v.kind?' selected':''}>${l}</option>`).join('')}</select>
+      <select data-vp="${v.id}">${AD.uniP.map(x=>`<option value="${escH(x.id)}"${x.id===v.planet_id?' selected':''}>${escH(x.name)}</option>`).join('')}</select></div><small>${v.name?`제보 ${escH(v.name)} · `:''}${kstStr(v.created_at)}</small></div>
+      <div class="ad-act"><button data-au="up" data-i="${i}"${i?'':' disabled'}>↑</button><button data-au="down" data-i="${i}"${i<V.length-1?'':' disabled'}>↓</button><button data-au="vsave" data-id="${v.id}">저장</button><button class="ad-del" data-au="vdel" data-id="${v.id}">삭제</button></div></div>`).join('')}</div>`:'<p class="ad-empty">아직 영상이 없어요. ‘영상 넣기’에서 넣어 주세요</p>'}`:'<p class="ad-empty">행성이 없어요</p>'}`}
+  else body=AU.mets?(AU.mets.length?`<div class="ad-list">${AU.mets.map(m=>{const v=AD.uniV.find(x=>x.id===m.video_id);return`<div class="ad-row${m.approved?'':' off'}"><div class="ad-tx"><div class="ad-meta"><b>${escH(m.name)}</b> · ${kstStr(m.created_at)}${m.approved?'':' · <em>숨김</em>'}</div>
+      <div><b>${unTime(m.t)}</b> ${escH(m.memo)}</div><div><small>${escH(v?v.title:'')}${v?` · ${escH(auPn(v.planet_id))}`:''}</small></div></div>
+      <div class="ad-act"><button data-au="mhide" data-id="${m.id}">${m.approved?'숨기기':'보이기'}</button><button class="ad-del" data-au="mdel" data-id="${m.id}">삭제</button></div></div>`}).join('')}</div>`:'<p class="ad-empty">아직 유성이 없어요</p>'):'<p class="ad-empty">불러오는 중…</p>';
+  $('#adBody').innerHTML=`<div class="ad-bar"><span>행성 ${AD.uniP.length} · 관측 기록 ${AD.uniV.filter(v=>v.approved).length} · 확인 대기 ${pend.length}</span></div>${nav}${body}`;
+  if(S==='met'&&!AU.mets)sb.from('uni_meteors').select('*').order('created_at',{ascending:false}).limit(300).then(r=>{AU.mets=r.data||[];if(AD.tab==='uni'&&AU.sec==='met')adUniRender()})}
+adm.addEventListener('change',e=>{if(AD.tab!=='uni'||!AD.uniP)return;const t=e.target;
+  if(t.id==='auSel'||t.id==='auP'){AU.pid=t.value;if(t.id==='auSel')adUniRender();else AU.bulk.forEach(b=>b.planet_id=t.value),adUniRender()}
+  else if(t.dataset.bk)AU.bulk[+t.dataset.bk].kind=t.value});
+adm.addEventListener('input',e=>{if(AD.tab==='uni'&&e.target.dataset.bi)AU.bulk[+e.target.dataset.bi].title=e.target.value});
+adm.addEventListener('submit',async e=>{if(e.target.id!=='auPf')return;e.preventDefault();const F=new FormData(e.target),m=$('#auPm');
+  const row={name:F.get('name').trim(),sub:F.get('sub').trim(),date:F.get('date')||null,color:F.get('color'),sort:+F.get('sort')||0,parent:F.get('parent')||null,descr:F.get('descr').trim(),active:!!F.get('active')};
+  const r=await sb.from('uni_planets').update(row).eq('id',AU.pid);if(r.error){m.textContent=r.error.message;return}Object.assign(AD.uniP.find(x=>x.id===AU.pid),row);AD.uniP.sort((a,b)=>a.sort-b.sort);UNI.loaded=false;adUniRender();$('#auPm')&&($('#auPm').textContent='저장했어요')});
+adm.addEventListener('click',async e=>{if(AD.tab!=='uni'||!AD.uniP)return;const b=e.target.closest('[data-au]');if(!b)return;const a=b.dataset.au,id=b.dataset.id,V=AD.uniV.find(x=>x.id===id);
+  const done=()=>{UNI.loaded=false;adUniRender()};
+  if(a==='sec'){AU.sec=b.dataset.k;if(AU.sec==='met')AU.mets=null;adUniRender()}
+  else if(a==='ok'){const mx=Math.max(0,...AD.uniV.filter(x=>x.planet_id===V.planet_id&&x.approved).map(x=>x.sort));const r=await sb.from('uni_videos').update({approved:true,sort:mx+1}).eq('id',id);if(r.error)return alert(r.error.message);V.approved=true;V.sort=mx+1;done()}
+  else if(a==='vdel'){if(!b.dataset.sure){b.dataset.sure=1;b.textContent='한 번 더';return}const r=await sb.from('uni_videos').delete().eq('id',id);if(r.error)return alert(r.error.message);AD.uniV=AD.uniV.filter(x=>x.id!==id);done()}
+  else if(a==='vsave'){const t=adm.querySelector(`[data-vt="${id}"]`).value.trim(),k=adm.querySelector(`[data-vk="${id}"]`).value,p=adm.querySelector(`[data-vp="${id}"]`).value;if(!t)return alert('제목을 적어 주세요');
+    const r=await sb.from('uni_videos').update({title:t,kind:k,planet_id:p}).eq('id',id);if(r.error)return alert(/uni_videos_once/.test(r.error.message)?'그 행성에 이미 같은 영상이 있어요':r.error.message);Object.assign(V,{title:t,kind:k,planet_id:p});b.textContent='저장됨 ✓';UNI.loaded=false;if(p!==AU.pid)adUniRender()}
+  else if(a==='up'||a==='down'){const L=AD.uniV.filter(v=>v.planet_id===AU.pid&&v.approved),i=+b.dataset.i,j=a==='up'?i-1:i+1;if(!L[j])return;[L[i],L[j]]=[L[j],L[i]];
+    L.forEach((v,k)=>v.sort=k+1);adm.querySelectorAll('[data-au=up],[data-au=down]').forEach(x=>x.disabled=true);
+    const R=await Promise.all(L.map(v=>sb.from('uni_videos').update({sort:v.sort}).eq('id',v.id)));const er=R.find(r=>r.error);if(er)alert(er.error.message);AD.uniV.sort((a,b)=>a.sort-b.sort);done()}
+  else if(a==='pnew'){const nm=prompt('새 행성 이름 (예: NEW ALBUM)');if(!nm||!nm.trim())return;const nid=('p'+Date.now().toString(36)).slice(0,24);
+    const r=await sb.from('uni_planets').insert({id:nid,name:nm.trim().slice(0,24),sort:Math.max(0,...AD.uniP.map(x=>x.sort))+1,color:'#a98bff',active:false}).select().single();if(r.error)return alert(r.error.message);
+    AD.uniP.push(r.data);AU.pid=nid;done()}
+  else if(a==='pdel'){const p=AD.uniP.find(x=>x.id===AU.pid),n=AD.uniV.filter(v=>v.planet_id===AU.pid).length;if(!confirm(`'${p.name}' 행성을 지울까요?${n?` 영상 ${n}개와 유성도 함께 지워져요.`:''}`))return;
+    const r=await sb.from('uni_planets').delete().eq('id',AU.pid);if(r.error)return alert(r.error.message);AD.uniP=AD.uniP.filter(x=>x.id!==AU.pid);AD.uniV=AD.uniV.filter(v=>v.planet_id!==AU.pid);AU.pid=AD.uniP[0]?.id||null;done()}
+  else if(a==='parse'){const pid=$('#auP').value,kind=$('#auK').value,msg=$('#auMsg'),lines=$('#auT').value.split('\n').map(s=>s.trim()).filter(Boolean),seen=new Set(AU.bulk.map(x=>x.yt));let bad=0,dup=0;
+    const add=[];for(const ln of lines){const[u,...t]=ln.split('|'),y=ytId(u);if(!y){bad++;continue}if(seen.has(y)||AD.uniV.some(v=>v.planet_id===pid&&v.yt===y)){dup++;continue}seen.add(y);add.push({yt:y,title:t.join('|').trim().slice(0,100),kind,planet_id:pid})}
+    if(!add.length){msg.textContent=`넣을 링크가 없어요${bad?` · 링크가 아닌 줄 ${bad}개`:''}${dup?` · 이미 있는 영상 ${dup}개`:''}`;return}
+    b.disabled=true;msg.textContent='제목 불러오는 중…';await Promise.all(add.filter(x=>!x.title).map(async x=>{x.title=await unTitle(x.yt)}));
+    AU.bulk.push(...add);AU.bulk.forEach(x=>x.planet_id=pid);adUniRender();$('#auMsg').textContent=`${add.length}개 불러왔어요${bad?` · 링크가 아닌 줄 ${bad}개`:''}${dup?` · 이미 있는 영상 ${dup}개는 뺐어요`:''}${add.some(x=>!x.title)?' · 제목을 못 불러온 건 직접 적어 주세요':''}`}
+  else if(a==='bx'){AU.bulk.splice(+b.dataset.i,1);adUniRender()}
+  else if(a==='bulkgo'){if(AU.bulk.some(x=>!x.title.trim()))return alert('제목이 빈 영상이 있어요');b.disabled=true;let mx=Math.max(0,...AD.uniV.filter(x=>x.planet_id===AU.bulk[0].planet_id).map(x=>x.sort));
+    const r=await sb.from('uni_videos').insert(AU.bulk.map(x=>({planet_id:x.planet_id,yt:x.yt,title:x.title.trim(),kind:x.kind,approved:true,sort:++mx}))).select();
+    if(r.error){b.disabled=false;return alert(/uni_videos_once/.test(r.error.message)?'이미 들어 있는 영상이 섞여 있어요':r.error.message)}
+    AD.uniV.push(...r.data);const n=AU.bulk.length;AU.bulk=[];AU.sec='planet';done();setTimeout(()=>alert(`${n}개 넣었어요`),50)}
+  else if(a==='mhide'||a==='mdel'){const m=AU.mets.find(x=>x.id===id);if(a==='mdel'&&!b.dataset.sure){b.dataset.sure=1;b.textContent='한 번 더';return}
+    const r=a==='mdel'?await sb.from('uni_meteors').delete().eq('id',id):await sb.from('uni_meteors').update({approved:!m.approved}).eq('id',id);if(r.error)return alert(r.error.message);
+    if(a==='mdel')AU.mets=AU.mets.filter(x=>x.id!==id);else m.approved=!m.approved;done()}});
+/* =====================================================================
    휴대폰 · 브라우저 '뒤로가기'를 사이트 안에서 한 단계씩 처리해요
    창이 떠 있으면 창 닫기 → 가사 · 교신 · 직캠 · 라운지 · 레코드샵 전체 보기면 생일파티로 → 생일파티면 행성 맵으로
    (맵에서 한 번 더 누르면 원래처럼 사이트를 나가요)
    ===================================================================== */
-{let guard=false;const SUB=new Set(['lyrics','msgs','cams','lounge','cds','gallery']);
+{let guard=false;const SUB=new Set(['lyrics','msgs','cams','lounge','cds','gallery','uni']);
   const deep=()=>modalOpen||rpOpen;
   const arm=()=>{if(!guard&&deep()){try{history.pushState({jc:1},'')}catch(e){}guard=true}};
   addEventListener('popstate',()=>{guard=false;
