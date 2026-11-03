@@ -637,25 +637,32 @@ img{max-width:100%}
 .cd-item small{font-size:12px;color:#cfc4ea;margin-top:-3px;overflow-wrap:anywhere;padding-right:20px}
 .cd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:18px 10px;background:#140d2c;border-radius:12px;padding:16px 12px}
 .cd-grid .cd-item{width:auto}
-/* 보기: 케이스가 열려요 */
-.cdv-wrap{--s:min(42vw,215px);display:flex;justify-content:center;perspective:1100px;padding:6px 0 4px;overflow:hidden}
-.cdv{position:relative;width:calc(var(--s)*2);height:var(--s);transform:translateX(calc(var(--s)*-.5));transition:transform .8s cubic-bezier(.3,1,.4,1);cursor:pointer;transform-style:preserve-3d}
+/* 보기: 앞면을 누르면 열고 닫혀요 · 뒤집으면 뒷면 */
+.cdv-wrap{--s:min(40vw,205px);display:flex;justify-content:center;perspective:1200px;padding:22px 0;overflow:hidden;border-radius:12px;background:radial-gradient(120% 90% at 60% 40%,#251a55 0%,#0b0820 70%);position:relative}
+.cdv-wrap::before{content:"";position:absolute;inset:0;background-image:radial-gradient(1px 1px at 12% 20%,#fff9,transparent),radial-gradient(1px 1px at 78% 14%,#fff8,transparent),radial-gradient(1.5px 1.5px at 40% 80%,#fffa,transparent),radial-gradient(1px 1px at 90% 70%,#fff7,transparent),radial-gradient(1px 1px at 25% 60%,#fff6,transparent),radial-gradient(1.5px 1.5px at 62% 30%,#fff9,transparent);pointer-events:none}
+.cdv{position:relative;width:calc(var(--s)*2);height:var(--s);transform:translateX(calc(var(--s)*-.5));transition:transform .8s cubic-bezier(.3,1,.4,1);transform-style:preserve-3d}
 .cdv.open{transform:none}
-.cdv-base{position:absolute;left:var(--s);top:0;width:var(--s);height:var(--s);border-radius:6px;background:rgba(236,230,248,.9);box-shadow:0 10px 24px rgba(42,31,61,.28),inset 0 0 0 2px rgba(255,255,255,.9)}
-.cdv-tray{position:absolute;inset:6%;border-radius:4px;background:radial-gradient(circle,#fff 0 9%,#e4dcf2 9.5% 46%,#d6cdea 46.5%);box-shadow:inset 0 0 0 1px rgba(42,31,61,.12)}
-.cdv-disc{position:absolute;left:7%;top:7%;width:86%;height:86%;border-radius:50%;filter:drop-shadow(0 4px 8px rgba(42,31,61,.3));transition:transform 1s cubic-bezier(.3,1.2,.5,1)}
+.cdv-flip{position:absolute;inset:0;transform-style:preserve-3d;transform-origin:75% 50%;transition:transform .8s cubic-bezier(.4,.9,.35,1)}
+.cdv.flip .cdv-flip{transform:rotateY(180deg)}
+.cdv-base{position:absolute;left:var(--s);top:0;width:var(--s);height:var(--s);border-radius:6px;background:rgba(255,255,255,.1);box-shadow:0 14px 30px rgba(0,0,0,.5),inset 0 0 0 1.5px rgba(255,255,255,.55);backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.cdv-tray{position:absolute;inset:6%;border-radius:4px;background-image:radial-gradient(circle,rgba(255,255,255,.75) 0 9%,rgba(255,255,255,.18) 9.5% 46%,rgba(0,0,0,.25) 46.5%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
+/* CD는 제자리에서 돌고(rotate), 꺼낼 때는 옆으로만 움직여요(translate) */
+.cdv-disc{position:absolute;left:7%;top:7%;width:86%;height:86%;border-radius:50%;cursor:pointer;filter:drop-shadow(0 4px 8px rgba(42,31,61,.3));translate:0 0;scale:1;transition:translate .7s cubic-bezier(.3,1.4,.5,1),scale .7s cubic-bezier(.3,1.4,.5,1),filter .7s}
 .cdv.open .cdv-disc{animation:cdSpin 3.2s linear .9s infinite}
-.cdv.out .cdv-disc{transform:translateX(42%)}
-@keyframes cdSpin{to{rotate:360deg}}
-.cdv-lid{position:absolute;left:var(--s);top:0;width:var(--s);height:var(--s);transform-origin:left center;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.4,.9,.35,1)}
+.cdv.out .cdv-disc{translate:0 -11%;scale:1.07;filter:drop-shadow(0 14px 14px rgba(42,31,61,.35))}
+@keyframes cdSpin{from{rotate:0deg}to{rotate:360deg}}
+.cdv-lid{position:absolute;left:var(--s);top:0;width:var(--s);height:var(--s);transform-origin:left center;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.4,.9,.35,1);cursor:pointer}
 .cdv.open .cdv-lid{transform:rotateY(-180deg)}
-.cdv-lid .f,.cdv-lid .b{position:absolute;inset:0;border-radius:6px;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:#fbf7ef;box-shadow:0 10px 24px rgba(42,31,61,.28)}
+.cdv-lid .f,.cdv-lid .b,.cdv-back{position:absolute;inset:0;border-radius:6px;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:#141a3a;box-shadow:0 14px 30px rgba(0,0,0,.5)}
 .cdv-lid .b{transform:rotateY(180deg);display:flex;align-items:center;justify-content:center}
-.cdv-lid img{width:100%;height:100%;object-fit:cover;display:block}
+.cdv.flip .cdv-lid .b{visibility:hidden;transition:visibility 0s .35s}
+.cdv-back{inset:0 auto auto var(--s);width:var(--s);height:var(--s);transform:rotateY(180deg) translateZ(2px);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.cdv-lid img,.cdv-back img{width:100%;height:100%;object-fit:cover;display:block}
 .cdv-lid .f::before{content:"";position:absolute;left:0;top:0;bottom:0;width:7%;z-index:1;background:linear-gradient(90deg,rgba(255,255,255,.9),rgba(220,214,232,.65));box-shadow:inset -1px 0 0 rgba(42,31,61,.2)}
-.cdv-lid .f::after,.cdv-lid .b::after{content:"";position:absolute;inset:0;border-radius:6px;background:linear-gradient(125deg,rgba(255,255,255,.4),rgba(255,255,255,0) 30%,rgba(255,255,255,0) 66%,rgba(255,255,255,.18) 74%,rgba(255,255,255,0) 82%);box-shadow:inset 0 0 0 2px rgba(255,255,255,.85);pointer-events:none}
-.cdv-load{font-size:12px;color:#9a8db0}
-@media (prefers-reduced-motion:reduce){.cdv,.cdv-lid,.cdv-disc{transition:none}.cdv.open .cdv-disc{animation:none}}
+.cdv-lid .f::after,.cdv-lid .b::after,.cdv-back::after{content:"";position:absolute;inset:0;border-radius:6px;background:linear-gradient(125deg,rgba(255,255,255,.4),rgba(255,255,255,0) 30%,rgba(255,255,255,0) 66%,rgba(255,255,255,.18) 74%,rgba(255,255,255,0) 82%);box-shadow:inset 0 0 0 2px rgba(255,255,255,.85);pointer-events:none}
+.cdv-load{font-size:12px;color:#b3a5dc}
+.cdv-btns{justify-content:center}.cdv-btns button{flex:1;max-width:180px}
+@media (prefers-reduced-motion:reduce){.cdv,.cdv-flip,.cdv-lid,.cdv-disc{transition:none}.cdv.open .cdv-disc{animation:none}}
 .cd-meta{display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center}
 .cd-meta b{font-family:var(--display);font-weight:400;font-size:20px;overflow-wrap:anywhere}.cd-meta span{font-size:13px;color:#7a6d92}
 .cd-tl{margin:0;padding:10px 12px;list-style:none;background:#fff;border:1.5px solid #ece2f2;border-radius:10px;display:flex;flex-direction:column;gap:6px}
@@ -663,21 +670,32 @@ img{max-width:100%}
 .cd-tl i{flex:none;font-style:normal;font-family:"Anton",sans-serif;color:var(--berry);width:22px}
 .cd-tl b{font-family:var(--display);font-weight:400;overflow-wrap:anywhere}.cd-tl span{font-size:12px;color:#9a8db0;overflow-wrap:anywhere}
 .cd-tl li.hid{background:#fff4d6;border-radius:6px;padding:4px 6px;margin:2px -6px 0}.cd-tl li.hid i{color:#c48a00}
-.cd-note{margin:0;background:#fff;border:1.5px solid #ece2f2;border-radius:10px;padding:10px 14px;font-family:"Gaegu",var(--body);font-size:18px;line-height:1.45;overflow-wrap:anywhere;white-space:pre-line}
-.cd-note small{display:block;font-family:var(--display);font-size:13px;color:var(--berry-deep)}
 .sheet .cd-del{background:#ffe3ea;color:var(--berry-deep)}
 /* 만들기 */
-.mk-prev{display:block;width:100%;height:auto;aspect-ratio:8/5;border-radius:10px;background:#efe6ff}
-.mk-f h4{margin:8px 0 0;font-family:var(--display);font-weight:400;font-size:16px}
+.mk-stage{display:flex;justify-content:center;background:radial-gradient(120% 90% at 60% 40%,#251a55 0%,#0b0820 70%);border-radius:12px;padding:14px}
+.mk-prev{display:block;width:100%;max-width:340px;height:auto;aspect-ratio:1;border-radius:6px;box-shadow:0 10px 26px rgba(0,0,0,.5)}
+.mk-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.mk-tab{display:flex;flex-direction:column;align-items:center;gap:4px;background:#fff!important;border:2px solid #ece2f2!important;border-radius:10px!important;padding:6px 4px!important;color:var(--ink);font-family:var(--display)!important;font-size:13px}
+.mk-tab canvas{width:100%;max-width:64px;aspect-ratio:1;height:auto;border-radius:4px}
+.mk-tab.on{border-color:var(--ink)!important;box-shadow:0 3px 0 var(--ink)}
+.mk-f h4{margin:6px 0 0;font-family:var(--display);font-weight:400;font-size:16px}
 .mk-f h4 small{font-family:var(--body);font-size:12px;color:#9a8db0;margin-left:4px}
-.mk-ph{align-items:center;flex-wrap:wrap}
+.mk-ph{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .sheet .mk-file{display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:9px 14px;border-radius:8px;font-size:15px}
 .mk-crop{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .mk-crop label{display:flex;flex-direction:column;gap:2px;font-size:12px;color:#7a6d92}
 .sheet .mk-crop input{padding:0;border:none;background:none;accent-color:var(--berry)}
+.mk-ths{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:8px}
+.mk-th{display:flex;flex-direction:column;align-items:center;gap:3px;background:none!important;padding:0!important;color:var(--ink);font-size:11px;font-family:var(--body)}
+.mk-th img{width:100%;aspect-ratio:1;border-radius:8px;border:2px solid rgba(42,31,61,.12);display:block}
+.mk-th.on img{border-color:var(--ink);box-shadow:0 0 0 2px var(--cream),0 0 0 4px var(--ink)}
 .mk-cols{display:flex;flex-wrap:wrap;gap:8px}
-.mk-col{width:34px;height:34px;border-radius:50%!important;padding:0!important;border:2px solid rgba(42,31,61,.15)!important}
+.mk-col{position:relative;width:32px;height:32px;border-radius:50%!important;padding:0!important;border:2px solid rgba(42,31,61,.15)!important;flex:none}
 .mk-col.on{box-shadow:0 0 0 3px var(--cream),0 0 0 5px var(--ink)}
+.mk-pick{display:inline-flex;align-items:center;justify-content:center;cursor:pointer;background:conic-gradient(#ff6f91,#ffd166,#8ff0d2,#9cc4ff,#c4b0ff,#ff6f91)}
+.mk-pick.on{background:var(--c)}
+.mk-pick span{width:18px;height:18px;border-radius:50%;background:#fff;color:var(--ink);font-size:14px;line-height:18px;text-align:center;font-family:var(--display)}
+.mk-pick input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;padding:0;border:none}
 .mk-chk{display:flex;align-items:center;gap:8px;font-size:14px}
 .sheet .mk-chk input{width:20px;height:20px;accent-color:var(--berry)}
 .mk-tr{display:flex;flex-direction:column;gap:6px}
@@ -1068,7 +1086,7 @@ $('#closeBtn').addEventListener('click',closeSheet);
 $('#veil').addEventListener('click',e=>{if(e.target.id==='veil')closeSheet()});
 function hiDPI(c,w,h){const d=Math.min(window.devicePixelRatio||1,2);c.width=w*d;c.height=h*d;const x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);return x}
 let dl=null;try{if(window.claude&&window.claude.use)window.claude.use('downloads').then(x=>{dl=x}).catch(()=>{})}catch(e){}
-const saveUI=(img,name)=>`<div class="row" style="justify-content:center"><button class="soft savebtn" type="button" data-img="${img}" data-name="${name}">이미지 저장하기</button></div><div class="save">저장이 안 되면 이미지를 길게 누르거나(폰) 우클릭(PC)하세요</div>`;
+const saveUI=(img,name)=>'';   // 게임에서는 이미지 저장을 하지 않아요
 $('#sheetBody').addEventListener('click',async e=>{const b=e.target.closest('.savebtn');if(!b)return;const img=document.getElementById(b.dataset.img);if(!img||!img.src.startsWith('data:'))return;
   const tip=b.parentElement.nextElementSibling;
   if(!dl){try{const l=document.createElement('a');l.href=img.src;l.download=b.dataset.name;document.body.append(l);l.click();l.remove();tip.textContent='저장했어요. 안 되면 이미지를 길게 눌러 저장하세요'}catch(err){tip.textContent='이미지를 길게 누르거나 우클릭해서 저장하세요'}return}
@@ -1743,7 +1761,7 @@ function vCover(){const s=myStats(),mon=s.mon?s.mon.img:zzuImg();
     ${s.shot||s.gal?`<div class="rp-cbot">${s.shot?`<div class="rp-pola rp-pola2"><span class="rp-tp" style="top:-9px;left:44px;width:54px;background:#ffd98a;transform:rotate(5deg)"></span><img class="im" src="${s.shot.img}" alt="착륙 인증샷"><span class="rp-hand cap">착륙 인증샷</span></div>`:''}
       ${s.gal?`<div class="rp-gcard"><small>사진관에 건 사진</small><img src="${s.gal.img}" alt=""><b class="rp-hand">「${escH(s.gal.t)}」</b></div>`:''}</div>`:''}
     <div class="rp-hand rp-sign">주은아 생일 축하해!</div></div>
-  <div class="rp-crow"><button data-act="save">이미지로 저장</button><button data-act="share">공유하기</button></div>
+  <div class="rp-crow"><button data-act="share">공유하기</button></div>
   <button class="rp-cta" data-go="archive">${doneCount()===5?'탐사 성공 기념 · 쭈니 생일 축하파티':'쭈니 생일 축하파티'}</button></div>`}
 
 function vArchive(){
@@ -1987,7 +2005,7 @@ async function shareCard(){const u=await coverCard();
   try{const f=new File([dataBlob(u)],'1203-탐사일지.png',{type:'image/png'});
     if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'행성 #1203 탐사 일지',text:ARCHIVE.tag});return}}
   catch(e){if(e&&e.name==='AbortError')return}
-  showCard(u,`이 화면에서는 바로 공유가 안 돼서 이미지로 저장해 올려 주세요. ${escH(ARCHIVE.tag)}`)}
+  showCard(u,`이 화면에서는 바로 공유가 안 돼요. 휴대폰에서 다시 눌러 주세요. ${escH(ARCHIVE.tag)}`)}
 
 /* 눌렀을 때 */
 rp.addEventListener('click',async e=>{const b=e.target.closest('[data-go],[data-act]');if(!b||!rp.contains(b))return;
@@ -2825,33 +2843,45 @@ adm.addEventListener('change',async e=>{const el=e.target;if(!el.dataset||!(el.d
 
 /* =====================================================================
    쭈니 CD · JUUN RECORDS
-   대원이 앞표지 · CD 알판 · 트랙리스트를 꾸며 "발매"하면 생일파티의 레코드샵에 꽂혀요
-   앨범 이미지와 키링 제작용 이미지를 저장할 수 있고, 운영진은 전체를 ZIP으로 받아요
+   앞면 · CD 알판 · 안쪽 · 뒷면(트랙리스트)을 각각 꾸며 "발매"하면 생일파티의 레코드샵에 꽂혀요
+   케이스를 누르면 열리고 닫히고, 뒤집으면 뒷면 트랙리스트가 보여요
    서버가 없으면(미리보기) 이 기기에만 저장해요
    ===================================================================== */
 const TAU=Math.PI*2;
-const CD={list:[],loaded:false,loading:false,missing:false,img:new Map()};
-const CD_COL={
-  berry:{bg:'#ff8fab',ink:'#2a1f3d',acc:'#fff7f0',n:'딸기'},lilac:{bg:'#c4b0ff',ink:'#2a1f3d',acc:'#ffffff',n:'라일락'},
-  mint:{bg:'#8ff0d2',ink:'#1d3b34',acc:'#ffffff',n:'민트'},butter:{bg:'#ffd166',ink:'#3a2a10',acc:'#ffffff',n:'버터'},
-  sky:{bg:'#9cc4ff',ink:'#14264d',acc:'#ffffff',n:'하늘'},navy:{bg:'#2b3a8f',ink:'#fff7f0',acc:'#ffd166',n:'네이비'},
-  night:{bg:'#1d1530',ink:'#fff7f0',acc:'#c4b0ff',n:'밤하늘'},cream:{bg:'#fff3e2',ink:'#2a1f3d',acc:'#ff6f91',n:'크림'}};
-const CD_TPL=[['photo','사진 가득'],['frame','액자'],['type','타이포']];
-const CD_DISC=[['photo','표지 사진'],['solid','단색'],['glitter','반짝이'],['star','별무늬']];
-const CD_FONT={d:'"Jua","Gowun Dodum",sans-serif',b:'"Gowun Dodum",sans-serif',n:'"Anton",sans-serif',h:'"Gaegu","Gowun Dodum",sans-serif'};
-const cdC=st=>CD_COL[st&&st.c]||CD_COL.berry;
+const CD={list:[],loaded:false,loading:false,missing:false,img:new Map(),noInner:false};
+const CD_PAL=[['#0b0b12','블랙'],['#141a3a','미드나잇'],['#1e2a6e','네이비'],['#2f4bd8','코발트'],['#3d7bff','일렉트릭'],['#36d1dc','시안'],['#36f5b0','오로라'],['#b9a6ff','라벤더'],
+  ['#7b4dff','바이올렛'],['#ff3d9a','마젠타'],['#ff8fab','핑크'],['#ff5a4d','레드'],['#e6c068','골드'],['#c9ccd6','실버'],['#f5f5f7','화이트'],['#5b5f6b','건메탈']];
+const CD_TH=[['deep','딥스페이스'],['nebula','성운'],['aurora','오로라'],['galaxy','은하수'],['planet','행성'],['orbit','궤도'],['constel','별자리'],
+  ['eclipse','일식'],['grid','레트로 그리드'],['hud','HUD'],['holo','홀로그램'],['chrome','크롬'],['grain','그레인'],['plain','단색']];
+const CD_TPL=[['photo','사진 가득'],['frame','미니멀'],['type','타이포']];
+const CD_ITPL=[['letter','라이너 노트'],['photo','사진'],['poster','포스터']];
+const CD_PART=[['f','앞면'],['d','CD 알판'],['i','안쪽'],['b','뒷면']];
+const CD_OLD={berry:'#ff8fab',lilac:'#c4b0ff',mint:'#8ff0d2',butter:'#ffd166',sky:'#9cc4ff',navy:'#2b3a8f',night:'#1d1530',cream:'#fff3e2'};
 const cdRnd=seed=>{let a=0;for(const ch of String(seed))a=(a*31+ch.charCodeAt(0))|0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}};
 const cdImgUrl=p=>!p?null:/^(https?:|data:|blob:)/.test(p)?p:pubUrl(p);
+const cdHex=v=>/^#[0-9a-f]{6}$/i.test(v||'')?v.toLowerCase():CD_OLD[v]||null;
+const cdRgb=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+const cdMix=(h,t,k)=>{const a=cdRgb(h),b=cdRgb(t);return'#'+a.map((v,i)=>Math.round(v+(b[i]-v)*k).toString(16).padStart(2,'0')).join('')};
+const cdLum=h=>{const[r,g,b]=cdRgb(h).map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)});return .2126*r+.7152*g+.0722*b};
+const cdInk=h=>cdLum(h)>.42?'#2a1f3d':'#fff7f0';
+const cdCrop=c=>{c=c||{};const r=(v,a,b,d)=>Math.round(Math.max(a,Math.min(b,isFinite(+v)?+v:d))*100)/100;return{z:r(c.z,1,3,1),ox:r(c.ox,-1,1,0),oy:r(c.oy,-1,1,0)}};
+const cdThOk=t=>CD_TH.some(x=>x[0]===t);
+/* 예전에 만든 CD(첫 버전)도 그대로 읽어요 */
+function cdNorm(s){s=s||{};const d=s.d||{},i=s.in||{},b=s.b||{},c=cdHex(s.c)||'#141a3a';
+  return{tpl:['photo','frame','type'].includes(s.tpl)?s.tpl:'photo',c,th:cdThOk(s.th)?s.th:'deep',s19:s.s19!==false,crop:cdCrop(s.crop),
+    d:{src:d.src==='theme'||d.src==='photo'?d.src:(s.disc&&s.disc!=='photo'?'theme':'photo'),th:cdThOk(d.th)?d.th:'nebula',c:cdHex(d.c)||c,crop:cdCrop(d.crop||s.crop)},
+    in:{tpl:['letter','photo','poster'].includes(i.tpl)?i.tpl:'letter',th:cdThOk(i.th)?i.th:'deep',c:cdHex(i.c)||'#1e2a6e',crop:cdCrop(i.crop)},
+    b:{th:cdThOk(b.th)?b.th:'deep',c:cdHex(b.c)||'#0b0b12'}}}
 
 /* ---------- 그리기 도구 ---------- */
 function cdLoad(src){if(!src)return Promise.resolve(null);if(CD.img.has(src))return CD.img.get(src);
   const p=new Promise(res=>{const im=new Image();if(/^https?:/.test(src))im.crossOrigin='anonymous';im.onload=()=>res(im);im.onerror=()=>res(null);im.src=src});
   CD.img.set(src,p);return p}
-async function cdFonts(text){if(!document.fonts||!document.fonts.load)return;const t=String(text||'')+'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ#·';
-  try{await Promise.race([Promise.all([`40px ${CD_FONT.d}`,`20px ${CD_FONT.b}`,`40px ${CD_FONT.n}`,`24px ${CD_FONT.h}`].map(f=>document.fonts.load(f,t))),new Promise(r=>setTimeout(r,2500))])}catch(e){}}
+async function cdFonts(text){if(!document.fonts||!document.fonts.load)return;const t=String(text||'')+'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ#·—';
+  try{await Promise.race([Promise.all(['800 40px "Gothic A1"','600 20px "Gothic A1"','400 20px "Gothic A1"','40px "Anton"'].map(f=>document.fonts.load(f,t))),new Promise(r=>setTimeout(r,2500))])}catch(e){}}
 const cdCanvas=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h||w;return c};
 function cdRR(x,X,Y,W,H,r){x.beginPath();x.moveTo(X+r,Y);x.arcTo(X+W,Y,X+W,Y+H,r);x.arcTo(X+W,Y+H,X,Y+H,r);x.arcTo(X,Y+H,X,Y,r);x.arcTo(X,Y,X+W,Y,r);x.closePath()}
-function cdFit(x,text,maxW,size,font,min){let s=size;x.font=`${s}px ${font}`;while(s>min&&x.measureText(text).width>maxW){s-=1;x.font=`${s}px ${font}`}return s}
+function cdFit(x,text,maxW,size,kind,min){let s=size;x.font=fnt(kind,s);while(s>min&&x.measureText(text).width>maxW){s-=1;x.font=fnt(kind,s)}return s}
 function cdClip(x,text,maxW){if(x.measureText(text).width<=maxW)return text;let t=text;while(t.length>1&&x.measureText(t+'…').width>maxW)t=t.slice(0,-1);return t+'…'}
 function cdWrap(x,text,maxW,lines){const out=[];   // 띄어쓰기 단위로 줄을 바꾸고, 너무 긴 단어만 글자 단위로 잘라요
   for(const para of String(text).split('\n')){let cur='';
@@ -2863,122 +2893,199 @@ function cdWrap(x,text,maxW,lines){const out=[];   // 띄어쓰기 단위로 줄
     out.push(cur.trimEnd())}
   while(out.length>1&&!out[out.length-1])out.pop();
   if(out.length>lines){out.length=lines;out[lines-1]=cdClip(x,out[lines-1]+'…',maxW)}return out}
-function cdPhoto(x,img,dx,dy,dw,dh,crop){const c=crop||{},z=Math.max(1,+c.z||1),iw=img.naturalWidth||img.width,ih=img.naturalHeight||img.height;
-  const sc=Math.max(dw/iw,dh/ih)*z,sw=dw/sc,sh=dh/sc,ox=Math.max(-1,Math.min(1,+c.ox||0)),oy=Math.max(-1,Math.min(1,+c.oy||0));
-  const cx=iw/2+ox*(iw-sw)/2,cy=ih/2+oy*(ih-sh)/2;x.drawImage(img,cx-sw/2,cy-sh/2,sw,sh,dx,dy,dw,dh)}
+function cdPhoto(x,img,dx,dy,dw,dh,crop){const c=cdCrop(crop),iw=img.naturalWidth||img.width,ih=img.naturalHeight||img.height;
+  const sc=Math.max(dw/iw,dh/ih)*c.z,sw=dw/sc,sh=dh/sc,cx=iw/2+c.ox*(iw-sw)/2,cy=ih/2+c.oy*(ih-sh)/2;x.drawImage(img,cx-sw/2,cy-sh/2,sw,sh,dx,dy,dw,dh)}
 function cdStar(x,cx,cy,r,ri){x.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?ri:r;x.lineTo(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr)}x.closePath()}
-function cdSparkles(x,S,col,n,rnd){x.fillStyle=col;for(let i=0;i<n;i++){const px=rnd()*S,py=rnd()*S,r=S*(.006+rnd()*.012);cdStar(x,px,py,r,r*.4);x.fill()}}
+function cdHeart(x,cx,cy,s){x.beginPath();x.moveTo(cx,cy+s*.35);x.bezierCurveTo(cx-s*1.1,cy-s*.35,cx-s*.45,cy-s*1.05,cx,cy-s*.45);x.bezierCurveTo(cx+s*.45,cy-s*1.05,cx+s*1.1,cy-s*.35,cx,cy+s*.35);x.closePath()}
 
-/* 앞표지 */
-function cdDrawCover(x,S,d,photo){const C=cdC(d.st),tpl=d.st.tpl||'photo',rnd=cdRnd(d.title+d.name),u=S/100;
-  x.save();x.fillStyle=C.bg;x.fillRect(0,0,S,S);
-  if(tpl==='photo'){
-    if(photo)cdPhoto(x,photo,0,0,S,S,d.st.crop);else cdSparkles(x,S,'rgba(255,255,255,.55)',40,rnd);
-    const g=x.createLinearGradient(0,S*.45,0,S);g.addColorStop(0,'rgba(13,8,32,0)');g.addColorStop(1,'rgba(13,8,32,.72)');x.fillStyle=g;x.fillRect(0,0,S,S);
-    const tg=x.createLinearGradient(0,0,0,S*.18);tg.addColorStop(0,'rgba(13,8,32,.35)');tg.addColorStop(1,'rgba(13,8,32,0)');x.fillStyle=tg;x.fillRect(0,0,S,S*.18);
-    x.fillStyle='#fff';x.textBaseline='alphabetic';const fs=cdFit(x,d.title,S*.86,u*11,CD_FONT.d,u*5);
-    const L=cdWrap(x,d.title,S*.86,2);L.forEach((l,i)=>x.fillText(l,u*7,S-u*14-(L.length-1-i)*fs*1.08));
-    x.font=`${u*4.2}px ${CD_FONT.b}`;x.fillStyle='rgba(255,255,255,.88)';x.fillText(cdClip(x,`by ${d.name} 대원`,S*.8),u*7,S-u*7);
-    x.fillStyle='rgba(255,255,255,.9)';
-  }else if(tpl==='frame'){
-    x.fillStyle='rgba(255,255,255,.18)';for(let i=0;i<60;i++){x.beginPath();x.arc(rnd()*S,rnd()*S,u*(.3+rnd()*.5),0,TAU);x.fill()}
-    const fx=u*12,fy=u*12,fw=u*76,fh=u*58;x.fillStyle='#fff';x.shadowColor='rgba(0,0,0,.18)';x.shadowBlur=u*2;x.shadowOffsetY=u*.8;x.fillRect(fx-u*2,fy-u*2,fw+u*4,fh+u*4);x.shadowColor='transparent';
-    if(photo)cdPhoto(x,photo,fx,fy,fw,fh,d.st.crop);else{x.fillStyle=C.acc==='#ffffff'?'#f4effc':C.acc;x.fillRect(fx,fy,fw,fh);x.fillStyle=C.bg;cdStar(x,S/2,fy+fh/2,u*10,u*4);x.fill()}
-    x.fillStyle=C.ink;x.textAlign='center';const fs=cdFit(x,d.title,S*.8,u*9,CD_FONT.d,u*5);x.fillText(cdClip(x,d.title,S*.84),S/2,u*84);
-    x.font=`${u*4}px ${CD_FONT.b}`;x.globalAlpha=.8;x.fillText(cdClip(x,`by ${d.name} 대원`,S*.8),S/2,u*84+Math.max(fs,u*6)*.9);x.globalAlpha=1;x.textAlign='left';
-    x.fillStyle=C.ink;
-  }else{
-    cdSparkles(x,S,C.ink==='#fff7f0'?'rgba(255,255,255,.5)':'rgba(255,255,255,.75)',26,rnd);
-    x.fillStyle=C.ink;x.textBaseline='top';const fs=cdFit(x,d.title,S*.84,u*17,CD_FONT.d,u*8);
-    const L=cdWrap(x,d.title,S*.84,3);L.forEach((l,i)=>x.fillText(l,u*8,u*15+i*fs*1.02));x.textBaseline='alphabetic';
-    if(photo){x.save();x.translate(S*.66,S*.68);x.rotate(.09);x.fillStyle='#fff';x.shadowColor='rgba(0,0,0,.25)';x.shadowBlur=u*2.5;x.shadowOffsetY=u;
-      x.fillRect(-u*20,-u*20,u*40,u*47);x.shadowColor='transparent';cdPhoto(x,photo,-u*17,-u*17,u*34,u*34,d.st.crop);x.restore()}
-    x.font=`${u*4.2}px ${CD_FONT.b}`;x.fillStyle=C.ink;x.fillText(cdClip(x,`by ${d.name} 대원`,S*.5),u*8,S-u*8);
-    x.fillStyle=C.ink;
-  }
-  x.font=`${u*3.2}px ${CD_FONT.n}`;x.globalAlpha=.9;x.textBaseline='top';x.fillText('JUUN RECORDS',u*6,u*5);x.textAlign='right';x.fillText('#1203',S-u*6,u*5);
-  x.textAlign='left';x.textBaseline='alphabetic';x.globalAlpha=1;
-  if(d.st.s19!==false){x.save();x.translate(S-u*15,tpl==='type'?S-u*15:u*20);x.rotate(-.22);x.fillStyle='#ffd166';x.shadowColor='rgba(0,0,0,.25)';x.shadowBlur=u*1.5;
-    cdStar(x,0,0,u*11,u*8.4);x.fill();x.shadowColor='transparent';x.fillStyle='#2a1f3d';x.textAlign='center';x.font=`${u*6}px ${CD_FONT.n}`;x.fillText('19th',0,u*1);
-    x.font=`${u*2.3}px ${CD_FONT.n}`;x.fillText('BIRTHDAY',0,u*4.2);x.restore()}
+/* ---------- 우주 · 간지 테마 ---------- */
+const CD_DARK=new Set(['deep','nebula','aurora','planet','galaxy','orbit','constel','eclipse','grid','hud']);
+const cdInkOf=(th,col)=>CD_DARK.has(th)?'#f5f5f7':th==='holo'||th==='chrome'?'#14102a':cdInk(col);   // 홀로그램·크롬은 늘 밝은 바탕이라 글씨를 어둡게
+const fnt=(k,s)=>({d:`800 ${s}px "Gothic A1",sans-serif`,m:`600 ${s}px "Gothic A1",sans-serif`,b:`400 ${s}px "Gothic A1",sans-serif`,n:`${s}px "Anton",sans-serif`,h:`700 ${s}px "Gaegu",sans-serif`})[k];
+function cdSp(x,t,X,Y,sp,align){t=String(t);const ch=[...t],ws=ch.map(c=>x.measureText(c).width),tot=ws.reduce((a,b)=>a+b,0)+sp*Math.max(0,ch.length-1);
+  let cx=align==='right'?X-tot:align==='center'?X-tot/2:X;const al=x.textAlign;x.textAlign='left';ch.forEach((c,i)=>{x.fillText(c,cx,Y);cx+=ws[i]+sp});x.textAlign=al;return tot}
+function cdGlow(x,cx,cy,r,col,a){const g=x.createRadialGradient(cx,cy,0,cx,cy,r);g.addColorStop(0,cdA(col,a));g.addColorStop(1,cdA(col,0));x.fillStyle=g;x.fillRect(cx-r,cy-r,r*2,r*2)}
+const cdA=(h,a)=>{const[r,g,b]=cdRgb(h);return`rgba(${r},${g},${b},${a})`};
+function cdStars(x,S,n,rnd,big){for(let i=0;i<n;i++){x.fillStyle=`rgba(255,255,255,${.25+rnd()*.7})`;const s=S/100*(.14+rnd()*.32);x.fillRect(rnd()*S,rnd()*S,s,s)}
+  for(let i=0;i<(big||0);i++){const px=rnd()*S,py=rnd()*S,r=S/100*(.5+rnd()*.9);cdGlow(x,px,py,r*5,'#ffffff',.35);x.fillStyle='#fff';x.fillRect(px-r*2.2,py-r*.12,r*4.4,r*.24);x.fillRect(px-r*.12,py-r*2.2,r*.24,r*4.4)}}
+function cdNoise(x,S,n,rnd,a){for(let i=0;i<n;i++){x.fillStyle=rnd()<.5?`rgba(0,0,0,${a})`:`rgba(255,255,255,${a})`;const s=S/100*.28;x.fillRect(rnd()*S,rnd()*S,s,s)}}
+function cdTheme(x,S,th,col,seed){const rnd=cdRnd(seed+th+col),u=S/100,base=cdMix(col,'#05030f',.82);
+  x.save();
+  if(CD_DARK.has(th)){x.fillStyle=base;x.fillRect(0,0,S,S)}else{x.fillStyle=col;x.fillRect(0,0,S,S)}
+  if(th==='plain')cdNoise(x,S,1400,rnd,.03);
+  else if(th==='deep'){cdGlow(x,S*.28,S*.22,S*.95,col,.38);cdGlow(x,S*.85,S*.9,S*.6,'#7b4dff',.18);cdStars(x,S,280,rnd,5)}
+  else if(th==='nebula'){x.globalCompositeOperation='lighter';[col,'#ff3d9a','#36d1dc','#7b4dff',col].forEach((c,i)=>cdGlow(x,S*(.15+rnd()*.7),S*(.15+rnd()*.7),S*(.35+rnd()*.35),c,.32+rnd()*.18));
+    x.globalCompositeOperation='source-over';cdStars(x,S,220,rnd,4)}
+  else if(th==='aurora'){cdStars(x,S,140,rnd,2);x.globalCompositeOperation='lighter';
+    [[col,.0],['#36f5b0',.18],['#36d1dc',.34]].forEach(([c,o])=>{for(let xx=0;xx<S;xx+=u*.6){const top=S*(.12+o*.4)+Math.sin(xx/(u*11)+o*9)*u*7,h=S*(.28+.12*Math.sin(xx/(u*5)+o*4));
+      const g=x.createLinearGradient(0,top,0,top+h);g.addColorStop(0,cdA(c,0));g.addColorStop(.55,cdA(c,.16));g.addColorStop(1,cdA(c,0));x.fillStyle=g;x.fillRect(xx,top,u*.6,h)}});
+    x.globalCompositeOperation='source-over'}
+  else if(th==='holo'){const g=x.createLinearGradient(0,0,S,S);[cdMix(col,'#ffffff',.45),'#ffd1f0','#c9f3ff','#d9ccff','#fff3c4',cdMix(col,'#ffffff',.2)].forEach((c,i,a)=>g.addColorStop(i/(a.length-1),c));
+    x.fillStyle=g;x.fillRect(0,0,S,S);x.save();x.translate(S/2,S/2);x.rotate(-.6);for(let k=-S;k<S;k+=u*16){const l=x.createLinearGradient(k,0,k+u*10,0);l.addColorStop(0,'rgba(255,255,255,0)');l.addColorStop(.5,'rgba(255,255,255,.35)');l.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=l;x.fillRect(k,-S,u*10,S*2)}x.restore();cdNoise(x,S,1200,rnd,.025)}
+  else if(th==='chrome'){const g=x.createLinearGradient(0,0,0,S);['#f6f7fb','#a4a9b6','#eef0f4','#5d6372','#dfe2e9','#8b919e','#f4f5f8'].forEach((c,i,a)=>g.addColorStop(i/(a.length-1),cdMix(c,col,.22)));
+    x.fillStyle=g;x.fillRect(0,0,S,S);x.fillStyle='rgba(255,255,255,.5)';for(let i=0;i<10;i++)x.fillRect(0,rnd()*S,S,u*(.15+rnd()*.3));cdNoise(x,S,900,rnd,.03)}
+  else if(th==='planet'){cdGlow(x,S*.5,S*.2,S*.7,col,.18);cdStars(x,S,200,rnd,3);const R=S*.78,cx=S*.5,cy=S*1.28;
+    cdGlow(x,cx,cy,R*1.18,cdMix(col,'#ffffff',.3),.45);const g=x.createRadialGradient(cx-R*.35,cy-R*.6,R*.1,cx,cy,R);g.addColorStop(0,cdMix(col,'#ffffff',.35));g.addColorStop(.6,col);g.addColorStop(1,cdMix(col,'#05030f',.7));
+    x.fillStyle=g;x.beginPath();x.arc(cx,cy,R,0,TAU);x.fill();x.strokeStyle='rgba(255,255,255,.5)';x.lineWidth=u*.5;x.beginPath();x.arc(cx,cy,R,Math.PI*1.08,Math.PI*1.92);x.stroke();
+    x.strokeStyle=cdA(cdMix(col,'#ffffff',.6),.55);x.lineWidth=u*1.1;x.beginPath();x.ellipse(cx,cy-R*.62,R*1.25,R*.16,-.08,Math.PI*1.03,Math.PI*1.97);x.stroke()}
+  else if(th==='galaxy'){x.save();x.translate(S/2,S/2);x.rotate(-.55);const g=x.createLinearGradient(0,-S*.2,0,S*.2);g.addColorStop(0,cdA(col,0));g.addColorStop(.5,cdA(cdMix(col,'#ffffff',.3),.5));g.addColorStop(1,cdA(col,0));
+    x.fillStyle=g;x.fillRect(-S,-S*.2,S*2,S*.4);for(let i=0;i<1100;i++){const gx=(rnd()*2-1)*S,gy=(rnd()+rnd()+rnd()-1.5)*S*.12;x.fillStyle=`rgba(255,255,255,${.2+rnd()*.7})`;const s=u*(.12+rnd()*.28);x.fillRect(gx,gy,s,s)}x.restore();cdStars(x,S,120,rnd,3)}
+  else if(th==='orbit'){cdStars(x,S,160,rnd,2);cdGlow(x,S*.5,S*.5,S*.2,col,.7);x.fillStyle=cdMix(col,'#ffffff',.6);x.beginPath();x.arc(S*.5,S*.5,u*3,0,TAU);x.fill();
+    x.save();x.translate(S/2,S/2);x.rotate(-.35);for(let k=1;k<=6;k++){const rx=u*(10+k*9),ry=rx*.42;x.strokeStyle=`rgba(255,255,255,${.1+.04*(k%3)})`;x.lineWidth=u*.25;x.beginPath();x.ellipse(0,0,rx,ry,0,0,TAU);x.stroke();
+      if(k%2){const a=rnd()*TAU,px=Math.cos(a)*rx,py=Math.sin(a)*ry;cdGlow(x,px,py,u*4,col,.6);x.fillStyle=cdMix(col,'#ffffff',.4);x.beginPath();x.arc(px,py,u*(1+rnd()*1.2),0,TAU);x.fill()}}x.restore()}
+  else if(th==='constel'){cdGlow(x,S*.7,S*.3,S*.8,col,.22);cdStars(x,S,200,rnd,0);for(let c=0;c<2;c++){let px=S*(.15+rnd()*.5),py=S*(.15+rnd()*.6);const pts=[[px,py]];
+      for(let i=0;i<5;i++){px=Math.max(S*.08,Math.min(S*.92,px+(rnd()-.4)*S*.22));py=Math.max(S*.08,Math.min(S*.92,py+(rnd()-.5)*S*.2));pts.push([px,py])}
+      x.strokeStyle='rgba(255,255,255,.45)';x.lineWidth=u*.22;x.beginPath();pts.forEach(([a,b],i)=>i?x.lineTo(a,b):x.moveTo(a,b));x.stroke();
+      pts.forEach(([a,b])=>{cdGlow(x,a,b,u*3.5,cdMix(col,'#ffffff',.5),.6);x.fillStyle='#fff';x.beginPath();x.arc(a,b,u*.7,0,TAU);x.fill()})}}
+  else if(th==='eclipse'){cdStars(x,S,150,rnd,1);const r=S*.24,cx=S*.5,cy=S*.46;cdGlow(x,cx,cy,r*2.6,col,.55);cdGlow(x,cx,cy,r*1.5,cdMix(col,'#ffffff',.5),.6);
+    x.fillStyle='#030208';x.beginPath();x.arc(cx,cy,r,0,TAU);x.fill();x.strokeStyle='rgba(255,255,255,.85)';x.lineWidth=u*.5;x.beginPath();x.arc(cx,cy,r,-2.2,-1.2);x.stroke();cdGlow(x,cx+Math.cos(-1.7)*r,cy+Math.sin(-1.7)*r,u*6,'#ffffff',.9)}
+  else if(th==='grid'){const hz=S*.56,sky=x.createLinearGradient(0,0,0,hz);sky.addColorStop(0,base);sky.addColorStop(1,cdMix(col,'#ff3d9a',.35));x.fillStyle=sky;x.fillRect(0,0,S,hz);cdStars(x,S*.55,90,rnd,1);
+    x.fillStyle='#07041a';x.fillRect(0,hz,S,S-hz);cdGlow(x,S/2,hz,S*.5,cdMix(col,'#ff3d9a',.4),.5);const lc=cdMix(col,'#ffffff',.35);x.strokeStyle=cdA(lc,.75);x.lineWidth=u*.3;
+    for(let k=0;k<14;k++){const y=hz+Math.pow(k/13,2.2)*(S-hz);x.beginPath();x.moveTo(0,y);x.lineTo(S,y);x.stroke()}
+    for(let k=-12;k<=12;k++){x.beginPath();x.moveTo(S/2+k*u*1.5,hz);x.lineTo(S/2+k*u*14,S);x.stroke()}x.fillStyle=cdA(lc,.9);x.fillRect(0,hz-u*.2,S,u*.4)}
+  else if(th==='grain'){const g=x.createLinearGradient(0,0,S,S);g.addColorStop(0,cdMix(col,'#ffffff',.15));g.addColorStop(.55,cdMix(col,'#7b4dff',.45));g.addColorStop(1,cdMix(col,'#ff3d9a',.4));x.fillStyle=g;x.fillRect(0,0,S,S);
+    cdGlow(x,S*.75,S*.25,S*.5,'#ffffff',.25);cdNoise(x,S,9000,rnd,.07)}
+  else if(th==='hud'){cdGlow(x,S/2,S/2,S*.75,col,.25);x.fillStyle='rgba(255,255,255,.05)';for(let y=0;y<S;y+=u*1.2)x.fillRect(0,y,S,u*.25);
+    x.strokeStyle=cdA(cdMix(col,'#ffffff',.5),.6);x.lineWidth=u*.3;const m=u*6,l=u*5;[[m,m,1,1],[S-m,m,-1,1],[m,S-m,1,-1],[S-m,S-m,-1,-1]].forEach(([a,b,dx,dy])=>{x.beginPath();x.moveTo(a,b+dy*l);x.lineTo(a,b);x.lineTo(a+dx*l,b);x.stroke()});
+    x.beginPath();x.arc(S/2,S/2,S*.22,0,TAU);x.stroke();x.setLineDash([u*.8,u*1.2]);x.beginPath();x.arc(S/2,S/2,S*.3,0,TAU);x.stroke();x.setLineDash([]);
+    for(let k=0;k<36;k++){const a=k/36*TAU,r1=S*.33,r2=r1+(k%3?u*1:u*2.4);x.beginPath();x.moveTo(S/2+Math.cos(a)*r1,S/2+Math.sin(a)*r1);x.lineTo(S/2+Math.cos(a)*r2,S/2+Math.sin(a)*r2);x.stroke()}}
   x.restore()}
 
-/* CD 알판 (바깥은 투명) */
-function cdDrawDisc(x,S,d,photo){const C=cdC(d.st),r=S/2,u=S/100,rnd=cdRnd(d.title+'disc'),sty=d.st.disc||'photo';
+/* 홀로그램 19th 씰 */
+function cdSeal(x,X,Y,r){const u=r/10;x.save();x.translate(X,Y);x.rotate(-.18);
+  if(x.createConicGradient){const g=x.createConicGradient(0,0,0);['#ffd1f0','#c9f3ff','#d9ccff','#fff3c4','#b8ffe9','#ffd1f0'].forEach((c,i,a)=>g.addColorStop(i/(a.length-1),c));x.fillStyle=g}else x.fillStyle='#e9e4ff';
+  x.shadowColor='rgba(0,0,0,.35)';x.shadowBlur=u*3;x.beginPath();x.arc(0,0,r,0,TAU);x.fill();x.shadowColor='transparent';
+  x.strokeStyle='rgba(20,16,40,.55)';x.lineWidth=u*.35;x.beginPath();x.arc(0,0,r*.84,0,TAU);x.stroke();
+  x.fillStyle='#14102a';x.textAlign='center';x.font=fnt('n',u*8.5);x.fillText('19',-u*1.6,u*3.2);x.font=fnt('n',u*3);x.fillText('TH',u*5.6,-u*1.2);
+  x.font=fnt('n',u*2);cdSp(x,'BIRTHDAY',0,u*6.6,u*.5,'center');x.restore()}
+
+/* ① 앞면: 사진 가득 · 미니멀 · 타이포 */
+function cdDrawCover(x,S,d,photo){const st=d.st,C=st.c,tpl=st.tpl,u=S/100;let ink=cdInkOf(st.th,C);
+  x.save();cdTheme(x,S,st.th,C,'f');x.textBaseline='alphabetic';
+  if(tpl==='photo'){
+    if(photo){cdPhoto(x,photo,0,0,S,S,st.crop);ink='#ffffff';
+      const g=x.createLinearGradient(0,S*.4,0,S);g.addColorStop(0,'rgba(5,3,15,0)');g.addColorStop(1,'rgba(5,3,15,.82)');x.fillStyle=g;x.fillRect(0,0,S,S);
+      const t=x.createLinearGradient(0,0,0,S*.2);t.addColorStop(0,'rgba(5,3,15,.45)');t.addColorStop(1,'rgba(5,3,15,0)');x.fillStyle=t;x.fillRect(0,0,S,S*.2)}
+    x.fillStyle=ink;const fs=cdFit(x,d.title,S*.86,u*12,'d',u*5);const L=cdWrap(x,d.title,S*.86,2);
+    L.forEach((l,i)=>x.fillText(l,u*7,S-u*14-(L.length-1-i)*fs*1.06));
+    x.globalAlpha=.75;x.fillRect(u*7,S-u*11,u*10,u*.35);x.font=fnt('b',u*3.4);x.fillText(cdClip(x,`by ${d.name}`,S*.6),u*7,S-u*6);
+    x.font=fnt('n',u*3);cdSp(x,'VOL.19 · 12.03',S-u*7,S-u*6,u*.5,'right');x.globalAlpha=1;
+  }else if(tpl==='frame'){
+    const pw=u*58,px=(S-pw)/2,py=u*16;
+    if(photo){x.save();x.shadowColor='rgba(0,0,0,.45)';x.shadowBlur=u*4;x.shadowOffsetY=u*1.5;x.fillStyle='#000';x.fillRect(px,py,pw,pw);x.restore();cdPhoto(x,photo,px,py,pw,pw,st.crop)}
+    else{cdGlow(x,S/2,py+pw/2,pw*.8,cdMix(C,'#ffffff',.3),.6);x.fillStyle=cdMix(C,'#ffffff',.25);x.beginPath();x.arc(S/2,py+pw/2,pw*.28,0,TAU);x.fill()}
+    x.fillStyle=ink;x.textAlign='center';cdFit(x,d.title,S*.78,u*6.4,'d',u*4);x.fillText(cdClip(x,d.title,S*.8),S/2,py+pw+u*11);
+    x.globalAlpha=.7;x.font=fnt('b',u*3.2);x.fillText(cdClip(x,`by ${d.name}`,S*.6),S/2,py+pw+u*16.5);x.globalAlpha=1;x.textAlign='left';
+  }else{
+    x.save();x.font=fnt('n',u*92);x.textAlign='right';x.lineWidth=u*.45;x.strokeStyle=cdA(ink==='#f5f5f7'||ink==='#fff7f0'?'#ffffff':'#14102a',.35);x.strokeText('19',S+u*3,S-u*3);x.restore();
+    x.fillStyle=ink;x.textBaseline='top';const fs=cdFit(x,d.title,S*.8,u*15,'d',u*7);const L=cdWrap(x,d.title,S*.8,3);L.forEach((l,i)=>x.fillText(l,u*7,u*14+i*fs*1.04));x.textBaseline='alphabetic';
+    if(photo){const pw=u*30,px=u*7,py=S-u*12-pw*1.25;x.save();x.shadowColor='rgba(0,0,0,.4)';x.shadowBlur=u*3;x.fillStyle='#000';x.fillRect(px,py,pw,pw*1.25);x.restore();cdPhoto(x,photo,px,py,pw,pw*1.25,st.crop)}
+    x.globalAlpha=.75;x.font=fnt('b',u*3.4);x.fillText(cdClip(x,`by ${d.name}`,S*.5),u*7,S-u*6);x.globalAlpha=1;
+  }
+  x.fillStyle=ink;x.globalAlpha=.85;x.textBaseline='top';x.font=fnt('n',u*3);cdSp(x,'JUUN RECORDS',u*7,u*6,u*.7);cdSp(x,'#1203',S-u*7,u*6,u*.7,'right');x.globalAlpha=1;x.textBaseline='alphabetic';
+  if(st.s19)cdSeal(x,S-u*15,tpl==='type'?S-u*16:u*22,u*9);
+  x.restore()}
+
+/* ② CD 알판 (바깥은 투명) */
+function cdDrawDisc(x,S,d,photo){const st=d.st.d,C=st.c,r=S/2,u=S/100,usePh=st.src==='photo'&&photo;
   x.clearRect(0,0,S,S);x.save();x.beginPath();x.arc(r,r,r*.985,0,TAU);x.clip();
-  x.fillStyle=C.bg;x.fillRect(0,0,S,S);
-  if(sty==='photo'&&photo){cdPhoto(x,photo,0,0,S,S,d.st.crop);x.fillStyle='rgba(13,8,32,.12)';x.fillRect(0,0,S,S)}
-  else if(sty==='glitter'){for(let i=0;i<1800;i++){x.fillStyle=rnd()<.6?`rgba(255,255,255,${.25+rnd()*.6})`:`rgba(255,209,102,${.3+rnd()*.6})`;const s=u*(.25+rnd()*.7);x.fillRect(rnd()*S,rnd()*S,s,s)}cdSparkles(x,S,'rgba(255,255,255,.9)',22,rnd)}
-  else if(sty==='star'){x.fillStyle=C.ink==='#fff7f0'?'rgba(255,255,255,.28)':'rgba(255,255,255,.6)';for(let yy=0;yy<10;yy++)for(let xx=0;xx<10;xx++){cdStar(x,(xx+(yy%2)*.5)*S/9.5,yy*S/9.5,u*3.2,u*1.3);x.fill()}}
-  else{x.strokeStyle='rgba(255,255,255,.14)';x.lineWidth=u*.35;for(let k=28;k<98;k+=3.2){x.beginPath();x.arc(r,r,k*u/2,0,TAU);x.stroke()}}
-  const ink=sty==='photo'&&photo?'#fff':C.ink;x.fillStyle=ink;x.textAlign='center';
-  if(sty==='photo'&&photo){x.shadowColor='rgba(0,0,0,.45)';x.shadowBlur=u*1.4}
-  cdFit(x,d.title,S*.56,u*7,CD_FONT.d,u*3.5);x.fillText(cdClip(x,d.title,S*.6),r,r+u*30);
-  x.font=`${u*3}px ${CD_FONT.n}`;x.fillText('JUUN RECORDS · #1203',r,r-u*27);x.shadowColor='transparent';x.textAlign='left';
+  if(usePh){cdPhoto(x,photo,0,0,S,S,st.crop);x.fillStyle='rgba(5,3,15,.18)';x.fillRect(0,0,S,S)}else cdTheme(x,S,st.th,C,'d');
+  if(x.createConicGradient){const g=x.createConicGradient(.4,r,r);['rgba(255,209,240,.0)','rgba(201,243,255,.22)','rgba(217,204,255,0)','rgba(255,243,196,.18)','rgba(184,255,233,0)','rgba(255,209,240,.2)','rgba(255,209,240,0)'].forEach((c,i,a)=>g.addColorStop(i/(a.length-1),c));
+    x.fillStyle=g;x.fillRect(0,0,S,S)}
+  x.strokeStyle='rgba(255,255,255,.06)';x.lineWidth=u*.2;for(let k=30;k<98;k+=1.6){x.beginPath();x.arc(r,r,k*u/2,0,TAU);x.stroke()}
+  const ink=usePh?'#fff':cdInkOf(st.th,C);x.fillStyle=ink;x.textAlign='center';if(usePh||ink!=='#2a1f3d'){x.shadowColor='rgba(0,0,0,.5)';x.shadowBlur=u*1.2}
+  cdFit(x,d.title,S*.56,u*6.4,'d',u*3.5);x.fillText(cdClip(x,d.title,S*.6),r,r+u*31);
+  x.font=fnt('n',u*2.8);cdSp(x,'JUUN RECORDS · #1203',r,r-u*28,u*.5,'center');x.shadowColor='transparent';x.textAlign='left';
   x.globalCompositeOperation='destination-out';x.beginPath();x.arc(r,r,r*.25,0,TAU);x.fill();x.globalCompositeOperation='source-over';
-  x.fillStyle='rgba(232,236,246,.55)';x.beginPath();x.arc(r,r,r*.25,0,TAU);x.arc(r,r,r*.085,0,TAU,true);x.fill('evenodd');
-  x.strokeStyle='rgba(255,255,255,.75)';x.lineWidth=u*.5;[.25,.18,.12,.085].forEach(k=>{x.beginPath();x.arc(r,r,r*k,0,TAU);x.stroke()});
-  if(x.createConicGradient){const g=x.createConicGradient(-.6,r,r);g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(.08,'rgba(255,255,255,.28)');g.addColorStop(.16,'rgba(255,255,255,0)');
-    g.addColorStop(.5,'rgba(255,255,255,0)');g.addColorStop(.58,'rgba(255,255,255,.22)');g.addColorStop(.66,'rgba(255,255,255,0)');g.addColorStop(1,'rgba(255,255,255,0)');
-    x.fillStyle=g;x.beginPath();x.arc(r,r,r,0,TAU);x.arc(r,r,r*.25,0,TAU,true);x.fill('evenodd')}
-  x.restore();x.strokeStyle='rgba(255,255,255,.85)';x.lineWidth=u*.7;x.beginPath();x.arc(r,r,r*.975,0,TAU);x.stroke();
-  x.strokeStyle='rgba(42,31,61,.35)';x.lineWidth=u*.3;x.beginPath();x.arc(r,r,r*.99,0,TAU);x.stroke()}
+  const hub=x.createRadialGradient(r-r*.06,r-r*.08,r*.02,r,r,r*.25);hub.addColorStop(0,'rgba(255,255,255,.85)');hub.addColorStop(.5,'rgba(196,201,214,.75)');hub.addColorStop(1,'rgba(120,126,142,.7)');
+  x.fillStyle=hub;x.beginPath();x.arc(r,r,r*.25,0,TAU);x.arc(r,r,r*.16,0,TAU,true);x.fill('evenodd');
+  x.fillStyle='rgba(225,230,242,.35)';x.beginPath();x.arc(r,r,r*.16,0,TAU);x.arc(r,r,r*.085,0,TAU,true);x.fill('evenodd');
+  x.strokeStyle='rgba(255,255,255,.8)';x.lineWidth=u*.35;[.25,.16,.085].forEach(k=>{x.beginPath();x.arc(r,r,r*k,0,TAU);x.stroke()});
+  x.restore();x.strokeStyle='rgba(255,255,255,.9)';x.lineWidth=u*.6;x.beginPath();x.arc(r,r,r*.977,0,TAU);x.stroke();
+  x.strokeStyle='rgba(0,0,0,.4)';x.lineWidth=u*.3;x.beginPath();x.arc(r,r,r*.99,0,TAU);x.stroke()}
 
-/* 뒷면 트랙리스트 */
-function cdDrawBack(x,S,d){const C=cdC(d.st),u=S/100,rnd=cdRnd(d.title+d.name+'bar');
-  x.save();x.fillStyle='#fbf7ef';x.fillRect(0,0,S,S);x.fillStyle=C.bg;x.fillRect(0,0,u*7,S);
-  x.fillStyle='rgba(42,31,61,.06)';for(let i=0;i<S;i+=u*2.4)x.fillRect(u*7,i,S,u*.12);
-  x.save();x.translate(u*4.6,S-u*6);x.rotate(-Math.PI/2);x.fillStyle=C.ink;x.font=`${u*3}px ${CD_FONT.n}`;x.fillText(cdClip(x,`${d.title}  ·  JUUN RECORDS  ·  #1203`,S*.88),0,0);x.restore();
-  const L=u*12,R=S-u*6,W=R-L;x.fillStyle='#2a1f3d';x.textBaseline='top';
-  x.font=`${u*7}px ${CD_FONT.n}`;x.fillText('TRACKLIST',L,u*6);
-  x.font=`${u*3.6}px ${CD_FONT.d}`;x.fillStyle='#7a6d92';x.fillText(cdClip(x,`${d.title} · by ${d.name} 대원`,W),L,u*15);
+/* ③ 안쪽: 라이너 노트 · 사진 · 포스터 */
+function cdDrawInner(x,S,d,photo){const st=d.st.in,C=st.c,u=S/100,note=(d.note||'').trim()||'열아홉 번째 생일 축하해, 쭈니야!',dark=cdInkOf(st.th,C)!=='#14102a'&&cdInkOf(st.th,C)!=='#2a1f3d';
+  x.save();cdTheme(x,S,st.th,C,'i');x.textBaseline='alphabetic';
+  if(st.tpl==='photo'){
+    let ink=cdInkOf(st.th,C);if(photo){cdPhoto(x,photo,0,0,S,S,st.crop);ink='#fff';const g=x.createLinearGradient(0,S*.35,0,S);g.addColorStop(0,'rgba(5,3,15,0)');g.addColorStop(1,'rgba(5,3,15,.85)');x.fillStyle=g;x.fillRect(0,0,S,S)}
+    x.fillStyle=ink;x.font=fnt('b',u*4.4);const L=cdWrap(x,note,S*.84,5),y0=S-u*14-L.length*u*6.4;
+    L.forEach((l,i)=>x.fillText(l,u*8,y0+(i+1)*u*6.4));x.font=fnt('d',u*4.6);x.fillText('To. 쭈니',u*8,y0-u*1.4);
+    x.globalAlpha=.75;x.font=fnt('b',u*3.2);x.textAlign='right';x.fillText(cdClip(x,`— ${d.name}`,S*.6),S-u*8,S-u*6);x.textAlign='left';x.globalAlpha=1;
+  }else if(st.tpl==='poster'){
+    const ink=cdInkOf(st.th,C);x.fillStyle=ink;x.textAlign='center';x.font=fnt('n',u*4);cdSp(x,'HAPPY BIRTHDAY',S/2,u*14,u*1.6,'center');
+    const cy=u*50;if(photo){x.save();x.strokeStyle=cdA(ink==='#f5f5f7'?'#ffffff':'#14102a',.4);x.lineWidth=u*.3;x.beginPath();x.ellipse(S/2,cy,u*30,u*9,-.25,0,TAU);x.stroke();
+      cdGlow(x,S/2,cy,u*26,cdMix(C,'#ffffff',.4),.45);x.beginPath();x.arc(S/2,cy,u*17,0,TAU);x.clip();cdPhoto(x,photo,S/2-u*17,cy-u*17,u*34,u*34,st.crop);x.restore()}
+    else{x.save();x.font=fnt('n',u*46);x.fillStyle=ink;x.fillText('19',S/2,cy+u*16);x.restore()}
+    x.fillStyle=ink;x.font=fnt('n',u*7.5);cdSp(x,photo?'JUUN · 19TH':'JUUN',S/2,u*80,u*1.2,'center');
+    x.globalAlpha=.85;x.font=fnt('b',u*3.4);cdWrap(x,note,S*.78,2).forEach((l,i)=>x.fillText(l,S/2,u*87.5+i*u*4.6));x.globalAlpha=1;x.textAlign='left';
+  }else{
+    const pX=u*9,pY=u*9,pW=S-u*18,pH=S-u*18;x.fillStyle=dark?'rgba(8,6,22,.55)':'rgba(255,255,255,.72)';cdRR(x,pX,pY,pW,pH,u*2.4);x.fill();
+    x.strokeStyle=dark?'rgba(255,255,255,.22)':'rgba(20,16,42,.15)';x.lineWidth=u*.3;x.stroke();
+    const ink=dark?'#f5f5f7':'#14102a',dim=dark?'rgba(245,245,247,.6)':'rgba(20,16,42,.55)';
+    x.fillStyle=dim;x.font=fnt('n',u*3);cdSp(x,'LINER NOTES',pX+u*7,pY+u*10,u*.9);cdSp(x,'#1203',pX+pW-u*7,pY+u*10,u*.9,'right');
+    x.fillRect(pX+u*7,pY+u*13,pW-u*14,u*.25);x.fillStyle=ink;x.font=fnt('d',u*5.4);x.fillText('To. 쭈니',pX+u*7,pY+u*23);
+    x.font=fnt('b',u*4.3);cdWrap(x,note,pW-u*14,9).forEach((l,i)=>x.fillText(l,pX+u*7,pY+u*32+i*u*6.4));
+    x.fillStyle=dim;x.font=fnt('b',u*3.2);x.textAlign='right';x.fillText(cdClip(x,`— ${d.name} 대원`,pW*.6),pX+pW-u*7,pY+pH-u*7);
+    x.textAlign='left';x.font=fnt('n',u*2.6);cdSp(x,'JUUN RECORDS · 2026.12.03',pX+u*7,pY+pH-u*7,u*.5);
+  }
+  x.restore()}
+
+/* ④ 뒷면 (트랙리스트) */
+function cdDrawBack(x,S,d){const st=d.st,B=st.b,u=S/100,rnd=cdRnd(d.title+d.name+'bar'),dark=cdInkOf(B.th,B.c)!=='#14102a'&&cdInkOf(B.th,B.c)!=='#2a1f3d';
+  const ink=dark?'#f5f5f7':'#14102a',dim=dark?'rgba(245,245,247,.55)':'rgba(20,16,42,.5)',acc=dark?cdMix(st.c,'#ffffff',.45):cdMix(st.c,'#14102a',cdLum(st.c)>.5?.45:0);
+  x.save();cdTheme(x,S,B.th,B.c,'b');x.textBaseline='alphabetic';
+  x.fillStyle=st.c;x.fillRect(0,0,u*5.5,S);x.save();x.translate(u*3.7,S-u*6);x.rotate(-Math.PI/2);x.fillStyle=cdInkOf('plain',st.c);x.font=fnt('n',u*2.6);cdSp(x,cdClip(x,`${d.title}  ·  JUUN RECORDS  ·  #1203`,S*.8),0,0,u*.4);x.restore();
+  const pX=u*10,pY=u*6,pW=S-u*16,pH=S-u*12;x.fillStyle=dark?'rgba(8,6,22,.58)':'rgba(255,255,255,.78)';cdRR(x,pX,pY,pW,pH,u*2.2);x.fill();
+  x.strokeStyle=dark?'rgba(255,255,255,.2)':'rgba(20,16,42,.12)';x.lineWidth=u*.3;x.stroke();
+  const L=pX+u*6,R=pX+pW-u*6,W=R-L;x.fillStyle=ink;x.font=fnt('n',u*8);cdSp(x,'TRACKLIST',L,pY+u*14,u*.6);
+  x.fillStyle=dim;x.font=fnt('m',u*3.2);x.fillText(cdClip(x,`${d.title} · by ${d.name}`,W),L,pY+u*20);
   const tr=(d.tracks||[]).filter(t=>t&&(t.s||t.a)),all=[...tr.map((t,i)=>({no:p2(i+1),s:t.s||'',a:t.a||''})),{no:'19',s:'Happy JUUN Day',a:'하츄대원 일동',hid:true}];
-  const noteH=d.note?u*19:0,top=u*22,bot=S-u*13-noteH,two=all.length>9,rows=two?Math.ceil(all.length/2):all.length,lh=Math.min(u*6.6,(bot-top)/rows),fs=Math.min(u*4,lh*.62);
-  const colW=two?(W-u*4)/2:W;
-  all.forEach((t,i)=>{const col=two&&i>=rows?1:0,row=col?i-rows:i,X=L+col*(colW+u*4),Y=top+row*lh;
-    if(t.hid){x.fillStyle='rgba(255,209,102,.35)';cdRR(x,X-u*1,Y-lh*.12,colW+u*1.4,lh*.9,u*1);x.fill()}
-    x.fillStyle=t.hid?'#c48a00':C.bg==='#fff3e2'?'#ff6f91':C.bg;x.font=`${fs*1.05}px ${CD_FONT.n}`;x.fillText(t.no,X,Y);
-    const nx=X+fs*1.7;x.fillStyle='#2a1f3d';x.font=`${fs}px ${CD_FONT.d}`;const sw=Math.min(x.measureText(t.s).width,colW-fs*1.9);x.fillText(cdClip(x,t.s,colW-fs*1.9),nx,Y);
-    if(t.a){x.font=`${fs*.78}px ${CD_FONT.b}`;x.fillStyle='#8a7da2';const ax=nx+sw+fs*.45,aw=X+colW-ax;if(aw>fs*2)x.fillText(cdClip(x,'- '+t.a,aw),ax,Y+fs*.16)}
-    if(t.hid){x.font=`${fs*.62}px ${CD_FONT.n}`;x.fillStyle='#c48a00';x.textAlign='right';x.fillText('HIDDEN TRACK',X+colW-u*.5,Y+fs*.22);x.textAlign='left'}});
-  if(d.note){const ny=S-u*13-noteH+u*1.5;x.fillStyle='#fff';x.strokeStyle='rgba(42,31,61,.18)';x.lineWidth=u*.3;cdRR(x,L,ny,W,noteH-u*3,u*1.5);x.fill();x.stroke();
-    x.fillStyle=C.bg==='#fff3e2'?'#ff6f91':C.bg==='#1d1530'?'#7a5be0':C.bg;x.font=`${u*3.6}px ${CD_FONT.d}`;x.fillText('To. 쭈니',L+u*3,ny+u*2.2);
-    x.fillStyle='#2a1f3d';x.font=`${u*4.2}px ${CD_FONT.h}`;cdWrap(x,d.note,W-u*6,2).forEach((l,i)=>x.fillText(l,L+u*3,ny+u*7+i*u*5))}
-  const by=S-u*10;x.fillStyle='#2a1f3d';let bx=L;while(bx<L+u*24){const w=u*(.25+Math.floor(rnd()*3)*.3);x.fillRect(bx,by,w,u*6);bx+=w+u*(.3+rnd()*.5)}
-  x.font=`${u*2.6}px ${CD_FONT.n}`;x.textAlign='right';x.fillText('JUUN RECORDS  JR-1203-'+p2(Math.floor(rnd()*90)+10),R,by+u*.5);
-  x.font=`${u*2.6}px ${CD_FONT.b}`;x.fillStyle='#7a6d92';x.fillText('2026.12.03 RELEASE · 행성 #1203',R,by+u*3.6);
-  x.textAlign='left';x.textBaseline='alphabetic';x.restore()}
+  const top=pY+u*28,bot=pY+pH-u*16,two=all.length>10,rows=two?Math.ceil(all.length/2):all.length,lh=Math.min(u*6.6,(bot-top)/rows),fs=Math.min(u*3.8,lh*.6),colW=two?(W-u*4)/2:W;
+  all.forEach((t,i)=>{const col=two&&i>=rows?1:0,row=col?i-rows:i,X=L+col*(colW+u*4),Y=top+row*lh+fs;
+    x.fillStyle=t.hid?'#e6c068':acc;x.font=fnt('n',fs*1.05);x.fillText(t.no,X,Y);
+    const nx=X+fs*1.9,tagW=t.hid?fs*4.8:0;x.fillStyle=ink;x.font=fnt('m',fs);const sw=Math.min(x.measureText(t.s).width,colW-fs*2-tagW);x.fillText(cdClip(x,t.s,colW-fs*2-tagW),nx,Y);
+    if(t.a){x.font=fnt('b',fs*.8);x.fillStyle=dim;const ax=nx+sw+fs*.6,aw=X+colW-ax-tagW;if(aw>fs*2)x.fillText(cdClip(x,t.a,aw),ax,Y)}
+    if(t.hid){x.fillStyle='#e6c068';x.font=fnt('n',fs*.62);cdSp(x,'HIDDEN TRACK',X+colW,Y,fs*.08,'right')}
+    x.fillStyle=dark?'rgba(255,255,255,.07)':'rgba(20,16,42,.07)';x.fillRect(X,Y+lh*.32,colW,u*.18)});
+  const by=pY+pH-u*13;x.fillStyle=ink;let bx=L;while(bx<L+u*22){const w=u*(.22+Math.floor(rnd()*3)*.28);x.fillRect(bx,by,w,u*6);bx+=w+u*(.28+rnd()*.45)}
+  x.fillStyle=dim;x.font=fnt('n',u*2.5);cdSp(x,'JUUN RECORDS  JR-1203-'+p2(Math.floor(rnd()*90)+10),R,by+u*2.4,u*.4,'right');cdSp(x,'2026.12.03 RELEASE · PLANET #1203',R,by+u*5.8,u*.4,'right');
+  x.restore()}
 
-/* 투명 케이스 */
+/* 투명 케이스 (어두운 배경용) */
 function cdCase(x,X,Y,S,inner,o){const u=S/100;o=o||{};
-  x.save();x.shadowColor='rgba(42,31,61,.28)';x.shadowBlur=u*4;x.shadowOffsetY=u*2;x.fillStyle='rgba(255,255,255,.55)';cdRR(x,X,Y,S,S*.92,u*2.2);x.fill();x.restore();
-  if(o.tab){x.save();x.fillStyle='rgba(255,255,255,.75)';x.strokeStyle='rgba(42,31,61,.25)';x.lineWidth=u*.5;cdRR(x,X+S/2-u*7,Y-u*7,u*14,u*9,u*3);x.fill();x.stroke();
+  x.save();x.shadowColor='rgba(0,0,0,.55)';x.shadowBlur=u*5;x.shadowOffsetY=u*2.5;x.fillStyle='rgba(255,255,255,.12)';cdRR(x,X,Y,S,S*.92,u*2.2);x.fill();x.restore();
+  if(o.tab){x.save();x.fillStyle='rgba(255,255,255,.22)';x.strokeStyle='rgba(255,255,255,.55)';x.lineWidth=u*.4;cdRR(x,X+S/2-u*7,Y-u*7,u*14,u*9,u*3);x.fill();x.stroke();
     x.globalCompositeOperation='destination-out';x.beginPath();x.arc(X+S/2,Y-u*3,u*2.2,0,TAU);x.fill();x.restore();
-    x.save();x.strokeStyle='#b9b4c4';x.lineWidth=u*1.1;x.beginPath();x.ellipse(X+S/2,Y-u*6.5,u*3.6,u*5.2,0,0,TAU);x.stroke();
-    x.strokeStyle='rgba(255,255,255,.8)';x.lineWidth=u*.35;x.beginPath();x.ellipse(X+S/2-u*.4,Y-u*7,u*3.2,u*4.8,0,Math.PI*.9,Math.PI*1.5);x.stroke();x.restore()}
+    x.save();x.strokeStyle='#c9ccd6';x.lineWidth=u*1.1;x.beginPath();x.ellipse(X+S/2,Y-u*6.5,u*3.6,u*5.2,0,0,TAU);x.stroke();
+    x.strokeStyle='rgba(255,255,255,.9)';x.lineWidth=u*.35;x.beginPath();x.ellipse(X+S/2-u*.4,Y-u*7,u*3.2,u*4.8,0,Math.PI*.9,Math.PI*1.5);x.stroke();x.restore()}
   const ix=X+(o.hinge?u*8:u*4),iy=Y+u*4,iw=S-(o.hinge?u*12:u*8),ih=S*.92-u*8;
   if(inner){x.save();cdRR(x,ix,iy,iw,ih,u*.8);x.clip();x.drawImage(inner,ix,iy+(ih-iw)/2,iw,iw);x.restore()}
-  if(o.hinge){x.save();const g=x.createLinearGradient(X,0,X+u*8,0);g.addColorStop(0,'rgba(255,255,255,.85)');g.addColorStop(1,'rgba(220,214,232,.55)');x.fillStyle=g;cdRR(x,X+u*1,Y+u*1,u*6.5,S*.92-u*2,u*1.2);x.fill();
-    x.strokeStyle='rgba(42,31,61,.18)';x.lineWidth=u*.25;for(let k=0;k<6;k++){const yy=Y+u*10+k*(S*.92-u*20)/5;x.beginPath();x.moveTo(X+u*2,yy);x.lineTo(X+u*6.5,yy);x.stroke()}x.restore()}
-  x.save();const gl=x.createLinearGradient(X,Y,X+S,Y+S);gl.addColorStop(0,'rgba(255,255,255,.35)');gl.addColorStop(.35,'rgba(255,255,255,0)');gl.addColorStop(.62,'rgba(255,255,255,0)');gl.addColorStop(.7,'rgba(255,255,255,.18)');gl.addColorStop(.78,'rgba(255,255,255,0)');
-  x.fillStyle=gl;cdRR(x,X,Y,S,S*.92,u*2.2);x.fill();x.strokeStyle='rgba(255,255,255,.95)';x.lineWidth=u*.9;x.stroke();x.strokeStyle='rgba(42,31,61,.22)';x.lineWidth=u*.3;cdRR(x,X+u*1.6,Y+u*1.6,S-u*3.2,S*.92-u*3.2,u*1.4);x.stroke();x.restore()}
+  if(o.hinge){x.save();const g=x.createLinearGradient(X,0,X+u*8,0);g.addColorStop(0,'rgba(255,255,255,.55)');g.addColorStop(1,'rgba(200,204,220,.25)');x.fillStyle=g;cdRR(x,X+u*1,Y+u*1,u*6.5,S*.92-u*2,u*1.2);x.fill();
+    x.strokeStyle='rgba(255,255,255,.3)';x.lineWidth=u*.25;for(let k=0;k<6;k++){const yy=Y+u*10+k*(S*.92-u*20)/5;x.beginPath();x.moveTo(X+u*2,yy);x.lineTo(X+u*6.5,yy);x.stroke()}x.restore()}
+  x.save();const gl=x.createLinearGradient(X,Y,X+S,Y+S);gl.addColorStop(0,'rgba(255,255,255,.28)');gl.addColorStop(.3,'rgba(255,255,255,0)');gl.addColorStop(.62,'rgba(255,255,255,0)');gl.addColorStop(.7,'rgba(255,255,255,.12)');gl.addColorStop(.78,'rgba(255,255,255,0)');
+  x.fillStyle=gl;cdRR(x,X,Y,S,S*.92,u*2.2);x.fill();x.strokeStyle='rgba(255,255,255,.7)';x.lineWidth=u*.7;x.stroke();x.strokeStyle='rgba(255,255,255,.18)';x.lineWidth=u*.3;cdRR(x,X+u*1.6,Y+u*1.6,S-u*3.2,S*.92-u*3.2,u*1.4);x.stroke();x.restore()}
 
-/* 앨범 이미지 (1600 × 1000) */
-function cdDrawShot(x,k,d,cover,disc,back){const W=1600*k,H=1000*k,u=k;
-  const g=x.createLinearGradient(0,0,W,H);g.addColorStop(0,'#efe6ff');g.addColorStop(1,'#fff3e8');x.fillStyle=g;x.fillRect(0,0,W,H);
-  const rnd=cdRnd(d.title+'bg');x.fillStyle='rgba(196,176,255,.55)';for(let i=0;i<30;i++){const s=u*(4+rnd()*8);cdStar(x,rnd()*W,rnd()*H,s,s*.4);x.fill()}
+/* 앨범 이미지 (1600 × 1000): 뒷면 · CD · 앞면, 우주 배경 */
+function cdDrawShot(x,k,d,cover,disc,back){const W=1600*k,H=1000*k,u=k,rnd=cdRnd(d.title+'bg');
+  const g=x.createLinearGradient(0,0,W,H);g.addColorStop(0,'#07051a');g.addColorStop(1,'#140d33');x.fillStyle=g;x.fillRect(0,0,W,H);
+  cdGlow(x,W*.62,H*.5,W*.45,d.st.c,.28);cdGlow(x,W*.2,H*.2,W*.3,'#7b4dff',.18);
+  for(let i=0;i<260;i++){x.fillStyle=`rgba(255,255,255,${.2+rnd()*.6})`;const s=u*(.8+rnd()*1.8);x.fillRect(rnd()*W,rnd()*H,s,s)}
   cdCase(x,110*u,200*u,620*u,back,{});
-  x.save();x.translate(890*u,560*u);x.rotate(-.35);x.shadowColor='rgba(42,31,61,.3)';x.shadowBlur=24*u;x.shadowOffsetY=10*u;x.drawImage(disc,-270*u,-270*u,540*u,540*u);x.restore();
+  x.save();x.translate(890*u,560*u);x.rotate(-.35);x.shadowColor='rgba(0,0,0,.55)';x.shadowBlur=30*u;x.shadowOffsetY=12*u;x.drawImage(disc,-270*u,-270*u,540*u,540*u);x.restore();
   cdCase(x,880*u,160*u,620*u,cover,{hinge:true,tab:true});
-  x.fillStyle='#2a1f3d';x.textBaseline='alphabetic';x.font=`${30*u}px ${CD_FONT.n}`;x.fillText('JUUN RECORDS',110*u,92*u);
-  x.font=`${26*u}px ${CD_FONT.d}`;x.fillStyle='#5c4f73';x.fillText(cdClip(x,`「${d.title}」 by ${d.name} 대원`,700*u),110*u,132*u);
-  x.textAlign='right';x.font=`${22*u}px ${CD_FONT.n}`;x.fillStyle='#9a8db0';x.fillText('#1203 · 2026.12.03',W-110*u,92*u);x.textAlign='left'}
+  x.textBaseline='alphabetic';x.fillStyle='#f5f5f7';x.font=fnt('n',30*u);cdSp(x,'JUUN RECORDS',110*u,92*u,4*u);
+  x.fillStyle='rgba(245,245,247,.7)';x.font=fnt('m',24*u);x.fillText(cdClip(x,`「${d.title}」  by ${d.name}`,700*u),110*u,132*u);
+  x.fillStyle='rgba(245,245,247,.55)';x.font=fnt('n',20*u);cdSp(x,'PLANET #1203 · 2026.12.03',W-110*u,92*u,2*u,'right')}
 
-async function cdRender(d,photo,coverImg,discImg){await cdFonts(d.title+d.name+(d.note||'')+(d.tracks||[]).map(t=>(t.s||'')+(t.a||'')).join('')+'To. 쭈니대원행성 HappyJUUNDay하츄일동');
-  const cover=cdCanvas(1200),disc=cdCanvas(1000),back=cdCanvas(1200);
-  if(coverImg)cover.getContext('2d').drawImage(coverImg,0,0,1200,1200);else cdDrawCover(cover.getContext('2d'),1200,d,photo);
-  if(discImg)disc.getContext('2d').drawImage(discImg,0,0,1000,1000);else cdDrawDisc(disc.getContext('2d'),1000,d,photo);
-  cdDrawBack(back.getContext('2d'),1200,d);return{cover,disc,back}}
+const cdText=d=>d.title+d.name+(d.note||'')+(d.tracks||[]).map(t=>(t.s||'')+(t.a||'')).join('')+'To.쭈니 대원 행성 HappyJUUNDay하츄일동 from. 열아홉 번째 생일 축하해, 쭈니야!';
+/* ph: {f,d,i} 사진 / im: {cover,disc,inner} 이미 만들어 둔 그림 */
+async function cdRender(d,ph,im){ph=ph||{};im=im||{};await cdFonts(cdText(d));
+  const cover=cdCanvas(1200),disc=cdCanvas(1000),inner=cdCanvas(1200),back=cdCanvas(1200);
+  if(im.cover)cover.getContext('2d').drawImage(im.cover,0,0,1200,1200);else cdDrawCover(cover.getContext('2d'),1200,d,ph.f);
+  if(im.disc)disc.getContext('2d').drawImage(im.disc,0,0,1000,1000);else cdDrawDisc(disc.getContext('2d'),1000,d,ph.d||ph.f);
+  if(im.inner)inner.getContext('2d').drawImage(im.inner,0,0,1200,1200);else cdDrawInner(inner.getContext('2d'),1200,d,ph.i||ph.f);
+  cdDrawBack(back.getContext('2d'),1200,d);return{cover,disc,inner,back}}
 const cdBlob=(c,type,q)=>new Promise(r=>c.toBlob(r,type||'image/png',q));
 function cdSave(blob,name){if(!blob)return;const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},5000)}
 const cdFile=s=>String(s||'cd').replace(/[\\/:*?"<>|\s]+/g,'_').slice(0,30);
@@ -2997,14 +3104,17 @@ async function cdZip(files){const enc=new TextEncoder(),parts=[],cen=[];let off=
   return new Blob([...parts,...cen,e],{type:'application/zip'})}
 
 /* ---------- 불러오기 ---------- */
-const cdRow=r=>({id:r.id,n:r.name,title:r.title,tracks:Array.isArray(r.tracks)?r.tracks:[],note:r.note||'',st:r.style||{},cover:cdImgUrl(r.image_path),disc:cdImgUrl(r.disc_path),
-  path:r.image_path,dpath:r.disc_path,mine:sb?r.user_id===uid:true,approved:r.approved!==false,at:Date.parse(r.created_at)||Date.now()});
+const cdRow=r=>({id:r.id,n:r.name,title:r.title,tracks:Array.isArray(r.tracks)?r.tracks:[],note:r.note||'',st:cdNorm(r.style),cover:cdImgUrl(r.image_path),disc:cdImgUrl(r.disc_path),inner:cdImgUrl(r.inner_path),
+  path:r.image_path,dpath:r.disc_path,ipath:r.inner_path||null,mine:sb?r.user_id===uid:true,approved:r.approved!==false,at:Date.parse(r.created_at)||Date.now()});
+const CD_COLS='id,user_id,name,title,tracks,note,style,image_path,disc_path,approved,created_at';
+async function cdSelect(q){let r=await q(CD_COLS+',inner_path');if(r.error&&/inner_path/.test(r.error.message||'')){CD.noInner=true;r=await q(CD_COLS)}return r}
 async function cdLoadList(){await sbReady;
-  if(!sb){CD.list=store.get('jc_cds',[]).map(r=>({...r,mine:true}));CD.loaded=true;return}
-  const r=await sb.from('cds').select('id,user_id,name,title,tracks,note,style,image_path,disc_path,approved,created_at').order('created_at',{ascending:false}).limit(400);
+  if(!sb){CD.list=store.get('jc_cds',[]).map(r=>({...r,st:cdNorm(r.st),mine:true}));CD.loaded=true;return}
+  const r=await cdSelect(c=>sb.from('cds').select(c).order('created_at',{ascending:false}).limit(400));
   if(r.error){CD.missing=true;CD.loaded=true;return}           // SQL을 아직 안 돌렸으면 레코드샵을 숨겨요
   CD.list=r.data.map(cdRow);CD.loaded=true}
-const cdData=c=>({title:c.title,name:c.n,tracks:c.tracks,note:c.note,st:c.st});
+const cdData=c=>({title:c.title,name:c.n,tracks:c.tracks,note:c.note,st:cdNorm(c.st)});
+async function cdInnerOf(c,S){if(c.inner){const im=await cdLoad(c.inner);if(im)return im}const cv=cdCanvas(S||600);await cdFonts(cdText(cdData(c)));cdDrawInner(cv.getContext('2d'),S||600,cdData(c),null);return cv}
 
 /* ---------- 생일파티 화면: JUUN RECORDS ---------- */
 function cdSection(){if(CD.missing)return'';const L=CD.list.filter(c=>c.approved||c.mine);
@@ -3016,109 +3126,145 @@ function cdAll(){const L=CD.list.filter(c=>c.approved||c.mine);
   openSheet('JUUN RECORDS',`<p>하츄대원들이 발매한 쭈니 앨범 <b>${L.length}</b>장</p><div class="cd-grid">${L.map(cdItem).join('')}</div>`);
   $('#sheetBody').querySelectorAll('[data-cd=view]').forEach(b=>b.onclick=()=>cdView(b.dataset.id))}
 
-/* ---------- CD 보기: 케이스가 열리고 CD가 돌아요 ---------- */
-async function cdView(id){const c=CD.list.find(x=>String(x.id)===String(id));if(!c)return;const tk=++cdViewTok;
-  openSheet(c.title,`<div class="cdv-wrap"><div class="cdv" id="cdv"><div class="cdv-base"><div class="cdv-tray"></div><img class="cdv-disc" src="${escH(c.disc)}" alt=""></div>
-    <div class="cdv-lid"><div class="f"><img src="${escH(c.cover)}" alt="앞표지"></div><div class="b"><span class="cdv-load">트랙리스트 그리는 중…</span></div></div></div></div>
-  <p class="zhint" id="cdvHint">케이스를 톡 눌러서 열어 보세요</p>
+/* ---------- CD 보기: 앞면을 누르면 열고 닫혀요 · 뒤집으면 트랙리스트 ---------- */
+let cdViewTok=0;
+async function cdView(id,fresh){const c=CD.list.find(x=>String(x.id)===String(id));if(!c)return;const tk=++cdViewTok;
+  openSheet(c.title,`<div class="cdv-wrap"><div class="cdv" id="cdv"><div class="cdv-flip">
+    <div class="cdv-base"><div class="cdv-tray" style="background-color:${escH(c.st.in.c)}"></div><img class="cdv-disc" src="${escH(c.disc)}" alt="CD 알판"></div>
+    <div class="cdv-lid"><div class="f"><img src="${escH(c.cover)}" alt="앞면"></div><div class="b"><span class="cdv-load">그리는 중…</span></div></div>
+    <div class="cdv-back"><span class="cdv-load">그리는 중…</span></div></div></div></div>
+  <div class="row cdv-btns"><button class="soft" id="cdvOpen">케이스 열기</button><button class="soft" id="cdvFlip">뒷면 보기</button></div>
+  <p class="zhint" id="cdvHint">${fresh?'🎉 발매 완료! JUUN RECORDS에 꽂혔어요':'앞면을 누르면 케이스가 열리고 닫혀요'}</p>
   <div class="cd-meta"><b>「${escH(c.title)}」</b><span>by ${escH(c.n)} 대원 · ${(k=>`${k.mo}월 ${k.d}일 발매`)(kst(c.at))}</span></div>
   <ol class="cd-tl">${c.tracks.map((t,i)=>`<li><i>${p2(i+1)}</i><b>${escH(t.s||'')}</b>${t.a?`<span>${escH(t.a)}</span>`:''}</li>`).join('')}<li class="hid"><i>19</i><b>Happy JUUN Day</b><span>하츄대원 일동 · HIDDEN TRACK</span></li></ol>
-  ${c.note?`<blockquote class="cd-note"><small>To. 쭈니</small>${escH(c.note)}</blockquote>`:''}
-  <div class="row"><button class="soft" id="cdSvA">앨범 이미지 저장</button><button class="soft" id="cdSvK">키링 제작용 저장</button></div>
+  <button class="soft" id="cdSvA">앨범 이미지 저장</button>
   ${c.mine?'<button class="soft cd-del" id="cdDel">내 CD 내리기</button>':''}<p id="cdMsg" class="save"></p>`);
-  const v=$('#cdv'),open=()=>{if(v.classList.contains('open'))return;v.classList.add('open');$('#cdvHint').textContent='CD가 돌아가는 중 ♪';SFX.open&&SFX.open();setTimeout(()=>SFX.blip&&SFX.blip(),500)};
-  v.onclick=()=>v.classList.contains('open')?v.classList.toggle('out'):open();
-  $('#cdSvA').onclick=()=>cdDownload(c,'album',$('#cdSvA'));$('#cdSvK').onclick=()=>cdDownload(c,'kit',$('#cdSvK'));
+  const v=$('#cdv'),ob=$('#cdvOpen'),fb=$('#cdvFlip'),hint=$('#cdvHint');
+  const ui=()=>{const o=v.classList.contains('open'),f=v.classList.contains('flip');ob.textContent=o?'케이스 닫기':'케이스 열기';fb.textContent=f?'앞면 보기':'뒷면 보기';
+    if(!fresh||o||f)hint.textContent=f?'뒷면이에요 · 트랙리스트가 적혀 있어요':o?'CD를 누르면 들었다 놓았다 해요':'앞면을 누르면 케이스가 열리고 닫혀요';fresh=false};
+  const setOpen=o=>{if(o&&v.classList.contains('flip')){v.classList.remove('flip');setTimeout(()=>setOpen(true),650);ui();return}
+    v.classList.toggle('open',o);if(!o)v.classList.remove('out');if(o){SFX.open&&SFX.open();setTimeout(()=>SFX.blip&&SFX.blip(),500)}else SFX.close&&SFX.close();ui()};
+  const setFlip=f=>{if(f&&v.classList.contains('open')){setOpen(false);setTimeout(()=>setFlip(true),700);return}v.classList.toggle('flip',f);SFX.swish&&SFX.swish();ui()};
+  v.querySelector('.cdv-lid').onclick=()=>setOpen(!v.classList.contains('open'));
+  v.querySelector('.cdv-disc').onclick=e=>{if(!v.classList.contains('open'))return;e.stopPropagation();v.classList.toggle('out');SFX.blip&&SFX.blip()};
+  v.querySelector('.cdv-back').onclick=()=>setFlip(false);
+  ob.onclick=()=>setOpen(!v.classList.contains('open'));fb.onclick=()=>setFlip(!v.classList.contains('flip'));
+  $('#cdSvA').onclick=()=>cdDownload(c,'album',$('#cdSvA'));
   if($('#cdDel'))$('#cdDel').onclick=()=>cdRemove(c,$('#cdDel'));
-  setTimeout(()=>{if(tk===cdViewTok)open()},650);
-  const[ci,di]=await Promise.all([cdLoad(c.cover),cdLoad(c.disc)]);if(tk!==cdViewTok)return;
-  const back=cdCanvas(600);await cdFonts(c.title+c.n+c.note+c.tracks.map(t=>t.s+t.a).join(''));cdDrawBack(back.getContext('2d'),600,cdData(c));
-  const b=document.querySelector('.cdv-lid .b');if(b&&tk===cdViewTok)b.innerHTML=`<img src="${back.toDataURL('image/jpeg',.9)}" alt="트랙리스트">`}
-let cdViewTok=0;
+  setTimeout(()=>{if(tk===cdViewTok&&!v.classList.contains('open')&&!v.classList.contains('flip'))setOpen(true)},700);
+  const d=cdData(c);await cdFonts(cdText(d));if(tk!==cdViewTok)return;
+  const back=cdCanvas(600);cdDrawBack(back.getContext('2d'),600,d);const inner=await cdInnerOf(c,600);if(tk!==cdViewTok)return;
+  const ic=inner instanceof HTMLCanvasElement?inner.toDataURL('image/jpeg',.9):inner.src;
+  const bi=v.querySelector('.cdv-lid .b'),bb=v.querySelector('.cdv-back');
+  if(bi)bi.innerHTML=`<img src="${ic}" alt="안쪽">`;if(bb)bb.innerHTML=`<img src="${back.toDataURL('image/jpeg',.9)}" alt="뒷면 트랙리스트">`}
 async function cdDownload(c,kind,btn){const o=btn.textContent;btn.disabled=true;btn.textContent='만드는 중…';
   try{const[ci,di]=await Promise.all([cdLoad(c.cover),cdLoad(c.disc)]);if(!ci||!di)throw new Error('그림을 불러오지 못했어요');
-    const R=await cdRender(cdData(c),null,ci,di),nm=`쭈니CD_${cdFile(c.title)}_${cdFile(c.n)}`;
+    const ii=c.inner?await cdLoad(c.inner):null,R=await cdRender(cdData(c),{},{cover:ci,disc:di,inner:ii}),nm=`쭈니CD_${cdFile(c.title)}_${cdFile(c.n)}`;
     if(kind==='album'){const s=cdCanvas(1600,1000);cdDrawShot(s.getContext('2d'),1,cdData(c),R.cover,R.disc,R.back);cdSave(await cdBlob(s,'image/jpeg',.92),nm+'.jpg')}
-    else{const z=await cdZip([{name:nm+'_1_앞표지.png',blob:await cdBlob(R.cover)},{name:nm+'_2_뒷면.png',blob:await cdBlob(R.back)},{name:nm+'_3_CD알판.png',blob:await cdBlob(R.disc)}]);cdSave(z,nm+'_키링제작용.zip')}
     btn.textContent='저장했어요'}
   catch(e){btn.textContent='저장하지 못했어요';const m=$('#cdMsg');if(m)m.textContent=e.message||'다시 시도해 주세요'}
   setTimeout(()=>{btn.disabled=false;btn.textContent=o},1600)}
 async function cdRemove(c,btn){if(!btn.dataset.sure){btn.dataset.sure=1;btn.textContent='한 번 더 누르면 레코드샵에서 내려요';return}btn.disabled=true;
   try{if(!sb){store.set('jc_cds',store.get('jc_cds',[]).filter(x=>x.id!==c.id))}
-    else{const r=await sb.from('cds').delete().eq('id',c.id);if(r.error)throw r.error;sb.storage.from(BUCKET).remove([c.path,c.dpath].filter(Boolean))}
+    else{const r=await sb.from('cds').delete().eq('id',c.id);if(r.error)throw r.error;sb.storage.from(BUCKET).remove([c.path,c.dpath,c.ipath].filter(Boolean))}
     CD.list=CD.list.filter(x=>x.id!==c.id);closeSheet();rpRefresh()}
   catch(e){btn.disabled=false;$('#cdMsg').textContent=errMsg(e)}}
 
-/* ---------- CD 만들기 ---------- */
-const MK={photo:null,photoUrl:null};
+/* ---------- CD 만들기: 앞면 · CD 알판 · 안쪽 · 뒷면 ---------- */
+const MK={ph:{f:null,d:null,i:null},url:{},part:'f'};
 function cdDraft(){const d=store.get('jc_cd_draft',null)||{};
-  return{title:d.title||'',tracks:Array.isArray(d.tracks)&&d.tracks.length?d.tracks.slice(0,18):[{s:'',a:''},{s:'',a:''},{s:'',a:''}],note:d.note||'',
-    st:{tpl:'photo',c:'berry',disc:'photo',s19:true,crop:{z:1,ox:0,oy:0},...(d.st||{})}}}
-function cdMake(){const D=cdDraft();MK.d=D;
-  const sw=(k,list,cur)=>list.map(([v,l])=>`<button type="button" class="soft fk${v===cur?' on':''}" data-mk="${k}" data-v="${v}">${l}</button>`).join('');
-  openSheet('쭈니 CD 만들기',`<p>나만의 쭈니 앨범을 만들어 <b>JUUN RECORDS</b>에 발매해요. 완성하면 앨범 이미지와 키링 제작용 이미지를 저장할 수 있어요.</p>
-  <canvas id="mkPrev" class="mk-prev" width="800" height="500" aria-label="미리보기"></canvas>
-  <form id="mkF" class="gb mk-f">
-    <label class="f">앨범 제목 <small>최대 24자</small><input id="mkT" maxlength="24" placeholder="예: 쭈니의 열아홉" value="${escH(D.title)}" required></label>
-    <h4>① 앞표지</h4>
-    <div class="row mk-ph"><label class="soft mk-file">${'사진 고르기'}<input type="file" id="mkFile" accept="image/*" hidden></label><button type="button" class="soft" id="mkNoPh" hidden>사진 빼기</button><span class="zhint" id="mkPhMsg">사진 없이 색으로만 만들어도 돼요</span></div>
-    <div class="mk-crop" id="mkCrop" hidden><label>확대<input type="range" min="1" max="3" step="0.01" data-crop="z" value="${D.st.crop.z}"></label><label>좌우<input type="range" min="-1" max="1" step="0.01" data-crop="ox" value="${D.st.crop.ox}"></label><label>위아래<input type="range" min="-1" max="1" step="0.01" data-crop="oy" value="${D.st.crop.oy}"></label></div>
-    <div class="row fr">${sw('tpl',CD_TPL,D.st.tpl)}</div>
-    <div class="mk-cols">${Object.entries(CD_COL).map(([k,c])=>`<button type="button" class="mk-col${k===D.st.c?' on':''}" data-mk="c" data-v="${k}" style="background:${c.bg}" aria-label="${c.n}" title="${c.n}"></button>`).join('')}</div>
-    <label class="mk-chk"><input type="checkbox" id="mk19"${D.st.s19!==false?' checked':''}>19th 생일 스티커 붙이기</label>
-    <h4>② CD 알판</h4>
-    <div class="row fr">${sw('disc',CD_DISC,D.st.disc)}</div>
-    <h4>③ 트랙리스트 <small>쭈니에게 들려주고 싶은 노래 · 최대 18곡</small></h4>
-    <div id="mkTr" class="mk-tr"></div>
-    <button type="button" class="soft" id="mkAdd">+ 곡 추가</button>
-    <p class="zhint">19번 트랙은 히든 트랙 <b>Happy JUUN Day</b>로 자동으로 들어가요</p>
-    <label class="f">쭈니에게 한마디 <small>뒷면에 손글씨로 들어가요 · 최대 120자</small><textarea id="mkN" maxlength="120" rows="2">${escH(D.note)}</textarea></label>
+  return{title:d.title||'',note:d.note||'',tracks:Array.isArray(d.tracks)&&d.tracks.length?d.tracks.slice(0,18):[{s:'',a:''},{s:'',a:''},{s:'',a:''}],st:cdNorm(d.st)}}
+function cdThumbs(part,col){const S=72;return CD_TH.map(([k])=>{const c=cdCanvas(S);cdTheme(c.getContext('2d'),S,k,col,part);return c.toDataURL('image/png')})}
+function cdMake(){const D=cdDraft();MK.ph={f:null,d:null,i:null};MK.part='f';
+  const tabs=CD_PART.map(([k,l])=>`<button type="button" class="mk-tab${k==='f'?' on':''}" data-part="${k}"><canvas width="160" height="160" data-th="${k}"></canvas><span>${l}</span></button>`).join('');
+  openSheet('쭈니 CD 만들기',`<p>앞면, CD 알판, 안쪽, 뒷면을 하나씩 꾸며서 <b>JUUN RECORDS</b>에 발매해요.</p>
+  <label class="f">앨범 제목 <small>최대 24자</small><input id="mkT" maxlength="24" placeholder="예: 쭈니의 열아홉" value="${escH(D.title)}"></label>
+  <div class="mk-stage"><canvas id="mkPrev" class="mk-prev" width="640" height="640" aria-label="미리보기"></canvas></div>
+  <div class="mk-tabs" role="tablist">${tabs}</div>
+  <form id="mkF" class="gb mk-f"><div id="mkPanel"></div>
     <button class="primary" type="submit" id="mkGo">💿 CD 발매하기</button><p id="mkMsg" class="save"></p></form>`);
+  const save=()=>store.set('jc_cd_draft',{title:D.title,tracks:D.tracks,note:D.note,st:D.st});
+  const dd=()=>({title:D.title.trim()||'쭈니의 열아홉',name:(me.name||'하츄').slice(0,16),note:D.note,st:D.st,
+    tracks:D.tracks.filter(t=>t.s||t.a).length?D.tracks.filter(t=>t.s||t.a):[{s:'노래 제목',a:'가수'}]});
+  const phOf=p=>p==='f'?MK.ph.f:(MK.ph[p]||MK.ph.f);
+  const drawPart=(cv,p,d)=>{const x=cv.getContext('2d'),S=cv.width;x.clearRect(0,0,S,S);
+    if(p==='f')cdDrawCover(x,S,d,MK.ph.f);else if(p==='i')cdDrawInner(x,S,d,phOf('i'));else if(p==='b')cdDrawBack(x,S,d);
+    else{x.fillStyle='#0b0820';x.fillRect(0,0,S,S);const c=cdCanvas(Math.round(S*.92));cdDrawDisc(c.getContext('2d'),c.width,d,phOf('d'));x.drawImage(c,(S-c.width)/2,(S-c.width)/2)}};
+  let raf=0,busy=false;const prev=()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(async()=>{if(busy){prev();return}busy=true;const d=dd();await cdFonts(cdText(d));busy=false;
+    const cv=$('#mkPrev');if(!cv)return;drawPart(cv,MK.part,d);document.querySelectorAll('.mk-tab canvas').forEach(c=>drawPart(c,c.dataset.th,d))})};
+  const upd=()=>{save();prev()};
+  const colors=(p,cur)=>`<div class="mk-cols">${CD_PAL.map(([h,n])=>`<button type="button" class="mk-col${h===cur?' on':''}" data-col="${p}" data-v="${h}" style="background:${h}" aria-label="${n}" title="${n}"></button>`).join('')}
+    <label class="mk-col mk-pick${CD_PAL.some(x=>x[0]===cur)?'':' on'}" title="직접 고르기" style="--c:${cur}"><input type="color" data-colpick="${p}" value="${cur}"><span>+</span></label></div>`;
+  const themes=(p,cur,col)=>{const T=cdThumbs(p,col);return`<div class="mk-ths">${CD_TH.map(([k,n],i)=>`<button type="button" class="mk-th${k===cur?' on':''}" data-thm="${p}" data-v="${k}"><img src="${T[i]}" alt=""><span>${n}</span></button>`).join('')}</div>`};
+  const photo=(p,label)=>{const has=!!MK.ph[p],cr=p==='f'?D.st.crop:p==='d'?D.st.d.crop:D.st.in.crop;
+    return`<div class="mk-ph"><label class="soft mk-file">${has?'사진 바꾸기':'사진 고르기'}<input type="file" accept="image/*" data-file="${p}" hidden></label>${has?`<button type="button" class="soft" data-nophoto="${p}">사진 빼기</button>`:''}<span class="zhint">${has?'슬라이더로 위치를 맞춰요':label}</span></div>
+    ${has||(p!=='f'&&MK.ph.f)?`<div class="mk-crop">${[['z','확대',1,3],['ox','좌우',-1,1],['oy','위아래',-1,1]].map(([k,l,a,b])=>`<label>${l}<input type="range" min="${a}" max="${b}" step="0.01" data-crop="${p}" data-k="${k}" value="${cr[k]}"></label>`).join('')}</div>`:''}`};
+  const seg=(attr,list,cur)=>`<div class="row fr">${list.map(([v,l])=>`<button type="button" class="soft fk${v===cur?' on':''}" data-${attr}="${v}">${l}</button>`).join('')}</div>`;
+  const panel=()=>{const p=MK.part,st=D.st;let h='';
+    if(p==='f')h=`<h4>앞면 사진</h4>${photo('f','사진 없이 배경만으로 만들어도 돼요')}<h4>모양</h4>${seg('tpl',CD_TPL,st.tpl)}
+      <h4>배경 테마 <small>사진이 없거나 미니멀 · 타이포일 때 보여요</small></h4>${themes('f',st.th,st.c)}<h4>색</h4>${colors('f',st.c)}
+      <label class="mk-chk"><input type="checkbox" id="mk19"${st.s19?' checked':''}>19th 생일 스티커 붙이기</label>`;
+    else if(p==='d')h=`<h4>CD 알판</h4>${seg('dsrc',[['photo','사진'],['theme','무늬']],st.d.src)}
+      ${st.d.src==='photo'?photo('d',MK.ph.f?'앞면 사진을 그대로 써요 · 다른 사진도 고를 수 있어요':'사진을 골라 주세요'):themes('d',st.d.th,st.d.c)}<h4>색 <small>${st.d.src==='photo'?'사진이 없을 때 바탕색':'무늬 색'}</small></h4>${colors('d',st.d.c)}`;
+    else if(p==='i')h=`<h4>안쪽 모양 <small>케이스를 열면 뚜껑 안에 보여요</small></h4>${seg('itpl',CD_ITPL,st.in.tpl)}
+      <label class="f">쭈니에게 한마디 <small>안쪽에 손글씨로 들어가요 · 최대 200자</small><textarea id="mkN" maxlength="200" rows="3" placeholder="비워 두면 '열아홉 번째 생일 축하해, 쭈니야!'가 들어가요">${escH(D.note)}</textarea></label>
+      ${st.in.tpl!=='letter'?`<h4>안쪽 사진</h4>${photo('i',MK.ph.f?'앞면 사진을 그대로 써요 · 다른 사진도 고를 수 있어요':'사진 없이도 돼요')}`:''}
+      <h4>배경 테마</h4>${themes('i',st.in.th,st.in.c)}<h4>색</h4>${colors('i',st.in.c)}`;
+    else h=`<h4>트랙리스트 <small>쭈니에게 들려주고 싶은 노래 · 최대 18곡</small></h4><div id="mkTr" class="mk-tr"></div><button type="button" class="soft" id="mkAdd">+ 곡 추가</button>
+      <p class="zhint">19번 트랙은 히든 트랙 <b>Happy JUUN Day</b>로 자동으로 들어가요</p><h4>뒷면 배경 테마</h4>${themes('b',st.b.th,st.b.c)}<h4>색</h4>${colors('b',st.b.c)}`;
+    $('#mkPanel').innerHTML=h;if(p==='b')tr()};
   const tr=()=>{$('#mkTr').innerHTML=D.tracks.map((t,i)=>`<div class="mk-ti"><i>${p2(i+1)}</i><input data-tr="s" data-i="${i}" maxlength="40" placeholder="노래 제목" value="${escH(t.s||'')}"><input data-tr="a" data-i="${i}" maxlength="24" placeholder="가수" value="${escH(t.a||'')}"><button type="button" class="soft" data-trx="${i}" aria-label="${i+1}번 트랙 빼기"${D.tracks.length<2?' disabled':''}>✕</button></div>`).join('');
     $('#mkAdd').disabled=D.tracks.length>=18};
-  tr();
-  const save=()=>store.set('jc_cd_draft',{title:D.title,tracks:D.tracks,note:D.note,st:D.st});
-  let raf=0;const prev=()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(async()=>{const cv=$('#mkPrev');if(!cv)return;
-    const d={...D,title:D.title||'쭈니의 열아홉',name:me.name||'하츄',tracks:D.tracks.filter(t=>t.s||t.a).length?D.tracks.filter(t=>t.s||t.a):[{s:'노래 제목',a:'가수'}]};
-    await cdFonts(d.title+d.name+d.note+d.tracks.map(t=>t.s+t.a).join(''));if(!$('#mkPrev'))return;
-    const co=cdCanvas(500),di=cdCanvas(440),ba=cdCanvas(500);cdDrawCover(co.getContext('2d'),500,d,MK.photo);cdDrawDisc(di.getContext('2d'),440,d,MK.photo);cdDrawBack(ba.getContext('2d'),500,d);
-    const x=cv.getContext('2d');x.clearRect(0,0,800,500);cdDrawShot(x,.5,d,co,di,ba)})};
-  const upd=()=>{save();prev()};
-  $('#mkT').oninput=e=>{D.title=e.target.value;upd()};$('#mkN').oninput=e=>{D.note=e.target.value;upd()};$('#mk19').onchange=e=>{D.st.s19=e.target.checked;upd()};
-  $('#mkF').addEventListener('click',e=>{const b=e.target.closest('[data-mk]');if(b){D.st[b.dataset.mk]=b.dataset.v;
-      $('#mkF').querySelectorAll(`[data-mk="${b.dataset.mk}"]`).forEach(x=>x.classList.toggle('on',x===b));upd();return}
-    const x=e.target.closest('[data-trx]');if(x&&D.tracks.length>1){D.tracks.splice(+x.dataset.trx,1);tr();upd()}});
-  $('#mkTr').oninput=e=>{const t=e.target;if(!t.dataset.tr)return;D.tracks[+t.dataset.i][t.dataset.tr]=t.value;upd()};
-  $('#mkAdd').onclick=()=>{if(D.tracks.length>=18)return;D.tracks.push({s:'',a:''});tr();save();const n=$('#mkTr').querySelectorAll('input[data-tr=s]');n[n.length-1].focus()};
-  $('#mkCrop').oninput=e=>{const k=e.target.dataset.crop;if(!k)return;D.st.crop[k]=+e.target.value;upd()};
-  const phUi=()=>{$('#mkCrop').hidden=!MK.photo;$('#mkNoPh').hidden=!MK.photo;$('#mkPhMsg').textContent=MK.photo?'슬라이더로 사진 위치를 맞춰요':'사진 없이 색으로만 만들어도 돼요';
-    $('#mkF').querySelector('.mk-file').firstChild.textContent=MK.photo?'사진 바꾸기':'사진 고르기'};
-  $('#mkFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;if(!/^image\//.test(f.type)){$('#mkMsg').textContent='사진 파일만 고를 수 있어요';return}
-    if(MK.photoUrl)URL.revokeObjectURL(MK.photoUrl);MK.photoUrl=URL.createObjectURL(f);const im=await new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=MK.photoUrl});
+  const partSt=p=>p==='f'?D.st:p==='d'?D.st.d:p==='i'?D.st.in:D.st.b;
+  const setCol=(p,v)=>{partSt(p).c=v;panel();upd()};
+  $('#mkT').oninput=e=>{D.title=e.target.value;upd()};
+  document.querySelector('.mk-tabs').onclick=e=>{const b=e.target.closest('[data-part]');if(!b)return;MK.part=b.dataset.part;
+    document.querySelectorAll('.mk-tab').forEach(t=>t.classList.toggle('on',t===b));panel();prev()};
+  const F=$('#mkF');
+  F.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;const s=t.dataset;
+    if(s.col){setCol(s.col,s.v);return}
+    if(s.thm){partSt(s.thm).th=s.v;F.querySelectorAll(`[data-thm="${s.thm}"]`).forEach(x=>x.classList.toggle('on',x===t));upd();return}
+    if(s.tpl){D.st.tpl=s.tpl;panel();upd();return}
+    if(s.itpl){D.st.in.tpl=s.itpl;panel();upd();return}
+    if(s.dsrc){D.st.d.src=s.dsrc;panel();upd();return}
+    if(s.nophoto){MK.ph[s.nophoto]=null;panel();upd();return}
+    if(s.trx!=null&&D.tracks.length>1){D.tracks.splice(+s.trx,1);tr();upd();return}
+    if(t.id==='mkAdd'&&D.tracks.length<18){D.tracks.push({s:'',a:''});tr();save();const n=$('#mkTr').querySelectorAll('input[data-tr=s]');n[n.length-1].focus()}});
+  F.addEventListener('input',e=>{const t=e.target,s=t.dataset;
+    if(s.tr){D.tracks[+s.i][s.tr]=t.value;upd()}
+    else if(s.crop){partSt(s.crop).crop[s.k]=+t.value;upd()}
+    else if(s.colpick){const p=s.colpick;partSt(p).c=t.value.toLowerCase();const l=t.closest('.mk-pick');l.style.setProperty('--c',t.value);
+      F.querySelectorAll(`[data-col="${p}"]`).forEach(x=>x.classList.remove('on'));l.classList.add('on');upd()}
+    else if(t.id==='mkN'){D.note=t.value;upd()}});
+  F.addEventListener('change',async e=>{const t=e.target;
+    if(t.dataset.colpick){panel();return}
+    if(t.id==='mk19'){D.st.s19=t.checked;upd();return}
+    const p=t.dataset.file;if(!p||!t.files[0])return;const f=t.files[0];if(!/^image\//.test(f.type)){$('#mkMsg').textContent='사진 파일만 고를 수 있어요';return}
+    if(MK.url[p])URL.revokeObjectURL(MK.url[p]);MK.url[p]=URL.createObjectURL(f);const im=await new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=MK.url[p]});
     if(!im){$('#mkMsg').textContent='사진을 열지 못했어요. 다른 사진을 골라 주세요';return}
     const k=Math.min(1,2000/Math.max(im.naturalWidth,im.naturalHeight)),c=cdCanvas(Math.round(im.naturalWidth*k),Math.round(im.naturalHeight*k));c.getContext('2d').drawImage(im,0,0,c.width,c.height);
-    MK.photo=c;D.st.crop={z:1,ox:0,oy:0};$('#mkCrop').querySelectorAll('input').forEach(i=>{i.value=i.dataset.crop==='z'?1:0});phUi();upd()};
-  $('#mkNoPh').onclick=()=>{MK.photo=null;$('#mkFile').value='';phUi();upd()};
-  phUi();prev();
-  $('#mkF').onsubmit=async e=>{e.preventDefault();const b=$('#mkGo'),msg=$('#mkMsg');if(b.disabled)return;
+    MK.ph[p]=c;partSt(p).crop={z:1,ox:0,oy:0};if(p==='d')D.st.d.src='photo';$('#mkMsg').textContent='';panel();upd()});
+  panel();prev();
+  F.onsubmit=async e=>{e.preventDefault();const b=$('#mkGo'),msg=$('#mkMsg');if(b.disabled)return;
     const tracks=D.tracks.map(t=>({s:(t.s||'').trim().slice(0,40),a:(t.a||'').trim().slice(0,24)})).filter(t=>t.s);
     if(!D.title.trim()){msg.textContent='앨범 제목을 적어 주세요';$('#mkT').focus();return}
-    if(!tracks.length){msg.textContent='노래를 한 곡 이상 적어 주세요';return}
-    const d={title:D.title.trim().slice(0,24),name:(me.name||'하츄').slice(0,16),tracks,note:D.note.trim().slice(0,120),st:{tpl:D.st.tpl,c:D.st.c,disc:D.st.disc,s19:D.st.s19!==false,crop:D.st.crop}};
-    if(!MK.photo&&d.st.disc==='photo')d.st.disc='solid';
+    if(!tracks.length){msg.textContent='뒷면 트랙리스트에 노래를 한 곡 이상 적어 주세요';document.querySelector('[data-part=b]').click();return}
+    const st=cdNorm(JSON.parse(JSON.stringify(D.st)));if(st.d.src==='photo'&&!phOf('d'))st.d.src='theme';
+    const d={title:D.title.trim().slice(0,24),name:(me.name||'하츄').slice(0,16),tracks,note:D.note.trim().slice(0,200),st};
     b.disabled=true;b.textContent='CD 굽는 중…';msg.textContent='';
-    try{const R=await cdRender(d,MK.photo);const cb=await cdBlob(R.cover,'image/jpeg',.9),db=await cdBlob(R.disc,'image/png');let row;
-      if(!sb){const small=cdCanvas(600),sd=cdCanvas(500);small.getContext('2d').drawImage(R.cover,0,0,600,600);sd.getContext('2d').drawImage(R.disc,0,0,500,500);
-        row={id:'l'+Date.now(),n:d.name,title:d.title,tracks:d.tracks,note:d.note,st:d.st,cover:small.toDataURL('image/jpeg',.85),disc:sd.toDataURL('image/png'),approved:true,at:Date.now()};
+    try{const R=await cdRender(d,{f:MK.ph.f,d:phOf('d'),i:phOf('i')});
+      const cb=await cdBlob(R.cover,'image/jpeg',.9),db=await cdBlob(R.disc,'image/png'),ib=await cdBlob(R.inner,'image/jpeg',.9);let row;
+      if(!sb){const sm=(c,s,t,q)=>{const o=cdCanvas(s);o.getContext('2d').drawImage(c,0,0,s,s);return o.toDataURL(t,q)};
+        row={id:'l'+Date.now(),n:d.name,title:d.title,tracks:d.tracks,note:d.note,st:d.st,cover:sm(R.cover,600,'image/jpeg',.85),disc:sm(R.disc,500,'image/png'),inner:sm(R.inner,600,'image/jpeg',.85),approved:true,at:Date.now()};
         const a=store.get('jc_cds',[]);a.unshift(row);try{localStorage.setItem('jc_cds',JSON.stringify(a))}catch(_){throw new Error('storage_full')}row={...row,mine:true}}
-      else{const t=Date.now(),p1=`${uid}/cd-${t}.jpg`,p2_=`${uid}/cd-${t}-disc.png`;
-        let u=await sb.storage.from(BUCKET).upload(p1,cb,{contentType:'image/jpeg',cacheControl:'31536000',upsert:false});if(u.error)throw u.error;
-        u=await sb.storage.from(BUCKET).upload(p2_,db,{contentType:'image/png',cacheControl:'31536000',upsert:false});if(u.error){sb.storage.from(BUCKET).remove([p1]);throw u.error}
-        const r=await sb.from('cds').insert({name:d.name,title:d.title,tracks:d.tracks,note:d.note||null,style:d.st,image_path:p1,disc_path:p2_}).select().single();
-        if(r.error){sb.storage.from(BUCKET).remove([p1,p2_]);throw r.error}row=cdRow(r.data)}
+      else{if(CD.noInner)throw new Error('운영진이 cds.sql을 다시 실행해야 해요 (안쪽 디자인 저장 칸이 없어요)');
+        const t=Date.now(),P=[`${uid}/cd-${t}.jpg`,`${uid}/cd-${t}-disc.png`,`${uid}/cd-${t}-inner.jpg`],B=[[cb,'image/jpeg'],[db,'image/png'],[ib,'image/jpeg']],done=[];
+        for(let i=0;i<3;i++){const u=await sb.storage.from(BUCKET).upload(P[i],B[i][0],{contentType:B[i][1],cacheControl:'31536000',upsert:false});if(u.error){if(done.length)sb.storage.from(BUCKET).remove(done);throw u.error}done.push(P[i])}
+        const r=await sb.from('cds').insert({name:d.name,title:d.title,tracks:d.tracks,note:d.note||null,style:d.st,image_path:P[0],disc_path:P[1],inner_path:P[2]}).select().single();
+        if(r.error){sb.storage.from(BUCKET).remove(P);throw r.error}row=cdRow(r.data)}
       CD.list.unshift(row);try{localStorage.removeItem('jc_cd_draft')}catch(_){}
-      SFX.done&&SFX.done();cdView(row.id);setTimeout(()=>{const h=$('#cdvHint');if(h)h.textContent='🎉 발매 완료! JUUN RECORDS에 꽂혔어요'},700);onClose=()=>setTimeout(rpRefresh,0)}
-    catch(err){b.disabled=false;b.textContent='💿 CD 발매하기';msg.textContent=errMsg(err)}}}
+      SFX.done&&SFX.done();cdView(row.id,true);onClose=()=>setTimeout(rpRefresh,0)}
+    catch(err){b.disabled=false;b.textContent='💿 CD 발매하기';msg.textContent=err&&/cds\.sql/.test(err.message||'')?err.message:errMsg(err)}}}
 
 /* 생일파티 화면에 끼워 넣기: 가사(LYRICS) 바로 아래 */
 {const f=VIEWS.archive,K='<section class="rp-sec" style="padding-top:40px"><div class="rp-big"><div><div class="rp-live">';
@@ -3129,22 +3275,23 @@ rp.addEventListener('click',e=>{const b=e.target.closest('[data-cd]');if(!b||!rp
 /* '올린 것도 모두 지우기'에 CD도 포함 */
 {const f=deleteAllMine;deleteAllMine=async function(){await f();
   if(!sb){try{localStorage.removeItem('jc_cds');localStorage.removeItem('jc_cd_draft')}catch(e){}CD.list=[];return}
-  const r=await sb.from('cds').select('image_path,disc_path').eq('user_id',uid);await sb.from('cds').delete().eq('user_id',uid);
-  const p=(r.data||[]).flatMap(x=>[x.image_path,x.disc_path]).filter(Boolean);for(let i=0;i<p.length;i+=50)await sb.storage.from(BUCKET).remove(p.slice(i,i+50));CD.list=[];CD.loaded=false}}
+  const r=await cdSelect(c=>sb.from('cds').select(c).eq('user_id',uid));await sb.from('cds').delete().eq('user_id',uid);
+  const p=(r.data||[]).flatMap(x=>[x.image_path,x.disc_path,x.inner_path]).filter(Boolean);for(let i=0;i<p.length;i+=50)await sb.storage.from(BUCKET).remove(p.slice(i,i+50));CD.list=[];CD.loaded=false}}
 
 /* ---------- 운영진: 'CD' 탭 ---------- */
 AD_TABS.splice(Math.max(0,AD_TABS.findIndex(t=>t[0]==='site')),0,['cds','CD']);
 {const f=adGo;adGo=async function(tab){if(tab!=='cds')return f(tab);AD.tab=tab;AD.msg='';
   adm.innerHTML=`<div class="adw">${adHead('<button class="ad-link" data-ad="logout">로그아웃</button>')}<div class="ad-tabs">${AD_TABS.map(([k,l])=>`<button class="${k===tab?'on':''}" data-ad="tab" data-k="${k}">${l}</button>`).join('')}</div><div id="adBody"><p class="ad-empty">불러오는 중…</p></div></div>`;
   adCds()}}
-async function adCds(){const r=await sb.from('cds').select('id,user_id,name,title,tracks,note,style,image_path,disc_path,approved,created_at').order('created_at',{ascending:false}).limit(1000);
+async function adCds(){const r=await cdSelect(c=>sb.from('cds').select(c).order('created_at',{ascending:false}).limit(1000));
   if(r.error){$('#adBody').innerHTML=`<p class="ad-err">CD를 불러오지 못했어요: ${escH(r.error.message)}</p><p class="ad-note">Supabase SQL Editor에서 cds.sql을 실행해 주세요.</p>`;return}
   AD.cds=r.data.map(cdRow);adCdsRender()}
 function adCdsRender(){const L=AD.cds,hid=L.filter(c=>!c.approved).length;
   $('#adBody').innerHTML=`<div class="ad-bar"><span>발매된 CD ${L.length}장 · 숨김 ${hid}</span></div>
+  ${CD.noInner?'<p class="ad-err">cds.sql을 다시 실행해 주세요. 안쪽 디자인을 저장할 칸이 아직 없어서 새 CD를 발매할 수 없어요.</p>':''}
   <div class="ad-hp" style="margin-bottom:12px"><b style="font-family:var(--display);font-weight:400">전체 내려받기</b>
     <p class="ad-note" style="margin:0">생일이 끝나면 포토북이나 실물 키링을 만들 때 써요. 숨긴 CD는 빠져요. 장수가 많으면 몇 분 걸릴 수 있어요.</p>
-    <div class="ad-hpm"><button type="button" data-cdz="album">앨범 이미지 전체 (ZIP)</button><button type="button" data-cdz="kit">키링 제작용 전체 (ZIP)</button><span class="ad-note" id="cdzMsg"></span></div></div>
+    <div class="ad-hpm"><button type="button" data-cdz="album">앨범 이미지 전체 (ZIP)</button><button type="button" data-cdz="kit">제작용 원본 전체 (ZIP)</button><span class="ad-note" id="cdzMsg"></span></div></div>
   ${L.length?`<div class="ad-list">${L.map(c=>`<div class="ad-row${c.approved?'':' off'}"><a href="${escH(c.cover)}" target="_blank" rel="noopener" class="ad-im"><img src="${escH(c.cover)}" alt="" loading="lazy"></a><div class="ad-tx">
     <div class="ad-meta"><b>${escH(c.n)}</b> · ${kstStr(new Date(c.at).toISOString())}${c.approved?'':' · <em>숨김</em>'}</div>
     <div><b>「${escH(c.title)}」</b> ${c.tracks.length}곡</div><div><small>${escH(c.tracks.slice(0,4).map(t=>t.s).join(' · '))}${c.tracks.length>4?' …':''}</small></div>${c.note?`<div><small>“${escH(c.note)}”</small></div>`:''}</div>
@@ -3152,17 +3299,18 @@ function adCdsRender(){const L=AD.cds,hid=L.filter(c=>!c.approved).length;
 async function adCdsZip(kind,btn){const L=AD.cds.filter(c=>c.approved),msg=$('#cdzMsg');if(!L.length)return alert('내려받을 CD가 없어요');
   btn.disabled=true;const files=[];
   try{for(let i=0;i<L.length;i++){const c=L[i];msg.textContent=`${i+1} / ${L.length} 만드는 중…`;
-      const[ci,di]=await Promise.all([cdLoad(c.cover),cdLoad(c.disc)]);if(!ci||!di)continue;const R=await cdRender(cdData(c),null,ci,di),nm=`${String(i+1).padStart(3,'0')}_${cdFile(c.title)}_${cdFile(c.n)}`;
+      const[ci,di]=await Promise.all([cdLoad(c.cover),cdLoad(c.disc)]);if(!ci||!di)continue;const ii=c.inner?await cdLoad(c.inner):null;
+      const R=await cdRender(cdData(c),{},{cover:ci,disc:di,inner:ii}),nm=`${String(i+1).padStart(3,'0')}_${cdFile(c.title)}_${cdFile(c.n)}`;
       if(kind==='album'){const s=cdCanvas(1600,1000);cdDrawShot(s.getContext('2d'),1,cdData(c),R.cover,R.disc,R.back);files.push({name:nm+'.jpg',blob:await cdBlob(s,'image/jpeg',.9)})}
-      else files.push({name:`${nm}/1_앞표지.png`,blob:await cdBlob(R.cover)},{name:`${nm}/2_뒷면.png`,blob:await cdBlob(R.back)},{name:`${nm}/3_CD알판.png`,blob:await cdBlob(R.disc)})}
-    msg.textContent='ZIP으로 묶는 중…';cdSave(await cdZip(files),kind==='album'?'JUUN_RECORDS_앨범이미지.zip':'JUUN_RECORDS_키링제작용.zip');msg.textContent=`${L.length}장 저장했어요`}
+      else files.push({name:`${nm}/1_앞면.png`,blob:await cdBlob(R.cover)},{name:`${nm}/2_안쪽.png`,blob:await cdBlob(R.inner)},{name:`${nm}/3_뒷면.png`,blob:await cdBlob(R.back)},{name:`${nm}/4_CD알판.png`,blob:await cdBlob(R.disc)})}
+    msg.textContent='ZIP으로 묶는 중…';cdSave(await cdZip(files),kind==='album'?'JUUN_RECORDS_앨범이미지.zip':'JUUN_RECORDS_제작용원본.zip');msg.textContent=`${L.length}장 저장했어요`}
   catch(e){msg.textContent='실패했어요: '+(e.message||e)}btn.disabled=false}
 adm.addEventListener('click',async e=>{if(AD.tab!=='cds'||!AD.cds)return;const z=e.target.closest('[data-cdz]');if(z)return adCdsZip(z.dataset.cdz,z);
   const b=e.target.closest('[data-cda]');if(!b)return;const c=AD.cds.find(x=>x.id===b.dataset.id);if(!c)return;const a=b.dataset.cda;
   if(a==='dl'){b.disabled=true;await cdDownload(c,'album',b)}
   else if(a==='hide'){const r=await sb.from('cds').update({approved:!c.approved}).eq('id',c.id);if(r.error)return alert(r.error.message);c.approved=!c.approved;CD.loaded=false;adCdsRender()}
   else if(a==='del'){if(!b.dataset.sure){b.dataset.sure=1;b.textContent='한 번 더 누르면 삭제';return}
-    const r=await sb.from('cds').delete().eq('id',c.id);if(r.error)return alert(r.error.message);sb.storage.from(BUCKET).remove([c.path,c.dpath].filter(Boolean));
+    const r=await sb.from('cds').delete().eq('id',c.id);if(r.error)return alert(r.error.message);sb.storage.from(BUCKET).remove([c.path,c.dpath,c.ipath].filter(Boolean));
     AD.cds=AD.cds.filter(x=>x.id!==c.id);CD.loaded=false;adCdsRender()}});
 
 
