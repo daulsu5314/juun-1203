@@ -2885,7 +2885,7 @@ const cdThOk=t=>CD_TH.some(x=>x[0]===t);
 function cdNorm(s){s=s||{};const d=s.d||{},i=s.in||{},b=s.b||{},c=cdHex(s.c)||'#141a3a';
   const fo=v=>cdFontOk(v)?v:'gothic';
   return{tpl:['photo','frame','type'].includes(s.tpl)?s.tpl:'photo',c,th:cdThOk(s.th)?s.th:'deep',s19:s.s19!==false,crop:cdCrop(s.crop),font:fo(s.font),
-    d:{src:d.src==='theme'||d.src==='photo'?d.src:(s.disc&&s.disc!=='photo'?'theme':'photo'),th:cdThOk(d.th)?d.th:'nebula',c:cdHex(d.c)||c,font:fo(d.font),txt:String(d.txt||'').slice(0,24),nt:!!d.nt,crop:cdCrop(d.crop||s.crop)},
+    d:{src:d.src==='theme'||d.src==='photo'?d.src:(s.disc&&s.disc!=='photo'?'theme':'photo'),th:cdThOk(d.th)?d.th:'nebula',c:cdHex(d.c)||c,font:fo(d.font),txt:String(d.txt||'').slice(0,24),nt:!!d.nt,nl:!!d.nl,crop:cdCrop(d.crop||s.crop)},
     in:{tpl:['letter','photo','poster'].includes(i.tpl)?i.tpl:'letter',th:cdThOk(i.th)?i.th:'deep',c:cdHex(i.c)||'#1e2a6e',font:fo(i.font),crop:cdCrop(i.crop)},
     b:{th:cdThOk(b.th)?b.th:'deep',c:cdHex(b.c)||'#0b0b12',font:fo(b.font)}}}
 
@@ -3012,8 +3012,8 @@ function cdDrawDisc(x,S,d,photo){cdUse(d.st.d.font);const st=d.st.d,C=st.c,r=S/2
     x.fillStyle=g;x.fillRect(0,0,S,S)}
   x.strokeStyle='rgba(255,255,255,.06)';x.lineWidth=u*.2;for(let k=30;k<98;k+=1.6){x.beginPath();x.arc(r,r,k*u/2,0,TAU);x.stroke()}
   const ink=usePh?'#fff':cdInkOf(st.th,C);x.fillStyle=ink;x.textAlign='center';if(usePh||ink!=='#2a1f3d'){x.shadowColor='rgba(0,0,0,.5)';x.shadowBlur=u*1.2}
-  if(!st.nt){const dt=(st.txt||'').trim()||d.title;cdFit(x,dt,S*.56,u*6.4,'d',u*3.5);x.fillText(cdClip(x,dt,S*.6),r,r+u*31);
-    x.font=fnt('n',u*2.8);cdSp(x,'JUUN RECORDS · #1203',r,r-u*28,u*.5,'center')}
+  if(!st.nt){const dt=(st.txt||'').trim()||d.title;cdFit(x,dt,S*.56,u*6.4,'d',u*3.5);x.fillText(cdClip(x,dt,S*.6),r,r+u*31)}
+  if(!st.nl){x.font=fnt('n',u*2.8);cdSp(x,'JUUN RECORDS · #1203',r,r-u*28,u*.5,'center')}
   x.shadowColor='transparent';x.textAlign='left';
   x.globalCompositeOperation='destination-out';x.beginPath();x.arc(r,r,r*.25,0,TAU);x.fill();x.globalCompositeOperation='source-over';
   const hub=x.createRadialGradient(r-r*.06,r-r*.08,r*.02,r,r,r*.25);hub.addColorStop(0,'rgba(255,255,255,.85)');hub.addColorStop(.5,'rgba(196,201,214,.75)');hub.addColorStop(1,'rgba(120,126,142,.7)');
@@ -3086,16 +3086,46 @@ function cdCase(x,X,Y,S,inner,o){const u=S/100;o=o||{};
   x.fillStyle=gl;cdRR(x,X,Y,S,S*.92,u*2.2);x.fill();x.strokeStyle='rgba(255,255,255,.7)';x.lineWidth=u*.7;x.stroke();x.strokeStyle='rgba(255,255,255,.18)';x.lineWidth=u*.3;cdRR(x,X+u*1.6,Y+u*1.6,S-u*3.2,S*.92-u*3.2,u*1.4);x.stroke();x.restore()}
 
 /* 앨범 이미지 (1600 × 1000): 뒷면 · CD · 앞면, 우주 배경 */
-function cdDrawShot(x,k,d,cover,disc,back){cdUse('gothic');const W=1600*k,H=1000*k,u=k,rnd=cdRnd(d.title+'bg');
-  const g=x.createLinearGradient(0,0,W,H);g.addColorStop(0,'#07051a');g.addColorStop(1,'#140d33');x.fillStyle=g;x.fillRect(0,0,W,H);
-  cdGlow(x,W*.62,H*.5,W*.45,d.st.c,.28);cdGlow(x,W*.2,H*.2,W*.3,'#7b4dff',.18);
-  for(let i=0;i<260;i++){x.fillStyle=`rgba(255,255,255,${.2+rnd()*.6})`;const s=u*(.8+rnd()*1.8);x.fillRect(rnd()*W,rnd()*H,s,s)}
-  cdCase(x,110*u,200*u,620*u,back,{});
-  x.save();x.translate(890*u,560*u);x.rotate(-.35);x.shadowColor='rgba(0,0,0,.55)';x.shadowBlur=30*u;x.shadowOffsetY=12*u;x.drawImage(disc,-270*u,-270*u,540*u,540*u);x.restore();
-  cdCase(x,880*u,160*u,620*u,cover,{hinge:true,tab:true});
-  x.textBaseline='alphabetic';x.fillStyle='#f5f5f7';x.font=fnt('n',30*u);cdSp(x,'JUUN RECORDS',110*u,92*u,4*u);
-  x.fillStyle='rgba(245,245,247,.7)';x.font=fnt('m',24*u);x.fillText(cdClip(x,`「${d.title}」  by ${d.name}`,700*u),110*u,132*u);
-  x.fillStyle='rgba(245,245,247,.55)';x.font=fnt('n',20*u);cdSp(x,'PLANET #1203 · 2026.12.03',W-110*u,92*u,2*u,'right')}
+/* 앞면 그림의 평균 색 (앨범 이미지 배경 분위기를 맞춰요) */
+function cdAvg(img,fb){try{const c=cdCanvas(1);const x=c.getContext('2d');x.drawImage(img,0,0,1,1);const[r,g,b]=x.getImageData(0,0,1,1).data;
+  const h='#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');return cdLum(h)<.012?fb:cdMix(h,fb,.25)}catch(e){return fb}}
+/* 앨범 이미지 (1600 × 1000): 신보 발매 포스터 */
+function cdDrawShot(x,k,d,cover,disc,back){const W=1600*k,H=1000*k,u=k,rnd=cdRnd(d.title+'bg'),st=d.st;
+  const a=cdAvg(cover,st.c),acc=cdLum(a)<.35?cdMix(a,'#ffffff',.55):cdMix(a,'#ffffff',.2);
+  x.save();x.fillStyle='#08070d';x.fillRect(0,0,W,H);
+  const bg=x.createRadialGradient(W*.32,H*.48,0,W*.32,H*.48,W*.8);bg.addColorStop(0,cdA(cdMix(a,'#08070d',.35),.95));bg.addColorStop(.55,cdA(cdMix(a,'#08070d',.78),.9));bg.addColorStop(1,'rgba(8,7,13,1)');
+  x.fillStyle=bg;x.fillRect(0,0,W,H);
+  for(let i=0;i<16000;i++){x.fillStyle=rnd()<.5?'rgba(255,255,255,.035)':'rgba(0,0,0,.06)';x.fillRect(rnd()*W,rnd()*H,u*1.2,u*1.2)}
+  const CX=120*u,CY=170*u,CS=620*u;
+  cdGlow(x,CX+CS*.55,CY+CS*.5,CS*1.05,cdMix(a,'#ffffff',.25),.28);
+  /* 커버 아래로 비치는 반사 */
+  const rh=150*u,rf=cdCanvas(Math.round(CS),Math.round(rh)),rx=rf.getContext('2d');rx.translate(0,rh);rx.scale(1,-1);rx.drawImage(cover,0,CS-rh,CS,rh,0,0,CS,rh);
+  rx.setTransform(1,0,0,1,0,0);rx.globalCompositeOperation='destination-in';const rg=rx.createLinearGradient(0,0,0,rh);rg.addColorStop(0,'rgba(0,0,0,.28)');rg.addColorStop(1,'rgba(0,0,0,0)');rx.fillStyle=rg;rx.fillRect(0,0,CS,rh);
+  x.drawImage(rf,CX,CY+CS+6*u);
+  /* CD가 커버 뒤에서 빠져나와요 */
+  x.save();x.translate(CX+CS-50*u,CY+CS/2);x.rotate(-.5);x.shadowColor='rgba(0,0,0,.6)';x.shadowBlur=40*u;x.shadowOffsetX=10*u;x.shadowOffsetY=16*u;x.drawImage(disc,-285*u,-285*u,570*u,570*u);x.restore();
+  x.save();x.shadowColor='rgba(0,0,0,.65)';x.shadowBlur=70*u;x.shadowOffsetY=34*u;x.fillStyle='#000';x.fillRect(CX,CY,CS,CS);x.restore();
+  x.drawImage(cover,CX,CY,CS,CS);
+  const sh=x.createLinearGradient(CX,CY,CX+CS,CY+CS);sh.addColorStop(0,'rgba(255,255,255,.1)');sh.addColorStop(.35,'rgba(255,255,255,0)');x.fillStyle=sh;x.fillRect(CX,CY,CS,CS);
+  x.strokeStyle='rgba(255,255,255,.14)';x.lineWidth=u*1.2;x.strokeRect(CX+u*.6,CY+u*.6,CS-u*1.2,CS-u*1.2);
+  /* 위쪽 라벨 */
+  x.textBaseline='alphabetic';cdUse('gothic');x.fillStyle='rgba(245,245,247,.85)';x.font=fnt('n',22*u);cdSp(x,'JUUN RECORDS',CX,108*u,5*u);
+  x.fillStyle='rgba(245,245,247,.45)';cdSp(x,'2026.12.03',W-100*u,108*u,4*u,'right');
+  /* 오른쪽: 제목 · 트랙리스트 */
+  const RX=1060*u,RW=440*u;x.fillStyle=acc;x.font=fnt('n',20*u);cdSp(x,'NEW RELEASE',RX,212*u,6*u);
+  cdUse(st.font);x.fillStyle='#ffffff';const fs=cdFit(x,d.title,RW,74*u,'d',40*u),TL=cdWrap(x,d.title,RW,2);TL.forEach((l,i)=>x.fillText(l,RX,(212+30)*u+fs*(i+1)*1.04));
+  let y=(212+30)*u+fs*TL.length*1.04;cdUse('gothic');x.fillStyle='rgba(245,245,247,.62)';x.font=fnt('m',24*u);x.fillText(cdClip(x,`by ${d.name}`,RW),RX,y+44*u);
+  y+=78*u;x.fillStyle='rgba(255,255,255,.18)';x.fillRect(RX,y,RW,u);y+=46*u;
+  const tr=(d.tracks||[]).filter(t=>t&&t.s),all=[...tr.map((t,i)=>({no:p2(i+1),s:t.s,a:t.a||''})),{no:'19',s:'Happy JUUN Day',a:'하츄',hid:true}],lh=40*u,max=Math.max(2,Math.floor((850*u-y)/lh));
+  let rows=all;if(all.length>max)rows=[...all.slice(0,max-2),{no:'',s:`… ${all.length-max+1}곡 더`,a:''},all[all.length-1]];
+  rows.forEach((t,i)=>{const Y=y+i*lh;x.fillStyle=t.hid?'#e6c068':acc;x.font=fnt('n',19*u);x.fillText(t.no,RX,Y);
+    x.fillStyle=t.no?'#ffffff':'rgba(245,245,247,.5)';x.font=fnt(t.no?'m':'b',22*u);const aw=t.a?Math.min(150*u,x.measureText(t.a).width+10*u):0;x.fillText(cdClip(x,t.s,RW-46*u-aw-(t.hid?92*u:0)),RX+46*u,Y);
+    if(t.a){x.fillStyle='rgba(245,245,247,.45)';x.font=fnt('b',18*u);x.textAlign='right';x.fillText(cdClip(x,t.a,140*u),RX+RW-(t.hid?92*u:0),Y);x.textAlign='left'}
+    if(t.hid){x.fillStyle='#e6c068';x.font=fnt('n',13*u);cdSp(x,'HIDDEN',RX+RW,Y-2*u,2*u,'right')}});
+  /* 아래: 바코드 · 발매 정보 */
+  const by=880*u;x.fillStyle='rgba(245,245,247,.75)';let bx=RX;while(bx<RX+120*u){const w=u*(1.2+Math.floor(rnd()*3)*1.4);x.fillRect(bx,by-30*u,w,30*u);bx+=w+u*(1.4+rnd()*2.2)}
+  x.fillStyle='rgba(245,245,247,.45)';x.font=fnt('n',15*u);cdSp(x,'PLANET #1203 · JR-1203',RX+RW,by-16*u,3*u,'right');cdSp(x,'HAPPY 19TH BIRTHDAY JUUN',RX+RW,by,3*u,'right');
+  x.restore()}
 
 const cdText=d=>d.title+d.name+(d.note||'')+(d.tracks||[]).map(t=>(t.s||'')+(t.a||'')).join('')+'To.쭈니 대원 행성 HappyJUUNDay하츄일동 from. 열아홉 번째 생일 축하해, 쭈니야!';
 /* ph: {f,d,i} 사진 / im: {cover,disc,inner} 이미 만들어 둔 그림 */
@@ -3227,8 +3257,9 @@ function cdMake(){const D=cdDraft();MK.ph={f:null,d:null,i:null};MK.part='f';
       <label class="mk-chk"><input type="checkbox" id="mk19"${st.s19?' checked':''}>19th 생일 스티커 붙이기</label>`;
     else if(p==='d')h=`<h4>CD 알판</h4>${seg('dsrc',[['photo','사진'],['theme','무늬']],st.d.src)}
       ${st.d.src==='photo'?photo('d',MK.ph.f?'앞면 사진을 그대로 써요 · 다른 사진도 고를 수 있어요':'사진을 골라 주세요'):themes('d',st.d.th,st.d.c)}<h4>색 <small>${st.d.src==='photo'?'사진이 없을 때 바탕색':'무늬 색'}</small></h4>${colors('d',st.d.c)}
-      <h4>CD 글자</h4><label class="mk-chk"><input type="checkbox" id="mkDnt"${st.d.nt?' checked':''}>글자 없이 깔끔하게</label>
-      ${st.d.nt?'':`<input id="mkDtx" class="mk-in" maxlength="24" placeholder="비워 두면 앨범 제목이 들어가요" value="${escH(st.d.txt)}"><h4>글씨체</h4>${fonts('d',st.d.font)}`}`;
+      <h4>CD 글자</h4><label class="mk-chk"><input type="checkbox" id="mkDt"${st.d.nt?'':' checked'}>CD에 글자 넣기</label>
+      ${st.d.nt?'':`<input id="mkDtx" class="mk-in" maxlength="24" placeholder="비워 두면 앨범 제목이 들어가요" value="${escH(st.d.txt)}"><h4>글씨체</h4>${fonts('d',st.d.font)}`}
+      <label class="mk-chk"><input type="checkbox" id="mkDl"${st.d.nl?'':' checked'}>JUUN RECORDS 로고 넣기</label>`;
     else if(p==='i')h=`<h4>안쪽 모양 <small>케이스를 열면 뚜껑 안에 보여요</small></h4>${seg('itpl',CD_ITPL,st.in.tpl)}
       <label class="f">쭈니에게 한마디 <small>안쪽에 손글씨로 들어가요 · 최대 200자</small><textarea id="mkN" maxlength="200" rows="3" placeholder="비워 두면 '열아홉 번째 생일 축하해, 쭈니야!'가 들어가요">${escH(D.note)}</textarea></label>
       ${st.in.tpl!=='letter'?`<h4>안쪽 사진</h4>${photo('i',MK.ph.f?'앞면 사진을 그대로 써요 · 다른 사진도 고를 수 있어요':'사진 없이도 돼요')}`:''}
@@ -3264,7 +3295,8 @@ function cdMake(){const D=cdDraft();MK.ph={f:null,d:null,i:null};MK.part='f';
   F.addEventListener('change',async e=>{const t=e.target;
     if(t.dataset.colpick){panel();return}
     if(t.id==='mk19'){D.st.s19=t.checked;upd();return}
-    if(t.id==='mkDnt'){D.st.d.nt=t.checked;panel();upd();return}
+    if(t.id==='mkDt'){D.st.d.nt=!t.checked;panel();upd();return}
+    if(t.id==='mkDl'){D.st.d.nl=!t.checked;upd();return}
     const p=t.dataset.file;if(!p||!t.files[0])return;const f=t.files[0];if(!/^image\//.test(f.type)){$('#mkMsg').textContent='사진 파일만 고를 수 있어요';return}
     if(MK.url[p])URL.revokeObjectURL(MK.url[p]);MK.url[p]=URL.createObjectURL(f);const im=await new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=MK.url[p]});
     if(!im){$('#mkMsg').textContent='사진을 열지 못했어요. 다른 사진을 골라 주세요';return}
