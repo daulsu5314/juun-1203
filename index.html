@@ -704,6 +704,15 @@ img{max-width:100%}
 .sheet .mk-ti input{padding:8px 10px;font-size:15px}
 .sheet .mk-ti button{padding:0;height:38px}
 @media (max-width:420px){.mk-ti{grid-template-columns:20px minmax(0,1fr) 34px}.mk-ti input[data-tr=a]{grid-column:2}.mk-ti button{grid-row:1/3;grid-column:3}}
+.mk-fonts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.mk-fo{height:42px;padding:0 6px!important;background:#fff!important;border:2px solid #ece2f2!important;border-radius:8px!important;color:var(--ink);line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mk-fo.on{border-color:var(--ink)!important;box-shadow:0 2px 0 var(--ink)}
+.sheet .mk-in{width:100%}
+/* ===== 넘겨 보기: 화살표를 그림 밖 양옆으로 ===== */
+.vwrap{display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
+.vwrap .vw{flex:0 1 auto;min-width:0;margin:0}
+.vwrap .vnav{position:static;transform:none;flex:none;width:36px;height:56px;background:#2a1f3d;color:#fff}
+.vwrap .vnav:active{transform:scale(.94)}
 </style>
 </head>
 <body>
@@ -1121,7 +1130,7 @@ function openEnding(){endingSeen=true;store.set('jc_end',true);endExplore();open
 let viewerNav=null;
 function openViewer(o){let i=o.index;
   const show=()=>{const it=o.items[i],n=o.items.length;
-    openSheet(o.title(it),`<div class="vw${o.pixel?' px':''}" id="vw" style="aspect-ratio:${typeof o.ratio==='function'?o.ratio(it):o.ratio};width:min(100%,calc(52vh * ${typeof o.ratio==='function'?o.ratio(it):o.ratio}))"><img src="${o.img(it)}" alt="${o.alt(it)}" draggable="false">${n>1?'<button class="vnav l" id="vp" aria-label="이전 작품">◀</button><button class="vnav r" id="vn" aria-label="다음 작품">▶</button>':''}</div>
+    openSheet(o.title(it),`<div class="vwrap">${n>1?'<button class="vnav l" id="vp" aria-label="이전 작품">◀</button>':''}<div class="vw${o.pixel?' px':''}" id="vw" style="aspect-ratio:${typeof o.ratio==='function'?o.ratio(it):o.ratio};width:min(100%,calc(52vh * ${typeof o.ratio==='function'?o.ratio(it):o.ratio}))"><img src="${o.img(it)}" alt="${o.alt(it)}" draggable="false"></div>${n>1?'<button class="vnav r" id="vn" aria-label="다음 작품">▶</button>':''}</div>
     <div class="vcount">${i+1} / ${n}${n>1?' · 옆으로 밀어서 넘겨 보세요':''}</div>${o.body(it)}
     <div class="row"><button class="soft" id="vback">← 목록으로</button>${o.extra?o.extra(it):''}</div><p id="vmsg" class="save"></p>`);
     const go=d=>{i=(i+d+n)%n;show()};viewerNav=n>1?go:null;
@@ -1168,8 +1177,8 @@ function charScene(seed,color){const W=120,H=190,c=document.createElement('canva
   if(r()<.75){const k=[STK.heart,STK.star][Math.floor(r()*2)];x.drawImage(k,20+Math.floor(r()*34),104,k.width*2,k.height*2)}
   return c}
 function openPhoto(){
-  openSheet('착륙 기록소',`${mTag('photo')}<p>행성 #1203에 무사히 착륙했다는 증거를 남겨요! <b>내 대원 캐릭터</b>로 프레임을 골라 한 장 찍으면 미션이 끝나요.</p><p class="zhint">찍은 사진은 탐사 일지에 들어가고, <b>생일파티에 걸기</b>를 누르면 축하파티 착륙 인증샷에도 올라가요. 쭈니와 함께한 실제 사진은 생일파티의 <b>쭈니 네컷</b>에서 남겨 주세요!</p>
-  <button class="soft" id="phHall">착륙 기록 전시관 구경하기 →</button>
+  openSheet('착륙 기록소',`${mTag('photo')}<p>행성 #1203에 무사히 착륙했다는 증거를 남겨요! <b>내 대원 캐릭터</b>로 프레임을 골라 한 장 찍으면 미션이 끝나요.</p><p class="zhint">찍은 사진은 내 탐사 일지에 들어가요. 쭈니와 함께한 실제 사진은 생일파티의 <b>쭈니 네컷</b>에서 남겨 주세요!</p>
+  <button class="soft" id="phHall" hidden>착륙 기록 전시관 구경하기 →</button>
   <div class="row pmode" hidden><button class="soft pm" type="button" data-m="cam">카메라로 찍기</button><button class="soft pm" type="button" data-m="up">사진 올리기</button><button class="soft pm on" type="button" data-m="char">내 캐릭터로 찍기</button></div>
   <div class="row fr">${FRAMES.map((f,i)=>`<button class="soft fk${i?'':' on'}" type="button" data-f="${i}">${f.name}</button>`).join('')}</div>
   <div class="booth9" id="bth"><video id="pv" playsinline muted></video><canvas id="pchar" hidden></canvas><img id="pshot" alt="찍은 사진" hidden><canvas id="pov" width="${PW}" height="${PH}"></canvas><div class="cd" id="pcd" hidden></div><div class="flash" id="pfl"></div>
@@ -1179,8 +1188,8 @@ function openPhoto(){
   <div class="row" style="justify-content:center"><label class="filebtn" id="pfileL" hidden>휴대폰 카메라로 찍기<input type="file" id="pfile" accept="image/*" capture="user" hidden></label></div>
   <p id="pmsg"></p>
   <div id="pafter" hidden><img class="out" id="pimg" alt="행성 #1203 착륙 기록 사진">${saveUI('pimg','1203-착륙기록.png')}
-  <p class="zhint" id="pexInfo">이 사진은 내 탐사 일지에 자동으로 들어가요. <b>생일파티에 걸기</b>를 누르면 축하파티의 착륙 인증샷에도 올라가요.</p><p id="pexMsg" class="save"></p>
-  <div class="row" style="justify-content:center"><button class="soft" id="pre">다시 찍기</button><button class="primary" id="pexh">생일파티에 걸기</button></div></div>`);
+  <p class="zhint" id="pexInfo">이 사진은 내 탐사 일지에 자동으로 들어가요.</p><p id="pexMsg" class="save"></p>
+  <div class="row" style="justify-content:center"><button class="soft" id="pre">다시 찍기</button><button class="primary" id="pexh" hidden>생일파티에 걸기</button></div></div>`);
   const my=token,pv=$('#pv'),pc=$('#pchar'),ov=$('#pov'),oc=ov.getContext('2d');
   let fi=0,stream=null,raw=null,busy=false,mode='char',facing='user',seed=(Date.now()%2147483646)+1;
   const drawOv=()=>{oc.clearRect(0,0,PW,PH);drawFrame(oc,FRAMES[fi],me.name,true)};drawOv();
@@ -1198,7 +1207,7 @@ function openPhoto(){
   function compose(){if(!raw)return;const c=document.createElement('canvas');c.width=PW;c.height=PH;const x=c.getContext('2d');drawFrame(x,FRAMES[fi],me.name,false);
     const r=Math.max(HOLE.w/raw.width,HOLE.h/raw.height),w=raw.width*r,h=raw.height*r;x.save();x.beginPath();x.rect(HOLE.x,HOLE.y,HOLE.w,HOLE.h);x.clip();x.imageSmoothingEnabled=!raw.px;x.drawImage(raw,HOLE.x+(HOLE.w-w)/2,HOLE.y+(HOLE.h-h)/2,w,h);x.restore();
     $('#pimg').src=c.toDataURL('image/jpeg',.88);$('#pshot').src=$('#pimg').src;$('#pafter').hidden=false;
-    $('#pexh').hidden=false;$('#pexh').disabled=false;$('#pexh').textContent='생일파티에 걸기';$('#pexMsg').textContent='';markDone('photo');
+    $('#pexh').hidden=true;$('#pexh').disabled=false;$('#pexh').textContent='생일파티에 걸기';$('#pexMsg').textContent='';markDone('photo');
     try{const sm=document.createElement('canvas');sm.width=360;sm.height=640;sm.getContext('2d').drawImage(c,0,0,360,640);store.set('jc_myshot',{img:sm.toDataURL('image/jpeg',.82),at:Date.now(),char:mode==='char',posted:false})}catch(e){}}
   function takeFrom(src,sw,sh,mirror,px){const c=document.createElement('canvas');c.width=sw;c.height=sh;const x=c.getContext('2d');x.imageSmoothingEnabled=!px;if(mirror){x.translate(sw,0);x.scale(-1,1)}x.drawImage(src,0,0,sw,sh);
     raw=c;raw.px=!!px;compose();$('#pshot').hidden=false;ui();$('#pafter').scrollIntoView({behavior:'smooth',block:'nearest'})}
@@ -1818,9 +1827,6 @@ ${(()=>{const LY=lyrList(),l=LY[0];return`<section class="rp-sec" style="padding
 
   <section class="rp-sec" id="rpFan"><div class="rp-sh"><h2>대원들이 자랑하는 쭈니</h2><small>사진관 · 최신순</small></div>
     <div class="rp-row">${gal.slice(0,40).map((e,i)=>`<button class="rp-card" style="width:132px" data-act="gal" data-i="${i}"><span class="rp-th" style="height:190px"><img loading="lazy" src="${e.img}" alt="${escH(e.t)}"></span><span class="rp-ct">「${escH(e.t)}」</span><span class="rp-cs">${escH(e.n)}${e.pending?' · 숨김':''}</span></button>`).join('')}</div></section>
-
-  <section class="rp-sec"><div class="rp-sh"><h2>착륙 인증샷</h2><small>${shots.length}장</small></div>
-    <div class="rp-row">${shots.slice(0,40).map((p,i)=>`<button class="rp-card" style="width:120px" data-act="shot" data-i="${i}"><span class="rp-th" style="height:213px"><img loading="lazy" src="${p.img}" alt="${escH(p.t)}"></span><span class="rp-cs" style="margin:0">${escH(p.n)} 대원${p.pending?' · 숨김':''}</span></button>`).join('')}</div></section>
 
   <div class="rp-last" id="rpLast"></div>
   <div class="rp-foot"><div>쭈일리언 외계행성 탐사대 · 비영리 팬 이벤트<br>영상·사진 출처는 각 작품에 표기<br><button class="adminLink" type="button">운영진</button></div><div style="display:flex;gap:4px"><img src="${ART.ag}" alt=""><img src="${ART.ap}" alt=""></div></div></div>`}
@@ -2855,6 +2861,15 @@ const CD_TH=[['deep','딥스페이스'],['nebula','성운'],['aurora','오로라
   ['eclipse','일식'],['grid','레트로 그리드'],['hud','HUD'],['holo','홀로그램'],['chrome','크롬'],['grain','그레인'],['plain','단색']];
 const CD_TPL=[['photo','사진 가득'],['frame','미니멀'],['type','타이포']];
 const CD_ITPL=[['letter','라이너 노트'],['photo','사진'],['poster','포스터']];
+/* 글씨체: 부분마다 따로 골라요 (w: 굵기, sc: 손글씨처럼 작아 보이는 글꼴은 조금 키워요) */
+const CD_FONTS={gothic:{f:'"Gothic A1"',w:{d:800,m:600,b:400},sc:1,n:'고딕'},orbit:{f:'"Orbit"',w:{d:400,m:400,b:400},sc:1,n:'오빗'},
+  blackhan:{f:'"Black Han Sans"',w:{d:400,m:400,b:400},sc:1,n:'블랙한산스'},dohyeon:{f:'"Do Hyeon"',w:{d:400,m:400,b:400},sc:1.05,n:'도현'},
+  myeongjo:{f:'"Nanum Myeongjo"',w:{d:800,m:700,b:400},sc:1,n:'명조'},pen:{f:'"Nanum Pen Script"',w:{d:400,m:400,b:400},sc:1.38,n:'펜 필기체'},
+  brush:{f:'"Nanum Brush Script"',w:{d:400,m:400,b:400},sc:1.32,n:'붓 필기체'},gaegu:{f:'"Gaegu"',w:{d:700,m:700,b:400},sc:1.18,n:'손글씨'},
+  hi:{f:'"Hi Melody"',w:{d:400,m:400,b:400},sc:1.22,n:'하이멜로디'}};
+const cdFontOk=k=>Object.prototype.hasOwnProperty.call(CD_FONTS,k);
+{const l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Orbit&family=Black+Han+Sans&family=Do+Hyeon&family=Nanum+Myeongjo:wght@400;700;800&family=Nanum+Pen+Script&family=Nanum+Brush+Script&family=Hi+Melody&display=swap';document.head.append(l)}
+let CDF=CD_FONTS.gothic;const cdUse=k=>{CDF=CD_FONTS[cdFontOk(k)?k:'gothic']};
 const CD_PART=[['f','앞면'],['d','CD 알판'],['i','안쪽'],['b','뒷면']];
 const CD_OLD={berry:'#ff8fab',lilac:'#c4b0ff',mint:'#8ff0d2',butter:'#ffd166',sky:'#9cc4ff',navy:'#2b3a8f',night:'#1d1530',cream:'#fff3e2'};
 const cdRnd=seed=>{let a=0;for(const ch of String(seed))a=(a*31+ch.charCodeAt(0))|0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}};
@@ -2868,17 +2883,20 @@ const cdCrop=c=>{c=c||{};const r=(v,a,b,d)=>Math.round(Math.max(a,Math.min(b,isF
 const cdThOk=t=>CD_TH.some(x=>x[0]===t);
 /* 예전에 만든 CD(첫 버전)도 그대로 읽어요 */
 function cdNorm(s){s=s||{};const d=s.d||{},i=s.in||{},b=s.b||{},c=cdHex(s.c)||'#141a3a';
-  return{tpl:['photo','frame','type'].includes(s.tpl)?s.tpl:'photo',c,th:cdThOk(s.th)?s.th:'deep',s19:s.s19!==false,crop:cdCrop(s.crop),
-    d:{src:d.src==='theme'||d.src==='photo'?d.src:(s.disc&&s.disc!=='photo'?'theme':'photo'),th:cdThOk(d.th)?d.th:'nebula',c:cdHex(d.c)||c,crop:cdCrop(d.crop||s.crop)},
-    in:{tpl:['letter','photo','poster'].includes(i.tpl)?i.tpl:'letter',th:cdThOk(i.th)?i.th:'deep',c:cdHex(i.c)||'#1e2a6e',crop:cdCrop(i.crop)},
-    b:{th:cdThOk(b.th)?b.th:'deep',c:cdHex(b.c)||'#0b0b12'}}}
+  const fo=v=>cdFontOk(v)?v:'gothic';
+  return{tpl:['photo','frame','type'].includes(s.tpl)?s.tpl:'photo',c,th:cdThOk(s.th)?s.th:'deep',s19:s.s19!==false,crop:cdCrop(s.crop),font:fo(s.font),
+    d:{src:d.src==='theme'||d.src==='photo'?d.src:(s.disc&&s.disc!=='photo'?'theme':'photo'),th:cdThOk(d.th)?d.th:'nebula',c:cdHex(d.c)||c,font:fo(d.font),txt:String(d.txt||'').slice(0,24),nt:!!d.nt,crop:cdCrop(d.crop||s.crop)},
+    in:{tpl:['letter','photo','poster'].includes(i.tpl)?i.tpl:'letter',th:cdThOk(i.th)?i.th:'deep',c:cdHex(i.c)||'#1e2a6e',font:fo(i.font),crop:cdCrop(i.crop)},
+    b:{th:cdThOk(b.th)?b.th:'deep',c:cdHex(b.c)||'#0b0b12',font:fo(b.font)}}}
 
 /* ---------- 그리기 도구 ---------- */
 function cdLoad(src){if(!src)return Promise.resolve(null);if(CD.img.has(src))return CD.img.get(src);
   const p=new Promise(res=>{const im=new Image();if(/^https?:/.test(src))im.crossOrigin='anonymous';im.onload=()=>res(im);im.onerror=()=>res(null);im.src=src});
   CD.img.set(src,p);return p}
-async function cdFonts(text){if(!document.fonts||!document.fonts.load)return;const t=String(text||'')+'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ#·—';
-  try{await Promise.race([Promise.all(['800 40px "Gothic A1"','600 20px "Gothic A1"','400 20px "Gothic A1"','40px "Anton"'].map(f=>document.fonts.load(f,t))),new Promise(r=>setTimeout(r,2500))])}catch(e){}}
+async function cdFonts(text,st){if(!document.fonts||!document.fonts.load)return;const t=String(text||'')+'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz#·—';
+  const fams=new Set(['gothic']);if(st)[st.font,st.d&&st.d.font,st.in&&st.in.font,st.b&&st.b.font].forEach(f=>{if(cdFontOk(f))fams.add(f)});
+  const specs=[...fams].flatMap(k=>[...new Set(Object.values(CD_FONTS[k].w))].map(w=>`${w} 40px ${CD_FONTS[k].f}`)).concat(['40px "Anton"']);
+  try{await Promise.race([Promise.all(specs.map(f=>document.fonts.load(f,t))),new Promise(r=>setTimeout(r,3000))])}catch(e){}}
 const cdCanvas=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h||w;return c};
 function cdRR(x,X,Y,W,H,r){x.beginPath();x.moveTo(X+r,Y);x.arcTo(X+W,Y,X+W,Y+H,r);x.arcTo(X+W,Y+H,X,Y+H,r);x.arcTo(X,Y+H,X,Y,r);x.arcTo(X,Y,X+W,Y,r);x.closePath()}
 function cdFit(x,text,maxW,size,kind,min){let s=size;x.font=fnt(kind,s);while(s>min&&x.measureText(text).width>maxW){s-=1;x.font=fnt(kind,s)}return s}
@@ -2901,7 +2919,7 @@ function cdHeart(x,cx,cy,s){x.beginPath();x.moveTo(cx,cy+s*.35);x.bezierCurveTo(
 /* ---------- 우주 · 간지 테마 ---------- */
 const CD_DARK=new Set(['deep','nebula','aurora','planet','galaxy','orbit','constel','eclipse','grid','hud']);
 const cdInkOf=(th,col)=>CD_DARK.has(th)?'#f5f5f7':th==='holo'||th==='chrome'?'#14102a':cdInk(col);   // 홀로그램·크롬은 늘 밝은 바탕이라 글씨를 어둡게
-const fnt=(k,s)=>({d:`800 ${s}px "Gothic A1",sans-serif`,m:`600 ${s}px "Gothic A1",sans-serif`,b:`400 ${s}px "Gothic A1",sans-serif`,n:`${s}px "Anton",sans-serif`,h:`700 ${s}px "Gaegu",sans-serif`})[k];
+const fnt=(k,s)=>k==='n'?`${s}px "Anton",sans-serif`:k==='h'?`700 ${s}px "Gaegu",sans-serif`:`${CDF.w[k]||400} ${Math.round(s*CDF.sc*10)/10}px ${CDF.f},"Gothic A1",sans-serif`;
 function cdSp(x,t,X,Y,sp,align){t=String(t);const ch=[...t],ws=ch.map(c=>x.measureText(c).width),tot=ws.reduce((a,b)=>a+b,0)+sp*Math.max(0,ch.length-1);
   let cx=align==='right'?X-tot:align==='center'?X-tot/2:X;const al=x.textAlign;x.textAlign='left';ch.forEach((c,i)=>{x.fillText(c,cx,Y);cx+=ws[i]+sp});x.textAlign=al;return tot}
 function cdGlow(x,cx,cy,r,col,a){const g=x.createRadialGradient(cx,cy,0,cx,cy,r);g.addColorStop(0,cdA(col,a));g.addColorStop(1,cdA(col,0));x.fillStyle=g;x.fillRect(cx-r,cy-r,r*2,r*2)}
@@ -2960,7 +2978,7 @@ function cdSeal(x,X,Y,r){const u=r/10;x.save();x.translate(X,Y);x.rotate(-.18);
   x.font=fnt('n',u*2);cdSp(x,'BIRTHDAY',0,u*6.6,u*.5,'center');x.restore()}
 
 /* ① 앞면: 사진 가득 · 미니멀 · 타이포 */
-function cdDrawCover(x,S,d,photo){const st=d.st,C=st.c,tpl=st.tpl,u=S/100;let ink=cdInkOf(st.th,C);
+function cdDrawCover(x,S,d,photo){cdUse(d.st.font);const st=d.st,C=st.c,tpl=st.tpl,u=S/100;let ink=cdInkOf(st.th,C);
   x.save();cdTheme(x,S,st.th,C,'f');x.textBaseline='alphabetic';
   if(tpl==='photo'){
     if(photo){cdPhoto(x,photo,0,0,S,S,st.crop);ink='#ffffff';
@@ -2987,15 +3005,16 @@ function cdDrawCover(x,S,d,photo){const st=d.st,C=st.c,tpl=st.tpl,u=S/100;let in
   x.restore()}
 
 /* ② CD 알판 (바깥은 투명) */
-function cdDrawDisc(x,S,d,photo){const st=d.st.d,C=st.c,r=S/2,u=S/100,usePh=st.src==='photo'&&photo;
+function cdDrawDisc(x,S,d,photo){cdUse(d.st.d.font);const st=d.st.d,C=st.c,r=S/2,u=S/100,usePh=st.src==='photo'&&photo;
   x.clearRect(0,0,S,S);x.save();x.beginPath();x.arc(r,r,r*.985,0,TAU);x.clip();
   if(usePh){cdPhoto(x,photo,0,0,S,S,st.crop);x.fillStyle='rgba(5,3,15,.18)';x.fillRect(0,0,S,S)}else cdTheme(x,S,st.th,C,'d');
   if(x.createConicGradient){const g=x.createConicGradient(.4,r,r);['rgba(255,209,240,.0)','rgba(201,243,255,.22)','rgba(217,204,255,0)','rgba(255,243,196,.18)','rgba(184,255,233,0)','rgba(255,209,240,.2)','rgba(255,209,240,0)'].forEach((c,i,a)=>g.addColorStop(i/(a.length-1),c));
     x.fillStyle=g;x.fillRect(0,0,S,S)}
   x.strokeStyle='rgba(255,255,255,.06)';x.lineWidth=u*.2;for(let k=30;k<98;k+=1.6){x.beginPath();x.arc(r,r,k*u/2,0,TAU);x.stroke()}
   const ink=usePh?'#fff':cdInkOf(st.th,C);x.fillStyle=ink;x.textAlign='center';if(usePh||ink!=='#2a1f3d'){x.shadowColor='rgba(0,0,0,.5)';x.shadowBlur=u*1.2}
-  cdFit(x,d.title,S*.56,u*6.4,'d',u*3.5);x.fillText(cdClip(x,d.title,S*.6),r,r+u*31);
-  x.font=fnt('n',u*2.8);cdSp(x,'JUUN RECORDS · #1203',r,r-u*28,u*.5,'center');x.shadowColor='transparent';x.textAlign='left';
+  if(!st.nt){const dt=(st.txt||'').trim()||d.title;cdFit(x,dt,S*.56,u*6.4,'d',u*3.5);x.fillText(cdClip(x,dt,S*.6),r,r+u*31);
+    x.font=fnt('n',u*2.8);cdSp(x,'JUUN RECORDS · #1203',r,r-u*28,u*.5,'center')}
+  x.shadowColor='transparent';x.textAlign='left';
   x.globalCompositeOperation='destination-out';x.beginPath();x.arc(r,r,r*.25,0,TAU);x.fill();x.globalCompositeOperation='source-over';
   const hub=x.createRadialGradient(r-r*.06,r-r*.08,r*.02,r,r,r*.25);hub.addColorStop(0,'rgba(255,255,255,.85)');hub.addColorStop(.5,'rgba(196,201,214,.75)');hub.addColorStop(1,'rgba(120,126,142,.7)');
   x.fillStyle=hub;x.beginPath();x.arc(r,r,r*.25,0,TAU);x.arc(r,r,r*.16,0,TAU,true);x.fill('evenodd');
@@ -3005,7 +3024,7 @@ function cdDrawDisc(x,S,d,photo){const st=d.st.d,C=st.c,r=S/2,u=S/100,usePh=st.s
   x.strokeStyle='rgba(0,0,0,.4)';x.lineWidth=u*.3;x.beginPath();x.arc(r,r,r*.99,0,TAU);x.stroke()}
 
 /* ③ 안쪽: 라이너 노트 · 사진 · 포스터 */
-function cdDrawInner(x,S,d,photo){const st=d.st.in,C=st.c,u=S/100,note=(d.note||'').trim()||'열아홉 번째 생일 축하해, 쭈니야!',dark=cdInkOf(st.th,C)!=='#14102a'&&cdInkOf(st.th,C)!=='#2a1f3d';
+function cdDrawInner(x,S,d,photo){cdUse(d.st.in.font);const st=d.st.in,C=st.c,u=S/100,note=(d.note||'').trim()||'열아홉 번째 생일 축하해, 쭈니야!',dark=cdInkOf(st.th,C)!=='#14102a'&&cdInkOf(st.th,C)!=='#2a1f3d';
   x.save();cdTheme(x,S,st.th,C,'i');x.textBaseline='alphabetic';
   if(st.tpl==='photo'){
     let ink=cdInkOf(st.th,C);if(photo){cdPhoto(x,photo,0,0,S,S,st.crop);ink='#fff';const g=x.createLinearGradient(0,S*.35,0,S);g.addColorStop(0,'rgba(5,3,15,0)');g.addColorStop(1,'rgba(5,3,15,.85)');x.fillStyle=g;x.fillRect(0,0,S,S)}
@@ -3032,7 +3051,7 @@ function cdDrawInner(x,S,d,photo){const st=d.st.in,C=st.c,u=S/100,note=(d.note||
   x.restore()}
 
 /* ④ 뒷면 (트랙리스트) */
-function cdDrawBack(x,S,d){const st=d.st,B=st.b,u=S/100,rnd=cdRnd(d.title+d.name+'bar'),dark=cdInkOf(B.th,B.c)!=='#14102a'&&cdInkOf(B.th,B.c)!=='#2a1f3d';
+function cdDrawBack(x,S,d){cdUse(d.st.b.font);const st=d.st,B=st.b,u=S/100,rnd=cdRnd(d.title+d.name+'bar'),dark=cdInkOf(B.th,B.c)!=='#14102a'&&cdInkOf(B.th,B.c)!=='#2a1f3d';
   const ink=dark?'#f5f5f7':'#14102a',dim=dark?'rgba(245,245,247,.55)':'rgba(20,16,42,.5)',acc=dark?cdMix(st.c,'#ffffff',.45):cdMix(st.c,'#14102a',cdLum(st.c)>.5?.45:0);
   x.save();cdTheme(x,S,B.th,B.c,'b');x.textBaseline='alphabetic';
   x.fillStyle=st.c;x.fillRect(0,0,u*5.5,S);x.save();x.translate(u*3.7,S-u*6);x.rotate(-Math.PI/2);x.fillStyle=cdInkOf('plain',st.c);x.font=fnt('n',u*2.6);cdSp(x,cdClip(x,`${d.title}  ·  JUUN RECORDS  ·  #1203`,S*.8),0,0,u*.4);x.restore();
@@ -3040,7 +3059,7 @@ function cdDrawBack(x,S,d){const st=d.st,B=st.b,u=S/100,rnd=cdRnd(d.title+d.name
   x.strokeStyle=dark?'rgba(255,255,255,.2)':'rgba(20,16,42,.12)';x.lineWidth=u*.3;x.stroke();
   const L=pX+u*6,R=pX+pW-u*6,W=R-L;x.fillStyle=ink;x.font=fnt('n',u*8);cdSp(x,'TRACKLIST',L,pY+u*14,u*.6);
   x.fillStyle=dim;x.font=fnt('m',u*3.2);x.fillText(cdClip(x,`${d.title} · by ${d.name}`,W),L,pY+u*20);
-  const tr=(d.tracks||[]).filter(t=>t&&(t.s||t.a)),all=[...tr.map((t,i)=>({no:p2(i+1),s:t.s||'',a:t.a||''})),{no:'19',s:'Happy JUUN Day',a:'하츄대원 일동',hid:true}];
+  const tr=(d.tracks||[]).filter(t=>t&&(t.s||t.a)),all=[...tr.map((t,i)=>({no:p2(i+1),s:t.s||'',a:t.a||''})),{no:'19',s:'Happy JUUN Day',a:'하츄',hid:true}];
   const top=pY+u*28,bot=pY+pH-u*16,two=all.length>10,rows=two?Math.ceil(all.length/2):all.length,lh=Math.min(u*6.6,(bot-top)/rows),fs=Math.min(u*3.8,lh*.6),colW=two?(W-u*4)/2:W;
   all.forEach((t,i)=>{const col=two&&i>=rows?1:0,row=col?i-rows:i,X=L+col*(colW+u*4),Y=top+row*lh+fs;
     x.fillStyle=t.hid?'#e6c068':acc;x.font=fnt('n',fs*1.05);x.fillText(t.no,X,Y);
@@ -3067,7 +3086,7 @@ function cdCase(x,X,Y,S,inner,o){const u=S/100;o=o||{};
   x.fillStyle=gl;cdRR(x,X,Y,S,S*.92,u*2.2);x.fill();x.strokeStyle='rgba(255,255,255,.7)';x.lineWidth=u*.7;x.stroke();x.strokeStyle='rgba(255,255,255,.18)';x.lineWidth=u*.3;cdRR(x,X+u*1.6,Y+u*1.6,S-u*3.2,S*.92-u*3.2,u*1.4);x.stroke();x.restore()}
 
 /* 앨범 이미지 (1600 × 1000): 뒷면 · CD · 앞면, 우주 배경 */
-function cdDrawShot(x,k,d,cover,disc,back){const W=1600*k,H=1000*k,u=k,rnd=cdRnd(d.title+'bg');
+function cdDrawShot(x,k,d,cover,disc,back){cdUse('gothic');const W=1600*k,H=1000*k,u=k,rnd=cdRnd(d.title+'bg');
   const g=x.createLinearGradient(0,0,W,H);g.addColorStop(0,'#07051a');g.addColorStop(1,'#140d33');x.fillStyle=g;x.fillRect(0,0,W,H);
   cdGlow(x,W*.62,H*.5,W*.45,d.st.c,.28);cdGlow(x,W*.2,H*.2,W*.3,'#7b4dff',.18);
   for(let i=0;i<260;i++){x.fillStyle=`rgba(255,255,255,${.2+rnd()*.6})`;const s=u*(.8+rnd()*1.8);x.fillRect(rnd()*W,rnd()*H,s,s)}
@@ -3080,7 +3099,7 @@ function cdDrawShot(x,k,d,cover,disc,back){const W=1600*k,H=1000*k,u=k,rnd=cdRnd
 
 const cdText=d=>d.title+d.name+(d.note||'')+(d.tracks||[]).map(t=>(t.s||'')+(t.a||'')).join('')+'To.쭈니 대원 행성 HappyJUUNDay하츄일동 from. 열아홉 번째 생일 축하해, 쭈니야!';
 /* ph: {f,d,i} 사진 / im: {cover,disc,inner} 이미 만들어 둔 그림 */
-async function cdRender(d,ph,im){ph=ph||{};im=im||{};await cdFonts(cdText(d));
+async function cdRender(d,ph,im){ph=ph||{};im=im||{};await cdFonts(cdText(d),d.st);
   const cover=cdCanvas(1200),disc=cdCanvas(1000),inner=cdCanvas(1200),back=cdCanvas(1200);
   if(im.cover)cover.getContext('2d').drawImage(im.cover,0,0,1200,1200);else cdDrawCover(cover.getContext('2d'),1200,d,ph.f);
   if(im.disc)disc.getContext('2d').drawImage(im.disc,0,0,1000,1000);else cdDrawDisc(disc.getContext('2d'),1000,d,ph.d||ph.f);
@@ -3114,7 +3133,7 @@ async function cdLoadList(){await sbReady;
   if(r.error){CD.missing=true;CD.loaded=true;return}           // SQL을 아직 안 돌렸으면 레코드샵을 숨겨요
   CD.list=r.data.map(cdRow);CD.loaded=true}
 const cdData=c=>({title:c.title,name:c.n,tracks:c.tracks,note:c.note,st:cdNorm(c.st)});
-async function cdInnerOf(c,S){if(c.inner){const im=await cdLoad(c.inner);if(im)return im}const cv=cdCanvas(S||600);await cdFonts(cdText(cdData(c)));cdDrawInner(cv.getContext('2d'),S||600,cdData(c),null);return cv}
+async function cdInnerOf(c,S){if(c.inner){const im=await cdLoad(c.inner);if(im)return im}const cv=cdCanvas(S||600);await cdFonts(cdText(cdData(c)),cdData(c).st);cdDrawInner(cv.getContext('2d'),S||600,cdData(c),null);return cv}
 
 /* ---------- 생일파티 화면: JUUN RECORDS ---------- */
 function cdSection(){if(CD.missing)return'';const L=CD.list.filter(c=>c.approved||c.mine);
@@ -3136,7 +3155,7 @@ async function cdView(id,fresh){const c=CD.list.find(x=>String(x.id)===String(id
   <div class="row cdv-btns"><button class="soft" id="cdvOpen">케이스 열기</button><button class="soft" id="cdvFlip">뒷면 보기</button></div>
   <p class="zhint" id="cdvHint">${fresh?'🎉 발매 완료! JUUN RECORDS에 꽂혔어요':'앞면을 누르면 케이스가 열리고 닫혀요'}</p>
   <div class="cd-meta"><b>「${escH(c.title)}」</b><span>by ${escH(c.n)} 대원 · ${(k=>`${k.mo}월 ${k.d}일 발매`)(kst(c.at))}</span></div>
-  <ol class="cd-tl">${c.tracks.map((t,i)=>`<li><i>${p2(i+1)}</i><b>${escH(t.s||'')}</b>${t.a?`<span>${escH(t.a)}</span>`:''}</li>`).join('')}<li class="hid"><i>19</i><b>Happy JUUN Day</b><span>하츄대원 일동 · HIDDEN TRACK</span></li></ol>
+  <ol class="cd-tl">${c.tracks.map((t,i)=>`<li><i>${p2(i+1)}</i><b>${escH(t.s||'')}</b>${t.a?`<span>${escH(t.a)}</span>`:''}</li>`).join('')}<li class="hid"><i>19</i><b>Happy JUUN Day</b><span>하츄 · HIDDEN TRACK</span></li></ol>
   <button class="soft" id="cdSvA">앨범 이미지 저장</button>
   ${c.mine?'<button class="soft cd-del" id="cdDel">내 CD 내리기</button>':''}<p id="cdMsg" class="save"></p>`);
   const v=$('#cdv'),ob=$('#cdvOpen'),fb=$('#cdvFlip'),hint=$('#cdvHint');
@@ -3152,7 +3171,7 @@ async function cdView(id,fresh){const c=CD.list.find(x=>String(x.id)===String(id
   $('#cdSvA').onclick=()=>cdDownload(c,'album',$('#cdSvA'));
   if($('#cdDel'))$('#cdDel').onclick=()=>cdRemove(c,$('#cdDel'));
   setTimeout(()=>{if(tk===cdViewTok&&!v.classList.contains('open')&&!v.classList.contains('flip'))setOpen(true)},700);
-  const d=cdData(c);await cdFonts(cdText(d));if(tk!==cdViewTok)return;
+  const d=cdData(c);await cdFonts(cdText(d),d.st);if(tk!==cdViewTok)return;
   const back=cdCanvas(600);cdDrawBack(back.getContext('2d'),600,d);const inner=await cdInnerOf(c,600);if(tk!==cdViewTok)return;
   const ic=inner instanceof HTMLCanvasElement?inner.toDataURL('image/jpeg',.9):inner.src;
   const bi=v.querySelector('.cdv-lid .b'),bb=v.querySelector('.cdv-back');
@@ -3190,7 +3209,7 @@ function cdMake(){const D=cdDraft();MK.ph={f:null,d:null,i:null};MK.part='f';
   const drawPart=(cv,p,d)=>{const x=cv.getContext('2d'),S=cv.width;x.clearRect(0,0,S,S);
     if(p==='f')cdDrawCover(x,S,d,MK.ph.f);else if(p==='i')cdDrawInner(x,S,d,phOf('i'));else if(p==='b')cdDrawBack(x,S,d);
     else{x.fillStyle='#0b0820';x.fillRect(0,0,S,S);const c=cdCanvas(Math.round(S*.92));cdDrawDisc(c.getContext('2d'),c.width,d,phOf('d'));x.drawImage(c,(S-c.width)/2,(S-c.width)/2)}};
-  let raf=0,busy=false;const prev=()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(async()=>{if(busy){prev();return}busy=true;const d=dd();await cdFonts(cdText(d));busy=false;
+  let raf=0,busy=false;const prev=()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(async()=>{if(busy){prev();return}busy=true;const d=dd();await cdFonts(cdText(d),d.st);busy=false;
     const cv=$('#mkPrev');if(!cv)return;drawPart(cv,MK.part,d);document.querySelectorAll('.mk-tab canvas').forEach(c=>drawPart(c,c.dataset.th,d))})};
   const upd=()=>{save();prev()};
   const colors=(p,cur)=>`<div class="mk-cols">${CD_PAL.map(([h,n])=>`<button type="button" class="mk-col${h===cur?' on':''}" data-col="${p}" data-v="${h}" style="background:${h}" aria-label="${n}" title="${n}"></button>`).join('')}
@@ -3199,19 +3218,23 @@ function cdMake(){const D=cdDraft();MK.ph={f:null,d:null,i:null};MK.part='f';
   const photo=(p,label)=>{const has=!!MK.ph[p],cr=p==='f'?D.st.crop:p==='d'?D.st.d.crop:D.st.in.crop;
     return`<div class="mk-ph"><label class="soft mk-file">${has?'사진 바꾸기':'사진 고르기'}<input type="file" accept="image/*" data-file="${p}" hidden></label>${has?`<button type="button" class="soft" data-nophoto="${p}">사진 빼기</button>`:''}<span class="zhint">${has?'슬라이더로 위치를 맞춰요':label}</span></div>
     ${has||(p!=='f'&&MK.ph.f)?`<div class="mk-crop">${[['z','확대',1,3],['ox','좌우',-1,1],['oy','위아래',-1,1]].map(([k,l,a,b])=>`<label>${l}<input type="range" min="${a}" max="${b}" step="0.01" data-crop="${p}" data-k="${k}" value="${cr[k]}"></label>`).join('')}</div>`:''}`};
+  const fonts=(p,cur)=>`<div class="mk-fonts">${Object.entries(CD_FONTS).map(([k,F])=>`<button type="button" class="mk-fo${k===cur?' on':''}" data-fnt="${p}" data-v="${k}" style="font-family:${escH(F.f)};font-weight:${F.w.d};font-size:${Math.round(15*F.sc)}px">${F.n}</button>`).join('')}</div>`;
   const seg=(attr,list,cur)=>`<div class="row fr">${list.map(([v,l])=>`<button type="button" class="soft fk${v===cur?' on':''}" data-${attr}="${v}">${l}</button>`).join('')}</div>`;
   const panel=()=>{const p=MK.part,st=D.st;let h='';
     if(p==='f')h=`<h4>앞면 사진</h4>${photo('f','사진 없이 배경만으로 만들어도 돼요')}<h4>모양</h4>${seg('tpl',CD_TPL,st.tpl)}
       <h4>배경 테마 <small>사진이 없거나 미니멀 · 타이포일 때 보여요</small></h4>${themes('f',st.th,st.c)}<h4>색</h4>${colors('f',st.c)}
+      <h4>글씨체</h4>${fonts('f',st.font)}
       <label class="mk-chk"><input type="checkbox" id="mk19"${st.s19?' checked':''}>19th 생일 스티커 붙이기</label>`;
     else if(p==='d')h=`<h4>CD 알판</h4>${seg('dsrc',[['photo','사진'],['theme','무늬']],st.d.src)}
-      ${st.d.src==='photo'?photo('d',MK.ph.f?'앞면 사진을 그대로 써요 · 다른 사진도 고를 수 있어요':'사진을 골라 주세요'):themes('d',st.d.th,st.d.c)}<h4>색 <small>${st.d.src==='photo'?'사진이 없을 때 바탕색':'무늬 색'}</small></h4>${colors('d',st.d.c)}`;
+      ${st.d.src==='photo'?photo('d',MK.ph.f?'앞면 사진을 그대로 써요 · 다른 사진도 고를 수 있어요':'사진을 골라 주세요'):themes('d',st.d.th,st.d.c)}<h4>색 <small>${st.d.src==='photo'?'사진이 없을 때 바탕색':'무늬 색'}</small></h4>${colors('d',st.d.c)}
+      <h4>CD 글자</h4><label class="mk-chk"><input type="checkbox" id="mkDnt"${st.d.nt?' checked':''}>글자 없이 깔끔하게</label>
+      ${st.d.nt?'':`<input id="mkDtx" class="mk-in" maxlength="24" placeholder="비워 두면 앨범 제목이 들어가요" value="${escH(st.d.txt)}"><h4>글씨체</h4>${fonts('d',st.d.font)}`}`;
     else if(p==='i')h=`<h4>안쪽 모양 <small>케이스를 열면 뚜껑 안에 보여요</small></h4>${seg('itpl',CD_ITPL,st.in.tpl)}
       <label class="f">쭈니에게 한마디 <small>안쪽에 손글씨로 들어가요 · 최대 200자</small><textarea id="mkN" maxlength="200" rows="3" placeholder="비워 두면 '열아홉 번째 생일 축하해, 쭈니야!'가 들어가요">${escH(D.note)}</textarea></label>
       ${st.in.tpl!=='letter'?`<h4>안쪽 사진</h4>${photo('i',MK.ph.f?'앞면 사진을 그대로 써요 · 다른 사진도 고를 수 있어요':'사진 없이도 돼요')}`:''}
-      <h4>배경 테마</h4>${themes('i',st.in.th,st.in.c)}<h4>색</h4>${colors('i',st.in.c)}`;
+      <h4>글씨체</h4>${fonts('i',st.in.font)}<h4>배경 테마</h4>${themes('i',st.in.th,st.in.c)}<h4>색</h4>${colors('i',st.in.c)}`;
     else h=`<h4>트랙리스트 <small>쭈니에게 들려주고 싶은 노래 · 최대 18곡</small></h4><div id="mkTr" class="mk-tr"></div><button type="button" class="soft" id="mkAdd">+ 곡 추가</button>
-      <p class="zhint">19번 트랙은 히든 트랙 <b>Happy JUUN Day</b>로 자동으로 들어가요</p><h4>뒷면 배경 테마</h4>${themes('b',st.b.th,st.b.c)}<h4>색</h4>${colors('b',st.b.c)}`;
+      <p class="zhint">19번 트랙은 히든 트랙 <b>Happy JUUN Day</b>로 자동으로 들어가요</p><h4>글씨체</h4>${fonts('b',st.b.font)}<h4>뒷면 배경 테마</h4>${themes('b',st.b.th,st.b.c)}<h4>색</h4>${colors('b',st.b.c)}`;
     $('#mkPanel').innerHTML=h;if(p==='b')tr()};
   const tr=()=>{$('#mkTr').innerHTML=D.tracks.map((t,i)=>`<div class="mk-ti"><i>${p2(i+1)}</i><input data-tr="s" data-i="${i}" maxlength="40" placeholder="노래 제목" value="${escH(t.s||'')}"><input data-tr="a" data-i="${i}" maxlength="24" placeholder="가수" value="${escH(t.a||'')}"><button type="button" class="soft" data-trx="${i}" aria-label="${i+1}번 트랙 빼기"${D.tracks.length<2?' disabled':''}>✕</button></div>`).join('');
     $('#mkAdd').disabled=D.tracks.length>=18};
@@ -3223,6 +3246,7 @@ function cdMake(){const D=cdDraft();MK.ph={f:null,d:null,i:null};MK.part='f';
   const F=$('#mkF');
   F.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;const s=t.dataset;
     if(s.col){setCol(s.col,s.v);return}
+    if(s.fnt){partSt(s.fnt).font=s.v;F.querySelectorAll(`[data-fnt="${s.fnt}"]`).forEach(x=>x.classList.toggle('on',x===t));upd();return}
     if(s.thm){partSt(s.thm).th=s.v;F.querySelectorAll(`[data-thm="${s.thm}"]`).forEach(x=>x.classList.toggle('on',x===t));upd();return}
     if(s.tpl){D.st.tpl=s.tpl;panel();upd();return}
     if(s.itpl){D.st.in.tpl=s.itpl;panel();upd();return}
@@ -3235,10 +3259,12 @@ function cdMake(){const D=cdDraft();MK.ph={f:null,d:null,i:null};MK.part='f';
     else if(s.crop){partSt(s.crop).crop[s.k]=+t.value;upd()}
     else if(s.colpick){const p=s.colpick;partSt(p).c=t.value.toLowerCase();const l=t.closest('.mk-pick');l.style.setProperty('--c',t.value);
       F.querySelectorAll(`[data-col="${p}"]`).forEach(x=>x.classList.remove('on'));l.classList.add('on');upd()}
-    else if(t.id==='mkN'){D.note=t.value;upd()}});
+    else if(t.id==='mkN'){D.note=t.value;upd()}
+    else if(t.id==='mkDtx'){D.st.d.txt=t.value.slice(0,24);upd()}});
   F.addEventListener('change',async e=>{const t=e.target;
     if(t.dataset.colpick){panel();return}
     if(t.id==='mk19'){D.st.s19=t.checked;upd();return}
+    if(t.id==='mkDnt'){D.st.d.nt=t.checked;panel();upd();return}
     const p=t.dataset.file;if(!p||!t.files[0])return;const f=t.files[0];if(!/^image\//.test(f.type)){$('#mkMsg').textContent='사진 파일만 고를 수 있어요';return}
     if(MK.url[p])URL.revokeObjectURL(MK.url[p]);MK.url[p]=URL.createObjectURL(f);const im=await new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=MK.url[p]});
     if(!im){$('#mkMsg').textContent='사진을 열지 못했어요. 다른 사진을 골라 주세요';return}
