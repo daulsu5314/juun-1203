@@ -2949,7 +2949,7 @@ function gcItem(id){const it=GC.items.find(x=>String(x.id)===String(id));if(!it)
   openSheet(it.name,`<div class="gc-card r-${it.rarity}" style="animation:none"><span class="gc-rar">${R.l} · ${R.n}</span>${gcArt(it)}<b>${escH(it.name)}</b>${it.desc?`<p>${escH(it.desc)}</p>`:''}<small>${it.stock===0?'모두 나갔어요':it.stock==null?'':`남은 수량 ${it.stock}개`}${it.ship?' · GS25 택배 발송':''}</small></div>`)}
 
 /* 생일파티 화면에 끼워 넣기: 보급품(굿즈) 바로 아래 */
-{const f=VIEWS.archive,K='<section class="rp-sec" style="padding-top:40px"><div class="rp-big"><div><div class="rp-kick">FANCAM</div>';
+{const f=VIEWS.archive,K='<section class="rp-sec" id="camSec" style="padding-top:40px"><div class="rp-big"><div><div class="rp-kick">FANCAM</div>';
   VIEWS.archive=()=>{if(!GC.loaded&&!GC.loading){GC.loading=true;gcLoad().catch(()=>{GC.loaded=true}).finally(()=>{GC.loading=false;if(rpOpen&&rpView==='archive')rpRefresh()})}
     const h=f();return h.includes(K)?h.replace(K,()=>gcSection()+K):h.replace('<div class="rp-last"',()=>gcSection()+'<div class="rp-last"')}}
 {const f=rpRefresh;rpRefresh=function(){if(GC.busy)return;f()}}
