@@ -708,6 +708,17 @@ img{max-width:100%}
 .mk-fo{height:42px;padding:0 6px!important;background:#fff!important;border:2px solid #ece2f2!important;border-radius:8px!important;color:var(--ink);line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mk-fo.on{border-color:var(--ink)!important;box-shadow:0 2px 0 var(--ink)}
 .sheet .mk-in{width:100%}
+/* JUUN RECORDS 전체 보기 */
+.cdf-bar{display:flex;gap:8px;padding:16px 18px 0}
+.cdf-bar input{flex:1;min-width:0;height:42px;border-radius:12px;border:1px solid #3a2f60;background:#140d2c;color:#fff;font-family:var(--body);font-size:16px;padding:0 14px}
+.cdf-bar input::placeholder{color:#8f84ad}
+.rp .cdf-bar button{flex:none;height:42px;padding:0 14px;border-radius:12px!important;background:#2a1d4d;border:1px dashed #6b55b8;color:#c4b0ff;font-weight:800;font-size:13px}
+.cdf-wrap{padding:6px 18px 40px}
+.cdf-count{margin:6px 0 14px;font-size:12px;color:#b3a5dc}
+.cdf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:22px 12px}
+.cdf-grid .cd-item{width:auto}
+.cdf-empty{text-align:center;color:#b3a5dc;font-size:14px;padding:48px 0}
+.rp .cdf-more{display:block;width:100%;height:46px;margin-top:22px;border-radius:12px!important;background:#1b1238;border:1px solid #3a2f60;color:#fff;font-weight:800;font-size:14px}
 /* ===== 넘겨 보기: 화살표를 그림 밖 양옆으로 ===== */
 .vwrap{display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
 .vwrap .vw{flex:0 1 auto;min-width:0;margin:0}
@@ -3159,7 +3170,7 @@ const CD_COLS='id,user_id,name,title,tracks,note,style,image_path,disc_path,appr
 async function cdSelect(q){let r=await q(CD_COLS+',inner_path');if(r.error&&/inner_path/.test(r.error.message||'')){CD.noInner=true;r=await q(CD_COLS)}return r}
 async function cdLoadList(){await sbReady;
   if(!sb){CD.list=store.get('jc_cds',[]).map(r=>({...r,st:cdNorm(r.st),mine:true}));CD.loaded=true;return}
-  const r=await cdSelect(c=>sb.from('cds').select(c).order('created_at',{ascending:false}).limit(400));
+  const r=await cdSelect(c=>sb.from('cds').select(c).order('created_at',{ascending:false}).limit(1000));
   if(r.error){CD.missing=true;CD.loaded=true;return}           // SQL을 아직 안 돌렸으면 레코드샵을 숨겨요
   CD.list=r.data.map(cdRow);CD.loaded=true}
 const cdData=c=>({title:c.title,name:c.n,tracks:c.tracks,note:c.note,st:cdNorm(c.st)});
@@ -3167,13 +3178,32 @@ async function cdInnerOf(c,S){if(c.inner){const im=await cdLoad(c.inner);if(im)r
 
 /* ---------- 생일파티 화면: JUUN RECORDS ---------- */
 function cdSection(){if(CD.missing)return'';const L=CD.list.filter(c=>c.approved||c.mine);
-  return`<section class="rp-sec" id="cdZone" style="padding-top:40px"><div class="rp-big"><div><div class="rp-kick" style="color:#9cc4ff">RECORD SHOP</div><h2>JUUN RECORDS</h2><p>하츄대원들이 발매한 쭈니 앨범 · ${L.length}장</p></div>${L.length>4?'<button class="rp-link" data-cd="all">전체 보기 &gt;</button>':''}</div>
+  return`<section class="rp-sec" id="cdZone" style="padding-top:40px"><div class="rp-big"><div><div class="rp-kick" style="color:#9cc4ff">RECORD SHOP</div><h2>JUUN RECORDS</h2><p>하츄대원들이 발매한 쭈니 앨범 · ${L.length}장</p></div>${L.length?'<button class="rp-link" data-cd="all">전체 보기 &gt;</button>':''}</div>
   <div class="rp-row cd-row"><button class="rp-card rp-cpost cd-new" data-cd="make"><b>+</b>내 쭈니 CD<br>만들기</button>
   ${CD.loaded?L.slice(0,30).map(cdItem).join(''):'<span class="cd-wait">레코드샵 여는 중…</span>'}</div></section>`}
 const cdItem=c=>`<button class="cd-item" data-cd="view" data-id="${escH(String(c.id))}"><span class="cd-jw"><img class="cd-dk" src="${escH(c.disc)}" alt="" loading="lazy"><span class="cd-cs"><img src="${escH(c.cover)}" alt="" loading="lazy"></span></span><b>${escH(c.title)}</b><small>by ${escH(c.n)}${c.approved?'':' · 숨김'}</small></button>`;
-function cdAll(){const L=CD.list.filter(c=>c.approved||c.mine);
-  openSheet('JUUN RECORDS',`<p>하츄대원들이 발매한 쭈니 앨범 <b>${L.length}</b>장</p><div class="cd-grid">${L.map(cdItem).join('')}</div>`);
-  $('#sheetBody').querySelectorAll('[data-cd=view]').forEach(b=>b.onclick=()=>cdView(b.dataset.id))}
+/* JUUN RECORDS 전체 보기: 검색 · 정렬 · 24장씩 더 보기 */
+const CDV={q:'',sort:'new',n:24};
+function cdFiltered(){const q=CDV.q.trim().toLowerCase();let L=CD.list.filter(c=>c.approved||c.mine);
+  if(CDV.sort==='mine')L=L.filter(c=>c.mine);
+  if(q)L=L.filter(c=>[c.title,c.n,...c.tracks.map(t=>`${t.s} ${t.a}`)].join(' ').toLowerCase().includes(q));
+  if(CDV.sort==='name')L=[...L].sort((a,b)=>a.title.localeCompare(b.title,'ko'));
+  return L}
+function cdGridHtml(){if(!CD.loaded)return'<p class="cdf-empty">레코드샵 여는 중…</p>';const L=cdFiltered(),shown=L.slice(0,CDV.n);
+  if(!L.length)return`<p class="cdf-empty">${CDV.q?'찾는 앨범이 없어요':CDV.sort==='mine'?'아직 발매한 CD가 없어요':'아직 발매된 CD가 없어요'}</p>`;
+  return`<p class="cdf-count">${CDV.q?`검색 결과 ${L.length}장`:`${L.length}장`}</p><div class="cdf-grid">${shown.map(cdItem).join('')}</div>
+    ${L.length>shown.length?`<button class="cdf-more" data-cd="more">더 보기 · ${L.length-shown.length}장 남음</button>`:''}`}
+function vCds(){if(!CD.loaded&&!CD.loading){CD.loading=true;cdLoadList().catch(()=>{CD.loaded=true}).finally(()=>{CD.loading=false;if(rpOpen&&rpView==='cds'){const g=$('#cdGrid');if(g)g.innerHTML=cdGridHtml()}})}
+  const n=CD.list.filter(c=>c.approved||c.mine).length;
+  return`<div class="rpv rp-msgs">
+  <div class="rp-mtop"><button class="rp-ib" data-go="archive" aria-label="뒤로">${SVG.back}</button><div class="rp-logo" style="font-size:20px">PLANET <span>#1203</span></div></div>
+  <div class="rp-mhead"><div class="rp-kick" style="color:#9cc4ff">RECORD SHOP</div><h1>JUUN RECORDS</h1><p>하츄대원들이 발매한 쭈니 앨범 <b>${n}장</b></p></div>
+  <div class="cdf-bar"><input id="cdQ" type="search" placeholder="앨범 · 대원 · 노래로 찾기" value="${escH(CDV.q)}" autocomplete="off"><button data-cd="make">+ 내 CD 만들기</button></div>
+  <div class="rp-tabs" style="padding-top:12px">${[['new','최신순'],['name','이름순'],['mine','내 CD']].map(([k,l])=>`<button class="${CDV.sort===k?'on':''}" data-cd="sort" data-k="${k}" aria-pressed="${CDV.sort===k}">${l}</button>`).join('')}</div>
+  <div id="cdGrid" class="cdf-wrap">${cdGridHtml()}</div></div>`}
+VIEWS.cds=vCds;
+function cdAll(){CDV.n=24;rpShow('cds')}
+rp.addEventListener('input',e=>{if(e.target.id!=='cdQ')return;CDV.q=e.target.value.slice(0,40);CDV.n=24;const g=$('#cdGrid');if(g)g.innerHTML=cdGridHtml()});
 
 /* ---------- CD 보기: 앞면을 누르면 열고 닫혀요 · 뒤집으면 트랙리스트 ---------- */
 let cdViewTok=0;
@@ -3320,7 +3350,7 @@ function cdMake(){const D=cdDraft();MK.ph={f:null,d:null,i:null};MK.part='f';
         for(let i=0;i<3;i++){const u=await sb.storage.from(BUCKET).upload(P[i],B[i][0],{contentType:B[i][1],cacheControl:'31536000',upsert:false});if(u.error){if(done.length)sb.storage.from(BUCKET).remove(done);throw u.error}done.push(P[i])}
         const r=await sb.from('cds').insert({name:d.name,title:d.title,tracks:d.tracks,note:d.note||null,style:d.st,image_path:P[0],disc_path:P[1],inner_path:P[2]}).select().single();
         if(r.error){sb.storage.from(BUCKET).remove(P);throw r.error}row=cdRow(r.data)}
-      CD.list.unshift(row);try{localStorage.removeItem('jc_cd_draft')}catch(_){}
+      CD.list.unshift(row);try{localStorage.removeItem('jc_cd_draft')}catch(_){}if(rpView==='cds'){const g=$('#cdGrid');if(g)g.innerHTML=cdGridHtml()}
       SFX.done&&SFX.done();cdView(row.id,true);onClose=()=>setTimeout(rpRefresh,0)}
     catch(err){b.disabled=false;b.textContent='💿 CD 발매하기';msg.textContent=err&&/cds\.sql/.test(err.message||'')?err.message:errMsg(err)}}}
 
@@ -3329,7 +3359,9 @@ function cdMake(){const D=cdDraft();MK.ph={f:null,d:null,i:null};MK.part='f';
   VIEWS.archive=()=>{if(!CD.loaded&&!CD.loading){CD.loading=true;cdLoadList().catch(()=>{CD.loaded=true}).finally(()=>{CD.loading=false;if(rpOpen&&rpView==='archive')rpRefresh()})}
     const h=f();return h.includes(K)?h.replace(K,()=>cdSection()+K):h.replace('<div class="rp-last"',()=>cdSection()+'<div class="rp-last"')}}
 rp.addEventListener('click',e=>{const b=e.target.closest('[data-cd]');if(!b||!rp.contains(b))return;const a=b.dataset.cd;
-  if(a==='make')cdMake();else if(a==='view')cdView(b.dataset.id);else if(a==='all')cdAll()});
+  if(a==='make')cdMake();else if(a==='view')cdView(b.dataset.id);else if(a==='all')cdAll();
+  else if(a==='more'){CDV.n+=24;const g=$('#cdGrid');if(g)g.innerHTML=cdGridHtml()}
+  else if(a==='sort'){CDV.sort=b.dataset.k;CDV.n=24;rp.querySelectorAll('[data-cd=sort]').forEach(x=>{x.classList.toggle('on',x===b);x.setAttribute('aria-pressed',x===b)});const g=$('#cdGrid');if(g)g.innerHTML=cdGridHtml()}});
 /* '올린 것도 모두 지우기'에 CD도 포함 */
 {const f=deleteAllMine;deleteAllMine=async function(){await f();
   if(!sb){try{localStorage.removeItem('jc_cds');localStorage.removeItem('jc_cd_draft')}catch(e){}CD.list=[];return}
@@ -3371,6 +3403,22 @@ adm.addEventListener('click',async e=>{if(AD.tab!=='cds'||!AD.cds)return;const z
     const r=await sb.from('cds').delete().eq('id',c.id);if(r.error)return alert(r.error.message);sb.storage.from(BUCKET).remove([c.path,c.dpath,c.ipath].filter(Boolean));
     AD.cds=AD.cds.filter(x=>x.id!==c.id);CD.loaded=false;adCdsRender()}});
 
+/* =====================================================================
+   휴대폰 · 브라우저 '뒤로가기'를 사이트 안에서 한 단계씩 처리해요
+   창이 떠 있으면 창 닫기 → 가사 · 교신 · 직캠 · 라운지 · 레코드샵 전체 보기면 생일파티로 → 생일파티면 행성 맵으로
+   (맵에서 한 번 더 누르면 원래처럼 사이트를 나가요)
+   ===================================================================== */
+{let guard=false;const SUB=new Set(['lyrics','msgs','cams','lounge','cds']);
+  const deep=()=>modalOpen||rpOpen;
+  const arm=()=>{if(!guard&&deep()){try{history.pushState({jc:1},'')}catch(e){}guard=true}};
+  addEventListener('popstate',()=>{guard=false;
+    if(modalOpen)closeSheet();
+    else if(rpOpen&&SUB.has(rpView)){if(rpView==='lyrics')lyrStop();rpShow('archive')}
+    else if(rpOpen)closeReport();
+    setTimeout(arm,0)});
+  {const f=openSheet;openSheet=function(){const r=f.apply(this,arguments);arm();return r}}
+  {const f=rpShow;rpShow=function(){const r=f.apply(this,arguments);arm();return r}}
+  {const f=openReport;openReport=function(){const r=f.apply(this,arguments);arm();return r}}}
 
 /* 디데이 */
 const OPEN=Date.UTC(2026,11,3,3,3),CLOSE=Date.UTC(2026,11,23,15,0);   // 착륙 12월 3일 12:03 ~ 12월 23일 24:00 (한국 시간)
