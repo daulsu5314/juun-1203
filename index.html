@@ -728,6 +728,16 @@ img{max-width:100%}
 .gl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:22px 12px;padding:18px 18px 40px}
 .gl-card{width:auto!important}
 .gl-card .rp-th{width:100%;aspect-ratio:3/4;height:auto!important;border-radius:8px!important;background:#f6f1fb;color:#5a4d80}
+/* ===== 작품 보기: 액자 ===== */
+.vw.frame{overflow:visible;border-radius:2px;background:#fbf8f1;border:16px solid #c9a03f;
+  border-image:linear-gradient(135deg,#f6e08f 0%,#b8862b 22%,#fff2b8 45%,#9c6b1c 68%,#e9c66a 85%,#8a5c16 100%) 1;
+  box-shadow:0 14px 28px rgba(40,24,6,.35),0 3px 6px rgba(40,24,6,.25),inset 0 2px 8px rgba(60,40,10,.22)}
+.vw.frame::before{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 0 2px rgba(110,74,18,.55),inset 0 0 0 4px rgba(255,240,190,.5)}
+.vw.frame img{left:9%;top:7%;width:82%;height:86%;filter:drop-shadow(0 1px 2px rgba(0,0,0,.28))}
+.vplq{align-self:center;display:flex;flex-direction:column;align-items:center;gap:1px;padding:7px 18px;border-radius:3px;text-align:center;max-width:90%;
+  background:linear-gradient(180deg,#f3dc91,#c99b3c 55%,#e8c770);box-shadow:0 2px 4px rgba(60,40,10,.3),inset 0 1px 0 rgba(255,255,255,.6);color:#3d2a08}
+.vplq b{font-family:"Gothic A1",var(--body);font-weight:800;font-size:13px;line-height:1.3}
+.vplq span{font-size:11px;letter-spacing:.5px;opacity:.8}
 /* ===== JUUN UNIVERSE · 궤도 지도 ===== */
 .un-k{color:#7fd8ff!important}
 .un-map{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:0 0 4px;
@@ -866,6 +876,39 @@ img{max-width:100%}
 /* 화면 떨림 방지: 스크롤바가 생겼다 사라졌다 해도 폭이 바뀌지 않게 자리를 비워 둬요 */
 .rp{scrollbar-gutter:stable}
 .rp-msgs.un-v{min-height:auto}
+/* ===== JUUN FORTUNE · 포춘쿠키 ===== */
+.fc-stage{position:relative;margin:4px 18px 0;min-height:230px;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:22px 16px;
+  background:radial-gradient(60% 70% at 50% 45%,rgba(255,211,110,.16),transparent 70%),radial-gradient(1px 1px at 15% 25%,#fff8,transparent),radial-gradient(1px 1px at 80% 20%,#fff7,transparent),radial-gradient(1.5px 1.5px at 70% 80%,#fff9,transparent),radial-gradient(1px 1px at 25% 75%,#fff6,transparent),#140c2e;
+  box-shadow:inset 0 0 0 1px #2c2252}
+.rp .fc-cookie{position:relative;background:none;padding:0;display:flex;flex-direction:column;align-items:center;gap:10px;color:#ffd36e;border-radius:16px!important}
+.fc-cookie svg{width:170px;height:auto;overflow:visible;filter:drop-shadow(0 8px 14px rgba(0,0,0,.45));animation:fcFloat 3s ease-in-out infinite}
+.fc-cookie em{font-style:normal;font-family:"Gothic A1",var(--body);font-weight:800;font-size:13px;color:#ffd36e;text-align:center;max-width:260px}
+.fc-glow{position:absolute;left:50%;top:38%;width:180px;height:120px;margin:-60px 0 0 -90px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,211,110,.35),transparent);animation:fcPulse 2.4s ease-in-out infinite;pointer-events:none}
+@keyframes fcFloat{50%{transform:translateY(-6px) rotate(-2deg)}}
+@keyframes fcPulse{50%{opacity:.45;transform:scale(1.1)}}
+.rp .fc-cookie:hover svg{animation-duration:1.2s}
+.fc-l,.fc-r{transform-box:fill-box;transition:transform .55s cubic-bezier(.3,1.4,.5,1),opacity .55s}
+.fc-l{transform-origin:100% 70%}.fc-r{transform-origin:0 70%}
+.fc-stage.shake .fc-cookie svg{animation:fcShake .65s ease-in-out}
+@keyframes fcShake{0%,100%{transform:rotate(0)}20%{transform:rotate(-7deg)}40%{transform:rotate(7deg)}60%{transform:rotate(-5deg)}80%{transform:rotate(4deg)}}
+.fc-stage.crack .fc-l{transform:translate(-26px,8px) rotate(-24deg);opacity:0}
+.fc-stage.crack .fc-r{transform:translate(26px,8px) rotate(24deg);opacity:0}
+.fc-stage.crack .fc-cookie em{opacity:0}
+.fc-slip{position:relative;width:100%;max-width:380px;padding:18px 22px 14px;border-radius:4px;text-align:center;color:#3a2a14;
+  background:repeating-linear-gradient(0deg,transparent 0 25px,rgba(180,140,80,.12) 25px 26px),#fffaf0;box-shadow:0 10px 24px rgba(0,0,0,.4)}
+.fc-slip::before,.fc-slip::after{content:"✦";position:absolute;top:8px;font-size:10px;color:#e0a948}
+.fc-slip::before{left:10px}.fc-slip::after{right:10px}
+.fc-q{position:absolute;left:12px;top:-6px;font-family:Georgia,serif;font-size:46px;line-height:1;color:#f2b553}
+.fc-slip p{margin:4px 0 8px;font-family:"Gaegu","Gothic A1",var(--body);font-size:19px;font-weight:700;line-height:1.5;overflow-wrap:anywhere;white-space:normal}
+.fc-slip small{font-size:11px;color:#8a6b3c;letter-spacing:.3px}
+.fc-stage.anim .fc-slip{animation:fcSlip .7s cubic-bezier(.2,1.3,.4,1)}
+@keyframes fcSlip{from{transform:scaleX(.08) scaleY(.6);opacity:0}60%{opacity:1}}
+.rp .fc-again{height:42px;padding:0 18px;border-radius:999px!important;background:#2a1d4d;border:1px dashed #b08a3a;color:#ffd36e;font-family:"Gothic A1",var(--body);font-weight:800;font-size:13px}
+.fc-stage.anim .fc-again{animation:fcIn .5s .5s both}
+@keyframes fcIn{from{opacity:0;transform:translateY(6px)}}
+@media (prefers-reduced-motion:reduce){.fc-cookie svg,.fc-glow{animation:none}}
+.fc-stage.crack .fc-cr,.fc-stage.crack .fc-pp{opacity:0;transition:opacity .2s}
+.fc-slip p{word-break:keep-all}
 </style>
 </head>
 <body>
@@ -1283,7 +1326,7 @@ function openEnding(){endingSeen=true;store.set('jc_end',true);endExplore();open
 let viewerNav=null;
 function openViewer(o){let i=o.index;
   const show=()=>{const it=o.items[i],n=o.items.length;
-    openSheet(o.title(it),`<div class="vwrap">${n>1?'<button class="vnav l" id="vp" aria-label="이전 작품">◀</button>':''}<div class="vw${o.pixel?' px':''}" id="vw" style="aspect-ratio:${typeof o.ratio==='function'?o.ratio(it):o.ratio};width:min(100%,calc(52vh * ${typeof o.ratio==='function'?o.ratio(it):o.ratio}))"><img src="${o.img(it)}" alt="${o.alt(it)}" draggable="false"></div>${n>1?'<button class="vnav r" id="vn" aria-label="다음 작품">▶</button>':''}</div>
+    openSheet(o.title(it),`<div class="vwrap">${n>1?'<button class="vnav l" id="vp" aria-label="이전 작품">◀</button>':''}<div class="vw${o.pixel?' px':''}${o.frame?' frame':''}" id="vw" style="aspect-ratio:${typeof o.ratio==='function'?o.ratio(it):o.ratio};width:min(100%,calc(52vh * ${typeof o.ratio==='function'?o.ratio(it):o.ratio}))"><img src="${o.img(it)}" alt="${o.alt(it)}" draggable="false"></div>${n>1?'<button class="vnav r" id="vn" aria-label="다음 작품">▶</button>':''}</div>
     <div class="vcount">${i+1} / ${n}${n>1?' · 옆으로 밀어서 넘겨 보세요':''}</div>${o.body(it)}
     <div class="row"><button class="soft" id="vback">← 목록으로</button>${o.extra?o.extra(it):''}</div><p id="vmsg" class="save"></p>`);
     const go=d=>{i=(i+d+n)%n;show()};viewerNav=n>1?go:null;
@@ -2184,7 +2227,7 @@ rp.addEventListener('click',async e=>{const b=e.target.closest('[data-go],[data-
   else if(a==='share'){b.disabled=true;try{await shareCard()}finally{b.disabled=false}}
   else if(a==='comm'){const list=ARCHIVE.commissions.filter(c=>c.img),c=ARCHIVE.commissions[i];
     if(!c||!c.img){openSheet('JUUN GALLERY','<p>커미션 작품을 준비하고 있어요.</p>');return}
-    openViewer({items:list,index:list.indexOf(c),ratio:'3/4',title:c=>c.title,img:c=>c.img,alt:c=>c.title,back:closeSheet,body:c=>`<p class="by">illust. ${escH(c.artist)}</p>`})}
+    openViewer({items:list,index:list.indexOf(c),ratio:'3/4',frame:true,title:c=>c.title,img:c=>c.img,alt:c=>c.title,back:closeSheet,body:c=>`<div class="vplq"><b>${escH(c.title)}</b><span>illust. ${escH(c.artist)}</span></div>`})}
   else if(a==='mon')openViewer({items:rpMons(),index:i,ratio:'1',pixel:true,title:m=>m.t,img:m=>m.img,alt:m=>m.t,back:closeSheet,body:m=>`<p class="by">그린 대원 · ${escH(m.n)}${m.ex?' · 예시 작품':''}</p>`})
   else if(a==='top')galView(rpTop(),i);
   else if(a==='gal')galView(rpGallery(),i);
@@ -3816,6 +3859,66 @@ adm.addEventListener('click',async e=>{if(AD.tab!=='uni'||!AD.uniP)return;const 
   else if(a==='mhide'||a==='mdel'){const m=AU.mets.find(x=>x.id===id);if(a==='mdel'&&!b.dataset.sure){b.dataset.sure=1;b.textContent='한 번 더';return}
     const r=a==='mdel'?await sb.from('uni_meteors').delete().eq('id',id):await sb.from('uni_meteors').update({approved:!m.approved}).eq('id',id);if(r.error)return alert(r.error.message);
     if(a==='mdel')AU.mets=AU.mets.filter(x=>x.id!==id);else m.approved=!m.approved;done()}});
+/* =====================================================================
+   JUUN FORTUNE · 쭈니 포춘쿠키 (생일파티 맨 아래)
+   쿠키를 깨면 쭈니가 한 말 · 댓글이 하나 나와요. 문장은 운영진이 넣어요
+   ===================================================================== */
+const FC={list:[],loaded:false,loading:false,cur:null,bag:[],busy:false};
+async function fcLoad(){if(!sb){FC.list=store.get('jc_fortunes',[]);FC.loaded=true;return}
+  const r=await sb.from('fortunes').select('id,text,source').eq('active',true).order('sort').limit(1000);
+  FC.list=r.error?[]:r.data;FC.loaded=true}
+function fcPick(){if(!FC.list.length)return null;if(!FC.bag.length){FC.bag=FC.list.map((_,i)=>i);for(let i=FC.bag.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[FC.bag[i],FC.bag[j]]=[FC.bag[j],FC.bag[i]]}
+    if(FC.cur&&FC.bag.length>1&&FC.list[FC.bag[FC.bag.length-1]].id===FC.cur.id)FC.bag.unshift(FC.bag.pop())}
+  return FC.list[FC.bag.pop()]}
+const FC_SVG=`<svg viewBox="0 0 160 112" aria-hidden="true"><defs><linearGradient id="fcG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe7ad"/><stop offset=".5" stop-color="#f3b756"/><stop offset="1" stop-color="#c27c20"/></linearGradient>
+  <linearGradient id="fcD" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d8902e"/><stop offset="1" stop-color="#a8661a"/></linearGradient></defs>
+  <rect class="fc-pp" x="72" y="80" width="30" height="16" rx="1.5" fill="#fffaf0" transform="rotate(14 87 88)"/>
+  <g class="fc-l"><path d="M80 16 C44 16 12 40 12 68 C12 82 26 88 44 82 C58 77 70 84 80 96 Z" fill="url(#fcG)"/><path d="M80 34 C66 52 56 68 46 80" stroke="url(#fcD)" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/><ellipse cx="40" cy="40" rx="12" ry="5" fill="#fff6d8" opacity=".55" transform="rotate(-25 40 40)"/></g>
+  <g class="fc-r"><path d="M80 16 C116 16 148 40 148 68 C148 82 134 88 116 82 C102 77 90 84 80 96 Z" fill="url(#fcG)"/><path d="M80 34 C94 52 104 68 114 80" stroke="url(#fcD)" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/></g>
+  <path class="fc-cr" d="M80 18 C78 46 80 70 80 96" stroke="#b06d17" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`;
+function fcSection(){const c=FC.cur;
+  return`<section class="rp-sec fc-sec" id="fcZone" style="padding-top:38px"><div class="rp-big"><div><div class="rp-kick" style="color:#ffd36e">FORTUNE COOKIE</div><h2>JUUN FORTUNE</h2><p>쿠키를 깨면 쭈니의 한마디가 나와요</p></div></div>
+  <div class="fc-stage${c?' open':''}">
+    <button class="fc-cookie" data-fc="crack" aria-label="포춘쿠키 깨기"${c?' hidden':''}><span class="fc-glow"></span>${FC_SVG}<em>톡! 눌러서 깨기</em></button>
+    ${c?`<div class="fc-slip" role="status"><span class="fc-q" aria-hidden="true">“</span><p>${escH(c.text).replace(/\n/g,'<br>')}</p>${c.source?`<small>— ${escH(c.source)}</small>`:'<small>— 쭈니</small>'}</div>
+      <button class="fc-again" data-fc="again">🥠 쿠키 하나 더 깨기</button>`:''}
+  </div></section>`}
+function fcCrack(again){if(FC.busy)return;if(!FC.loaded){fcEnsure();setTimeout(()=>fcCrack(again),300);return}
+  const z=$('#fcZone');if(!z)return;
+  if(!FC.list.length){const st=z.querySelector('.fc-stage');st.querySelector('.fc-cookie em').textContent='쭈니의 말을 준비하고 있어요 · 조금만 기다려 주세요';return}
+  if(again){FC.cur=null;rpRefresh();setTimeout(()=>fcCrack(false),120);return}
+  FC.busy=true;const st=z.querySelector('.fc-stage');st.classList.add('shake');SFX.tick&&SFX.tick();
+  setTimeout(()=>{st.classList.remove('shake');st.classList.add('crack');SFX.pop?SFX.pop():SFX.coin&&SFX.coin()},650);
+  setTimeout(()=>{FC.cur=fcPick();FC.busy=false;rpRefresh();const s=$('#fcZone .fc-stage');if(s)s.classList.add('anim');SFX.win&&SFX.win()},1250)}
+function fcEnsure(){if(FC.loaded||FC.loading)return;FC.loading=true;fcLoad().catch(()=>{FC.loaded=true}).finally(()=>{FC.loading=false})}
+{const f=VIEWS.archive,K='<div class="rp-last" id="rpLast">';
+  VIEWS.archive=()=>{fcEnsure();const h=f();return h.includes(K)?h.replace(K,()=>fcSection()+K):h+fcSection()}}
+rp.addEventListener('click',e=>{const b=e.target.closest('[data-fc]');if(!b||!rp.contains(b))return;fcCrack(b.dataset.fc==='again')});
+
+/* ---------- 운영진: '포춘쿠키' 탭 ---------- */
+AD_TABS.splice(Math.max(0,AD_TABS.findIndex(t=>t[0]==='site')),0,['fortune','포춘쿠키']);
+{const f=adGo;adGo=async function(tab){if(tab!=='fortune')return f(tab);AD.tab=tab;AD.msg='';
+  adm.innerHTML=`<div class="adw">${adHead('<button class="ad-link" data-ad="logout">로그아웃</button>')}<div class="ad-tabs">${AD_TABS.map(([k,l])=>`<button class="${k===tab?'on':''}" data-ad="tab" data-k="${k}">${l}</button>`).join('')}</div><div id="adBody"><p class="ad-empty">불러오는 중…</p></div></div>`;
+  adFc()}}
+async function adFc(){const r=await sb.from('fortunes').select('*').order('sort').order('created_at').limit(2000);
+  if(r.error){$('#adBody').innerHTML=`<p class="ad-err">포춘쿠키를 불러오지 못했어요: ${escH(r.error.message)}</p><p class="ad-note">Supabase SQL Editor에서 fortune.sql을 실행해 주세요.</p>`;return}
+  AD.fc=r.data;adFcRender()}
+function adFcRender(){const L=AD.fc;
+  $('#adBody').innerHTML=`<div class="ad-bar"><span>쭈니의 한마디 ${L.filter(x=>x.active).length}개${L.some(x=>!x.active)?` · 숨김 ${L.filter(x=>!x.active).length}`:''}</span></div>
+  <div class="ad-hp un-ad"><b>한꺼번에 넣기</b><p class="ad-note" style="margin:0">한 줄에 하나씩 적어 주세요. 출처는 <b>|</b> 뒤에 적어요. 예) 하츄 오늘도 고마워요 | 위버스 댓글 · 2025.12.03</p>
+    <textarea id="fcT" rows="5" placeholder="쭈니가 한 말 | 출처"></textarea><div class="ad-hpm"><button class="on" data-fca="add">넣기</button><span class="ad-note" id="fcM"></span></div></div>
+  ${L.length?`<div class="ad-list" style="margin-top:12px">${L.map(x=>`<div class="ad-row${x.active?'':' off'}"><div class="ad-tx un-ad"><textarea data-ft="${x.id}" rows="2" maxlength="200">${escH(x.text)}</textarea><input data-fs="${x.id}" value="${escH(x.source||'')}" maxlength="40" placeholder="출처 (예: 위버스 댓글 · 2025.12.03)"></div>
+    <div class="ad-act"><button data-fca="save" data-id="${x.id}">저장</button><button data-fca="hide" data-id="${x.id}">${x.active?'숨기기':'보이기'}</button><button class="ad-del" data-fca="del" data-id="${x.id}">삭제</button></div></div>`).join('')}</div>`:'<p class="ad-empty">아직 넣은 한마디가 없어요</p>'}`}
+adm.addEventListener('click',async e=>{if(AD.tab!=='fortune'||!AD.fc)return;const b=e.target.closest('[data-fca]');if(!b)return;const a=b.dataset.fca,id=b.dataset.id,x=AD.fc.find(y=>y.id===id);
+  const done=()=>{FC.loaded=false;FC.bag=[];adFcRender()};
+  if(a==='add'){const rows=$('#fcT').value.split('\n').map(s=>s.trim()).filter(Boolean).map(s=>{const i=s.lastIndexOf('|');return i>0?{text:s.slice(0,i).trim(),source:s.slice(i+1).trim()}:{text:s,source:''}}).filter(r=>r.text);
+    if(!rows.length)return $('#fcM').textContent='넣을 문장이 없어요';const bad=rows.find(r=>r.text.length>200||r.source.length>40);if(bad)return $('#fcM').textContent=`너무 길어요 (문장 200자 · 출처 40자까지): ${bad.text.slice(0,20)}…`;
+    b.disabled=true;let mx=Math.max(0,...AD.fc.map(y=>y.sort));const r=await sb.from('fortunes').insert(rows.map(r=>({...r,sort:++mx}))).select();b.disabled=false;
+    if(r.error)return $('#fcM').textContent=r.error.message;AD.fc.push(...r.data);done();$('#fcM').textContent=`${rows.length}개 넣었어요`}
+  else if(a==='save'){const t=adm.querySelector(`[data-ft="${id}"]`).value.trim(),s=adm.querySelector(`[data-fs="${id}"]`).value.trim();if(!t)return alert('문장을 적어 주세요');
+    const r=await sb.from('fortunes').update({text:t,source:s}).eq('id',id);if(r.error)return alert(r.error.message);Object.assign(x,{text:t,source:s});FC.loaded=false;b.textContent='저장됨 ✓'}
+  else if(a==='hide'){const r=await sb.from('fortunes').update({active:!x.active}).eq('id',id);if(r.error)return alert(r.error.message);x.active=!x.active;done()}
+  else if(a==='del'){if(!b.dataset.sure){b.dataset.sure=1;b.textContent='한 번 더';return}const r=await sb.from('fortunes').delete().eq('id',id);if(r.error)return alert(r.error.message);AD.fc=AD.fc.filter(y=>y.id!==id);done()}});
 /* =====================================================================
    휴대폰 · 브라우저 '뒤로가기'를 사이트 안에서 한 단계씩 처리해요
    창이 떠 있으면 창 닫기 → 가사 · 교신 · 직캠 · 라운지 · 레코드샵 전체 보기면 생일파티로 → 생일파티면 행성 맵으로
