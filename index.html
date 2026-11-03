@@ -3981,7 +3981,7 @@ adm.addEventListener('click',async e=>{if(AD.tab!=='fortune'||!AD.fc)return;cons
    ===================================================================== */
 const RC_TAGS='#주은 #JUUN #하츠투하츠 #Hearts2Hearts';   // 트윗에 붙는 해시태그 (바꾸고 싶으면 여기만)
 const RC={on:{},url:null,blob:null,busy:false,again:false,mets:null};
-const RC_SEC=[['pic','🖼️ 자랑한 사진'],['cd','💿 CD'],['mon','🎨 몽타주'],['cut','🎞️ 네컷'],['cam','📹 직캠·무대'],['note','📡 교신'],['fc','🥠 포춘쿠키'],['met','🌠 유성'],['gc','🎁 가챠']];
+const RC_SEC=[['pic','🖼️ 자랑한 사진'],['cd','💿 CD'],['mon','🎨 몽타주'],['cut','🎞️ 네컷'],['cam','📹 직캠·무대'],['note','📡 교신'],['fc','🥠 포춘쿠키'],['met','🌠 유성']];
 const RC_MAX={pic:1,cd:1,mon:1,cut:1,cam:1,note:1,fc:1,met:1,gc:1};
 const rcHost=()=>{try{return location.host||'juun-1203.vercel.app'}catch(e){return'juun-1203.vercel.app'}};
 const rcSite=()=>{try{return/^https?:/.test(location.href)?location.origin+location.pathname:'https://juun-1203.vercel.app/'}catch(e){return'https://juun-1203.vercel.app/'}};
@@ -3993,8 +3993,8 @@ function rcData(){const m=k=>rcSafe(()=>mineOf(k)).slice().sort((a,b)=>(b.at||0)
     cut:m('memories').filter(x=>x.img).map(x=>({img:x.img,cap:x.t||''})),
     cam:m('fancams').map(x=>{const i=rcSafe(()=>camInfo(x.url));return{img:i&&i.thumb||null,label:i&&i.label||'링크',cap:x.c||''}}),
     note:m('notes').filter(x=>x.m).map(x=>({cap:x.m})),
-    fc:store.get('jc_fc_got',[]).slice().reverse().map(x=>({cap:x.text,src:x.source})),
-    met:(RC.mets||[]),gc:rcSafe(()=>GC.wins||[]).map(w=>({cap:w.name}))};
+    fc:(()=>{const g=store.get('jc_fc_got',[]).slice().reverse().map(x=>({cap:x.text,src:x.source}));if(g.length)return g;const L=rcSafe(()=>FC.list);if(!L.length)return[];if(!RC.fcPick)RC.fcPick=L[Math.floor(Math.random()*L.length)];return[{cap:RC.fcPick.text,src:RC.fcPick.source,rnd:1}]})(),
+    met:(RC.mets||[]),gc:[]};
   const st=[['미션',`${rcSafe(()=>doneCount())}/5`],['사진',d.pic.length],['CD',d.cd.length],['몽타주',d.mon.length],['네컷',d.cut.length],['직캠',d.cam.length],['교신',d.note.length],['포춘',d.fc.length],['유성',d.met.length]].filter(([k,v])=>k==='미션'||+v>0);
   return{d,st}}
 async function rcMets(){if(RC.mets)return;const tt=id=>{const v=rcSafe(()=>UNI.videos).find?UNI.videos.find(v=>v.id===id):null;return v?v.title:''};
@@ -4035,7 +4035,7 @@ function rcBlocks(D,IM){const B=[],d=D.d,first=k=>RC.on[k]!==false&&d[k].length?
     B.push({h:rh,draw:(x,y)=>{const tot=n*(w+28)+(n-1)*30;P.forEach((p,i)=>{const cx=(RW-tot)/2+(w+28)/2+i*(w+28+30);rcPola(x,IM.get(p.img),cx,y+16+(h-w*p.r)/2+(i%2?10:0),w,w*p.r,[-2.5,2,-1.5,2.5,-2][i],p.lab,p.mode)})}})}
   /* 글 카드: 2칸씩 */
   const T=[];const fc=first('fc'),note=first('note'),met=first('met'),gc=first('gc');
-  if(fc)T.push({k:'fc',head:'✦ 내가 깬 포춘쿠키',body:fc.cap,sub:fc.src});
+  if(fc)T.push({k:'fc',head:fc.rnd?'✦ 오늘의 쭈니 포춘쿠키':'✦ 내가 깬 포춘쿠키',body:fc.cap,sub:fc.src});
   if(note)T.push({k:'note',head:'📡 내가 보낸 교신',body:note.cap});
   if(cam&&!IM.get(cam.img))T.push({k:'cam',head:'📹 내 최애 직캠 · 무대',body:cam.cap||'최애 포인트',sub:cam.label});
   if(met){const s=Math.max(0,met.t|0);T.push({k:'met',head:'🌠 내가 포착한 유성',body:`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}  ${met.cap}`,sub:met.v})}
@@ -4064,13 +4064,13 @@ async function rcDraw(){const D=rcData();
   let y=0;for(const b of B){if(y+b.h>H)break;x.save();b.draw(x,y);x.restore();y+=b.h}return cv}
 const rcBlob=cv=>new Promise(r=>cv.toBlob(b=>r(b),'image/png'));
 async function rcRender(){if(RC.busy){RC.again=true;return}RC.busy=true;const msg=$('#rcMsg');if(msg)msg.textContent='카드 만드는 중…';
-  try{await rcMets();const cv=await rcDraw();const b=await rcBlob(cv);if(RC.url)URL.revokeObjectURL(RC.url);RC.url=URL.createObjectURL(b);RC.blob=b;
+  try{if(!FC.loaded){try{await fcLoad()}catch(e){}}await rcMets();const cv=await rcDraw();const b=await rcBlob(cv);if(RC.url)URL.revokeObjectURL(RC.url);RC.url=URL.createObjectURL(b);RC.blob=b;
     if($('#rcImg'))$('#rcImg').src=RC.url;if($('#rcMsg'))$('#rcMsg').textContent=''}
   catch(e){if($('#rcMsg'))$('#rcMsg').textContent='카드를 만들지 못했어요: '+(e.message||e)}
   RC.busy=false;if(RC.again){RC.again=false;rcRender()}}
-function rcOpen(){RC.mets=null;const D=rcData(),chips=RC_SEC.filter(([k])=>D.d[k].length||k==='met');
+async function rcOpen(){RC.mets=null;try{if(!FC.loaded)await fcLoad()}catch(e){}const D=rcData(),chips=RC_SEC.filter(([k])=>D.d[k].length||k==='met');
   openSheet('내 파티 자랑 카드',`<p>종류마다 가장 최근 것 하나씩 한 장에 모았어요. 빼고 싶은 건 눌러서 끌 수 있어요.</p>
-  <div class="row rc-btns"><button class="primary" id="rcShare" type="button">𝕏 자랑하기</button><button class="soft" id="rcSave" type="button">이미지 저장</button></div>
+  <div class="row rc-btns"><button class="primary" id="rcShare" type="button">공유하기</button><button class="soft" id="rcSave" type="button">이미지 저장</button></div>
   <div class="rc-chips">${chips.map(([k,l])=>`<button type="button" class="${RC.on[k]===false?'':'on'}" data-rc="${k}" aria-pressed="${RC.on[k]!==false}">${l}</button>`).join('')}</div>
   <div class="rc-prev"><img id="rcImg" alt="내 파티 자랑 카드"></div><p class="save" id="rcMsg">카드 만드는 중…</p>
   <p class="rc-tip">폰에서는 공유 창에서 X를 고르면 이미지가 바로 붙어요. 컴퓨터에서는 이미지를 저장한 뒤 열리는 X 창에 첨부해 주세요. 미리보기를 길게 눌러 저장해도 돼요. 종류마다 가장 최근 것 하나씩 담겨요.</p>`);
