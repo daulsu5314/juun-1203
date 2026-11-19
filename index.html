@@ -859,6 +859,14 @@ img{max-width:100%}
 @media (min-width:700px){.cn-hall{padding:34px 22px 18px}.cn-cur{width:16px}}
 .cn-list{grid-template-columns:repeat(3,1fr);gap:12px 10px}
 .cn-tt{font-size:12.5px}.cn-by{font-size:10.5px}.cn-stub{padding:7px 8px 8px}
+/* JUUN CINEMA 간판: 깔끔하게 */
+.cn-sign{margin:10px 18px 0;padding:18px 14px 16px;border-radius:14px;background:#1d0f1a;border:1.5px solid #c9a24a;box-shadow:none}
+.cn-sign::before,.cn-sign::after{display:none}
+.cn-sign small{margin:0;font-family:"Gothic A1",var(--body);font-weight:800;font-size:11px;letter-spacing:5px;color:#e8c46a}
+.cn-sign h1{margin:6px 0 6px;font-size:40px;letter-spacing:3px;color:#fff3d6}
+.cn-sign p{margin:0;font-size:12px;color:#c9b3c2}
+.cn-sign p b{color:#e8c46a}
+@media (min-width:700px){.cn-sign h1{font-size:46px}}
 /* ===== JUUN UNIVERSE · 궤도 지도 ===== */
 .un-k{color:#7fd8ff!important}
 .un-map{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:0 0 4px;
@@ -2358,7 +2366,7 @@ ${(()=>{const LY=lyrList(),l=LY[0];return`<section class="rp-sec" style="padding
     <div class="rp-mq" aria-hidden="true"><div class="rp-mqi">${tk}${tk}</div></div>
     <div class="rp-row" style="gap:10px">${notes.slice(0,10).map((n,i)=>`<button class="rp-msg" data-go="msgs"><span class="rp-mh"><span>수신 #${String(notes.length-i).padStart(4,'0')}</span><span>${n.t?(k=>p2(k.h)+':'+p2(k.mi))(kst(n.t)):''}</span></span><span class="rp-mt">${escH(n.m)}</span><span class="rp-mf"><img src="${i%2?ART.ap:ART.ag}" alt=""><span>from <b>${escH(n.n)}</b> 대원</span></span></button>`).join('')}</div></section>
 
-  <section class="rp-sec" style="padding-top:36px"><div class="rp-sh"><h2>보급품</h2><small>생카 굿즈</small></div>
+  <section class="rp-sec" style="padding-top:36px"><div class="rp-sh"><h2>보급품</h2><small>PLANET #1203 굿즈</small></div>
     <div class="rp-row">${goodsList().map((g,i)=>`<button class="rp-card" style="width:132px" data-act="good" data-i="${i}"><span class="rp-th${g.px?' rp-gimg':''}" style="height:132px${g.px?'':';background:#f6f1fb'}">${g.img?`<img loading="lazy" src="${escH(g.img)}" alt="${escH(g.n)}">`:'[굿즈 사진]'}</span><span class="rp-ct">${escH(g.n)}</span><span class="rp-cs">${escH(g.p)}</span></button>`).join('')}</div></section>
 
   <section class="rp-sec" id="camSec" style="padding-top:40px"><div class="rp-big"><div><div class="rp-kick">FANCAM</div><h2>MY BEST FANCAM</h2><p>하츄대원들의 최애 직캠 · 무대 자랑</p></div><button class="rp-link" data-go="cams">전체 보기 &gt;</button></div>
@@ -4420,7 +4428,7 @@ function rcBlocks(D,IM){const B=[],d=D.d,first=k=>RC.on[k]!==false&&d[k].length?
       x.fillStyle='#3a2560';x.font=t.k==='fc'?'700 33px "Gaegu","Gothic A1",sans-serif':'400 29px "Jua","Gothic A1",sans-serif';rcWrap(x,t.body,w-52,t.sub?2:3).forEach((l,j)=>x.fillText(l,cx+26,cy+86+j*36));
       if(t.sub){x.fillStyle='#9a8aa8';x.font='600 19px "Gothic A1",sans-serif';x.fillText(rcFit(x,t.sub,w-52),cx+26,cy+ch-22)}x.restore()})})}
   if(!P.length&&!T.length)B.push({h:300,draw:(x,y)=>{x.textAlign='center';x.fillStyle='#ffb3d9';x.font='700 48px "Gaegu","Gothic A1",sans-serif';x.fillText('12.03 생일 축하해 주은아 💗',RW/2,y+160)}});
-  B.push({h:130,draw:(x,y)=>{y+=24;x.imageSmoothingEnabled=false;const ag=IM.get(ART.ag),ap=IM.get(ART.ap);if(ag)x.drawImage(ag,RW/2-110,y-14,78,78*ag.height/ag.width);if(ap)x.drawImage(ap,RW/2+30,y-8,74,74*ap.height/ap.width);x.imageSmoothingEnabled=true;x.fillStyle='#2c2252';x.setLineDash([6,8]);x.strokeStyle='#4a3d7a';x.lineWidth=2;x.beginPath();x.moveTo(RM,y+14);x.lineTo(RW/2-130,y+14);x.moveTo(RW/2+120,y+14);x.lineTo(RW-RM,y+14);x.stroke();x.setLineDash([]);x.textBaseline='alphabetic';x.textAlign='left';x.fillStyle='#8f84ad';x.font='700 24px "Gothic A1",sans-serif';x.fillText(rcHost(),RM,y+62);x.textAlign='right';x.fillText('12.03 HAPPY JUUN DAY 💗',RW-RM,y+62)}});
+  B.push({h:130,draw:(x,y)=>{y+=24;x.imageSmoothingEnabled=false;const ag=IM.get(ART.ag),ap=IM.get(ART.ap);if(ag)x.drawImage(ag,RW/2-110,y-14,78,78*ag.height/ag.width);if(ap)x.drawImage(ap,RW/2+30,y-8,74,74*ap.height/ap.width);x.imageSmoothingEnabled=true;x.fillStyle='#2c2252';x.setLineDash([6,8]);x.strokeStyle='#4a3d7a';x.lineWidth=2;x.beginPath();x.moveTo(RM,y+14);x.lineTo(RW/2-130,y+14);x.moveTo(RW/2+120,y+14);x.lineTo(RW-RM,y+14);x.stroke();x.setLineDash([]);x.textBaseline='alphabetic';x.textAlign='left';x.fillStyle='#8f84ad';x.font='400 28px "Anton",sans-serif';x.fillText('PLANET #1203',RM,y+64);x.font='700 24px "Gothic A1",sans-serif';x.textAlign='right';x.fillText('12.03 HAPPY JUUN DAY 💗',RW-RM,y+62)}});
   return B}
 async function rcDraw(){const D=rcData();
   const TX=['HAPPY JUUN DAY 12.03 BIRTHDAY 생일 축하해! 대원의 파티 기록 ✦ CREW NO. 0123456789 내가 자랑한 사진 내 CD 쭈일리언 네컷 최애 직캠 무대 깬 포춘쿠키 보낸 교신 포착한 유성 GACHA 당첨 SIGNAL FROM JUUN',me.name||'하츄',
