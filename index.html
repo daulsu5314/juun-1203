@@ -752,6 +752,48 @@ img{max-width:100%}
 .ed-card{width:auto!important}
 .ed-card .rp-th{width:100%;height:auto!important;aspect-ratio:16/9}
 .ed-card .rp-th img{width:100%;height:100%;object-fit:cover}
+/* JUUN CINEMA (쭈니 에딧 전체 보기) */
+.cn{background:#120914}
+.cn-sign{margin:8px 18px 0;padding:16px 14px 14px;text-align:center;border-radius:14px;background:#2a0f1c;border:3px solid #ffd166;position:relative;
+  box-shadow:0 0 0 4px #2a0f1c,0 0 0 6px #7a4a1a}
+.cn-sign::before,.cn-sign::after{content:"";position:absolute;left:8px;right:8px;height:6px;background:radial-gradient(circle,#fff3b0 0 2px,transparent 2.5px) 0 0/14px 6px repeat-x;animation:cnBulb 1.2s steps(2) infinite}
+.cn-sign::before{top:4px}.cn-sign::after{bottom:4px;animation-delay:.6s}
+@keyframes cnBulb{50%{opacity:.35}}
+.cn-sign small{display:block;font-family:"Anton",sans-serif;letter-spacing:4px;font-size:12px;color:#ff8fab;margin-top:4px}
+.cn-sign h1{margin:2px 0 4px;font-family:"Anton",sans-serif;font-weight:400;font-size:42px;line-height:1.05;color:#ffe9a8;letter-spacing:1px}
+.cn-sign p{margin:0 0 4px;font-size:12.5px;color:#f1d6e0}.cn-sign p b{color:#fff}
+.cn-hall{position:relative;margin:18px 0 0;padding:34px 30px 18px;background:#1c0c18;overflow:hidden}
+.cn-val{position:absolute;left:0;right:0;top:0;height:22px;z-index:2;background:#8e1530;
+  -webkit-mask:radial-gradient(circle at 12px 22px,transparent 11px,#000 11.5px) 0 0/24px 100% repeat-x;mask:radial-gradient(circle at 12px 22px,transparent 11px,#000 11.5px) 0 0/24px 100% repeat-x}
+.cn-cur{position:absolute;top:0;bottom:0;width:24px;z-index:1;background:repeating-linear-gradient(90deg,#9b1c38 0 6px,#7a1229 6px 12px)}
+.cn-cur.l{left:0;border-radius:0 0 18px 0}.cn-cur.r{right:0;border-radius:0 0 0 18px}
+.cn-screen{position:relative;aspect-ratio:16/9;border-radius:6px;overflow:hidden;background:#000;border:3px solid #f4f1ea;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.cn-screen iframe,.cn-screen video{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:contain;background:#000}
+.cn-poster{position:absolute;inset:0;width:100%;height:100%;padding:0;border-radius:0!important;background:#000}
+.cn-poster img{width:100%;height:100%;object-fit:cover;opacity:.78}
+.cn-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.92);color:#8e1530;font-size:22px;display:flex;align-items:center;justify-content:center;padding-left:4px}
+.cn-np{position:absolute;left:10px;top:10px;padding:3px 8px;border-radius:4px;background:#8e1530;color:#fff;font-family:"Anton",sans-serif;font-size:11px;letter-spacing:2px}
+.cn-off{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#b9a8c2;font-size:13px}
+.cn-info{margin-top:12px;text-align:center;display:flex;flex-direction:column;gap:3px;min-height:38px}
+.cn-info b{font-size:16px;color:#fff}.cn-info span{font-size:12px;color:#d8b9c8}
+.cn-seats{display:flex;justify-content:center;gap:6px;margin-top:14px}
+.cn-seats i{width:24px;height:16px;border-radius:8px 8px 3px 3px;background:#5a1428;box-shadow:inset 0 -4px 0 #3e0d1c}
+.cn-seats.b{margin-top:6px}.cn-seats.b i{width:26px;height:18px;background:#4a1022}
+.cn-list-h{display:flex;align-items:baseline;gap:8px;padding:22px 18px 10px}
+.cn-list-h span{font-family:"Jua","Gothic A1",var(--body);font-size:18px;color:#ffe9a8}.cn-list-h small{font-size:12px;color:#b9a8c2}
+.cn-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px 12px;padding:0 18px 44px}
+.rp .cn-tk{display:flex;flex-direction:column;padding:0;border-radius:10px!important;overflow:hidden;background:#fff7ea;color:#2a1f3d;text-align:left;border:2px solid transparent}
+.cn-tk.on{border-color:#ffd166;box-shadow:0 0 0 3px rgba(255,209,102,.25)}
+.cn-th{position:relative;display:block;aspect-ratio:16/9;background:#2a1f3d}
+.cn-th img{width:100%;height:100%;object-fit:cover;display:block}
+.cn-now{position:absolute;left:6px;top:6px;padding:2px 7px;border-radius:4px;background:#e8454f;color:#fff;font-size:10.5px;font-weight:800}
+.cn-stub{position:relative;display:flex;flex-direction:column;gap:2px;padding:9px 10px 10px;border-top:2px dashed #e0c9a8}
+.cn-stub::before,.cn-stub::after{content:"";position:absolute;top:-8px;width:14px;height:14px;border-radius:50%;background:#120914}
+.cn-stub::before{left:-9px}.cn-stub::after{right:-9px}
+.cn-no{font-family:"Anton",sans-serif;font-size:11px;letter-spacing:1px;color:#c0394f}
+.cn-tt{font-size:13.5px;font-weight:800;line-height:1.3}
+.cn-by{font-size:11px;color:#7a6a8a}
+@media (min-width:700px){.cn-hall{padding:40px 70px 22px}.cn-cur{width:56px}.cn-sign h1{font-size:54px}}
 /* ===== JUUN UNIVERSE · 궤도 지도 ===== */
 .un-k{color:#7fd8ff!important}
 .un-map{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:0 0 4px;
@@ -2212,7 +2254,7 @@ function vArchive(){
       <div class="rp-hbtn"><button class="rp-play" data-act="hplay">${SVG.play}재생</button><button class="rp-ghost" data-go="cover">${SVG.info}내 탐사 일지</button></div>
       ${ARCHIVE.heroCredit?`<div class="rp-credit">${escH(ARCHIVE.heroCredit)}</div>`:''}</div></div>
 
-  <section class="rp-sec"><div class="rp-sh ed-sh"><h2>쭈니 에딧</h2><small>하츄들이 만든 팬 편집 영상</small>${E.length?'<button class="rp-link ed-all" data-go="edits">전체 보기 &gt;</button>':''}</div>
+  <section class="rp-sec" id="edSec" style="padding-top:38px"><div class="rp-big"><div><div class="rp-kick">FAN EDIT</div><h2>JUUN EDIT</h2><p>하츄들이 만든 팬 편집 영상</p></div>${E.length?'<button class="rp-link" data-go="edits">전체 보기 &gt;</button>':''}</div>
     <div class="rp-row">${E.map((e,i)=>`<button class="rp-card" style="width:220px" data-act="play" data-i="${i}"><span class="rp-th" style="height:124px">${th(e)}${e.len?`<span class="rp-dur">${escH(e.len)}</span>`:''}</span><span class="rp-ct">${escH(e.title)}</span>${e.by?`<span class="rp-cs">edit by ${escH(e.by)}</span>`:''}</button>`).join('')}</div></section>
 
   <section class="rp-sec" style="padding-top:38px"><div class="rp-big"><div><div class="rp-kick">COMMISSION</div><h2>JUUN GALLERY</h2><p>작가님들의 쭈니 작품</p></div>${ARCHIVE.commissions.length?'<button class="rp-link" data-go="gallery">전체 보기 &gt;</button>':''}</div>
@@ -3823,12 +3865,33 @@ function vGallery(){const C=ARCHIVE.commissions||[];
 VIEWS.gallery=vGallery;
 
 
-/* ---------- 쭈니 에딧 전체 보기 ---------- */
-function vEdits(){const E=ARCHIVE.edits||[],th=e=>e.thumb?`<img src="${escH(e.thumb)}" alt="" loading="lazy">`:ytOk(e.yt)?`<img src="https://i.ytimg.com/vi/${e.yt}/hqdefault.jpg" alt="" loading="lazy">`:'[에딧 썸네일]';
-  return`<div class="rpv rp-msgs">
+/* ---------- 쭈니 에딧 전체 보기 · 영화관 ---------- */
+const ED={i:0,play:false};
+const edTh=e=>e.thumb||(ytOk(e.yt)?`https://i.ytimg.com/vi/${e.yt}/hqdefault.jpg`:'');
+function edScreen(){const E=ARCHIVE.edits||[],e=E[ED.i];if(!e)return'<div class="cn-off">상영할 에딧을 준비하고 있어요</div>';
+  if(ED.play){if(e.video)return`<video src="${escH(e.video)}"${e.thumb?` poster="${escH(e.thumb)}"`:''} controls playsinline autoplay></video>`;
+    if(ytOk(e.yt))return`<iframe src="https://www.youtube-nocookie.com/embed/${e.yt}?autoplay=1&playsinline=1&rel=0" title="${escH(e.title||'쭈니 에딧')}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
+    return'<div class="cn-off">영상을 준비하고 있어요</div>'}
+  const t=edTh(e);return`<button class="cn-poster" data-ed="play" aria-label="${escH(e.title||'에딧')} 재생">${t?`<img src="${escH(t)}" alt="">`:''}<span class="cn-play">▶</span><span class="cn-np">NOW PLAYING</span></button>`}
+function edInfo(){const e=(ARCHIVE.edits||[])[ED.i];return e?`<b>${escH(e.title||'')}</b><span>${e.by?`edit by ${escH(e.by)}`:''}${e.len?` · 상영 시간 ${escH(e.len)}`:''}</span>`:''}
+function vEdits(){const E=ARCHIVE.edits||[];if(ED.i>=E.length)ED.i=0;
+  return`<div class="rpv rp-msgs cn">
   <div class="rp-mtop"><button class="rp-ib" data-go="archive" aria-label="뒤로">${SVG.back}</button><div class="rp-logo" style="font-size:20px">PLANET <span>#1203</span></div></div>
-  <div class="rp-mhead"><div class="rp-kick">FAN EDIT</div><h1>JUUN EDIT</h1><p>쭈니 에딧 · 하츄들이 만든 팬 편집 영상 <b>${E.length}개</b></p></div>
-  <div class="ed-grid">${E.length?E.map((e,i)=>`<button class="rp-card ed-card" data-act="play" data-i="${i}"><span class="rp-th">${th(e)}${e.len?`<span class="rp-dur">${escH(e.len)}</span>`:''}</span><span class="rp-ct">${escH(e.title)}</span>${e.by?`<span class="rp-cs">edit by ${escH(e.by)}</span>`:''}</button>`).join(''):'<p class="cdf-empty">에딧을 준비하고 있어요</p>'}</div></div>`}
+  <div class="cn-sign"><small>NOW SHOWING</small><h1>JUUN CINEMA</h1><p>하츄들이 만든 쭈니 에딧 · 상영작 <b>${E.length}편</b></p></div>
+  <div class="cn-hall"><div class="cn-val"></div><div class="cn-cur l"></div><div class="cn-cur r"></div>
+    <div class="cn-screen" id="cnScreen">${edScreen()}</div>
+    <div class="cn-info" id="cnInfo">${edInfo()}</div>
+    <div class="cn-seats" aria-hidden="true">${'<i></i>'.repeat(9)}</div><div class="cn-seats b" aria-hidden="true">${'<i></i>'.repeat(10)}</div></div>
+  <div class="cn-list-h"><span>🎟️ 상영 시간표</span><small>보고 싶은 에딧을 골라요</small></div>
+  <div class="cn-list">${E.length?E.map((e,i)=>{const t=edTh(e);return`<button class="cn-tk${i===ED.i?' on':''}" data-ed="pick" data-i="${i}"><span class="cn-th">${t?`<img src="${escH(t)}" alt="" loading="lazy">`:''}${e.len?`<span class="rp-dur">${escH(e.len)}</span>`:''}${i===ED.i&&ED.play?'<span class="cn-now">상영 중</span>':''}</span>
+    <span class="cn-stub"><span class="cn-no">${p2(i+1)}관</span><span class="cn-tt">${escH(e.title||'')}</span>${e.by?`<span class="cn-by">edit by ${escH(e.by)}</span>`:''}</span></button>`}).join(''):'<p class="cdf-empty">에딧을 준비하고 있어요</p>'}</div></div>`}
+rp.addEventListener('click',e=>{const b=e.target.closest('[data-ed]');if(!b||!rp.contains(b)||rpView!=='edits')return;
+  if(b.dataset.ed==='pick'){const i=+b.dataset.i;if(i===ED.i&&ED.play)return;ED.i=i;ED.play=true}else ED.play=true;
+  try{bgmPause()}catch(err){}const sc=$('#cnScreen');if(sc)sc.innerHTML=edScreen();const inf=$('#cnInfo');if(inf)inf.innerHTML=edInfo();
+  rp.querySelectorAll('.cn-tk').forEach((t,k)=>{t.classList.toggle('on',k===ED.i);const n=t.querySelector('.cn-now');if(n)n.remove();if(k===ED.i)t.querySelector('.cn-th').insertAdjacentHTML('beforeend','<span class="cn-now">상영 중</span>')});
+  const v=sc&&sc.querySelector('video'),ed=(ARCHIVE.edits||[])[ED.i];if(v&&ed&&ed.vol!=null){const k=Math.max(0,Math.min(100,+ed.vol))/100;v.volume=k;v.muted=k===0}
+  if(b.dataset.ed==='pick'&&sc)sc.scrollIntoView({behavior:'smooth',block:'center'})});
+{const f=rpShow;rpShow=function(v){if(v==='edits'&&rpView!=='edits')ED.play=false;return f.apply(this,arguments)}}
 VIEWS.edits=vEdits;
 /* =====================================================================
    JUUN UNIVERSE · 쭈니 관측소
