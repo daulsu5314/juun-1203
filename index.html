@@ -1090,6 +1090,14 @@ a.sp-go{display:inline-flex;align-items:center;justify-content:center;text-decor
 .rm-chips button{display:flex;align-items:center;gap:6px;height:32px;padding:0 12px 0 6px;border-radius:999px!important;background:#f1f2fc;color:#2a1f3d;font-size:12px;font-weight:800;border:2px solid transparent}
 .rm-chips button.on{border-color:#2a1f3d;background:#fff4d6}
 .rm-chips i{width:20px;height:20px;border-radius:50%;border:2px solid #d6daf0;display:block}
+.rp .rm-card{display:flex;align-items:center;gap:12px;width:calc(100% - 36px);margin:4px 18px 0;padding:14px;border-radius:16px!important;border:1px solid #4a2a52;background:linear-gradient(135deg,#2a1640,#1a1030);color:#fff;text-align:left}
+.rm-ava{display:flex;flex:none;align-items:flex-end;gap:0}
+.rm-ava{width:56px;height:56px;border-radius:14px;background:#ffe9f1;justify-content:center;align-items:center}
+.rm-ava img{width:42px;height:46px;image-rendering:pixelated}
+.rm-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.rm-txt b{font-family:"Jua","Gothic A1",var(--body);font-weight:400;font-size:17px}
+.rm-txt small{font-size:11.5px;color:#d9c9f0;font-weight:700}
+.rm-card i{font-style:normal;font-size:22px;color:#ff9fcf}
 </style>
 </head>
 <body>
@@ -4331,7 +4339,7 @@ adm.addEventListener('click',async e=>{if(AD.tab!=='extras'||!AD.ex)return;const
    '목록으로 보기'를 누르면 원래의 스크롤 화면으로 볼 수 있어요.
    ===================================================================== */
 const PZW=320,PZH=430,PZ_WALL=100,PZ_HOOK={under:[],items:[],over:[]};
-const PZ={on:store.get('jc_plaza',true),raf:0,me:{x:160,y:212,dir:'down',frame:0,ft:0,walk:false,tgt:null},keys:new Set(),near:null,pend:null,booth:null,say:null,sayT:0,npcs:[],hint:!store.get('jc_plaza_hint',false)};
+const PZ={on:false,raf:0,me:{x:160,y:212,dir:'down',frame:0,ft:0,walk:false,tgt:null},keys:new Set(),near:null,pend:null,booth:null,say:null,sayT:0,npcs:[],hint:!store.get('jc_plaza_hint',false)};
 
 /* ---------- 대원 파티복 (옷은 OUTFITS에 추가하면 갈아입힐 수 있어요) ---------- */
 const OUTFITS={party:{name:'파티복',hat:'cone',drink:true,pal:c=>({C:c,D:pzShade(c,.72),K:'#ffd166',L:'#f4f1fb',W:'#fff6fb'})}};
@@ -4551,7 +4559,7 @@ addEventListener('keyup',e=>{const k=e.key.length===1?e.key.toLowerCase():e.key;
 {const f=rpRefresh;rpRefresh=function(){if(rpOpen&&rpView==='plaza')return;return f.apply(this,arguments)}}
 {const f=closeReport;closeReport=function(){pzStop();return f.apply(this,arguments)}}
 /* 목록 화면 맨 위에 '광장으로' 버튼 */
-{const f=VIEWS.archive;VIEWS.archive=()=>f().replace('<div class="rp-logo">PLANET <span>#1203</span></div>',m=>m+'<button class="pz-back" data-pz="on">🎉 광장으로</button>')}
+{const f=VIEWS.archive;VIEWS.archive=()=>f()}
 
 if(/[?&]pztest/.test(location.search))window.__PZ={PZ,PZ_B,pzDoor,pzGo,get cam(){return pzCam},get s(){return pzS}};
 /* =====================================================================
@@ -5066,7 +5074,7 @@ addEventListener('resize',()=>{if(rpOpen&&rpView==='room')rmResize()});
 
 /* ---------- 화면 ---------- */
 VIEWS.room=()=>`<div class="pz rm" id="rm"><canvas id="rmCv" aria-label="내 방. 굿즈를 고르고 바닥이나 벽을 누르면 꾸며져요"></canvas>
-  <div class="pz-top"><div class="rp-logo" style="font-size:18px">JUUN <span>ROOM</span></div><div class="pz-btns"><button class="pz-list rm-shot" data-rm="shot">📸 사진</button><button class="pz-list" data-rm="back">← 파티홀</button></div></div>
+  <div class="pz-top"><div class="rp-logo" style="font-size:18px">JUUN <span>ROOM</span></div><div class="pz-btns"><button class="pz-list rm-shot" data-rm="shot">📸 사진</button><button class="pz-list" data-rm="back">← 생일파티</button></div></div>
   <div class="dc-bar rm-bar" id="rmBar"></div></div>`;
 function rmOutImg(k){const c=document.createElement('canvas');c.width=21;c.height=23;c.getContext('2d').drawImage(pzSprite(me.color||'#ff6f91','down',0,k),0,0);return c.toDataURL()}
 function rmBar(){const b=$('#rmBar');if(!b)return;const T=JR.tab,cur=store.get('jc_outfit','party'),P=rmPhotos();
@@ -5096,7 +5104,7 @@ rp.addEventListener('pointerdown',e=>{if(rpView!=='room'||e.target.id!=='rmCv')r
     JR.st.items.push({t:JR.sel,gx,gy,c:RM_COL[JR.col]});rmSave();rmBar();SFX.blip&&SFX.blip();return}
   const[gx,gy]=fl();if(gx>=.5&&gy>=.5&&gx<=JR.G-.5&&gy<=JR.G-.5){JR.me.tx=gx;JR.me.ty=gy;JR.me.idle=300}});
 rp.addEventListener('click',e=>{const b=e.target.closest('[data-rm],[data-rmtab],[data-rmout],[data-rmsel],[data-rmcol],[data-rmw],[data-rmwall],[data-rmfloor]');if(!b||!rp.contains(b))return;const d=b.dataset;
-  if(d.rm==='go'){rpShow('room');return}if(d.rm==='back'){rpShow('plaza');return}if(d.rm==='shot'){rmShot();return}
+  if(d.rm==='go'){rpShow('room');return}if(d.rm==='back'){rpShow('archive');requestAnimationFrame(()=>{const z=$('#rmZone');if(z)z.scrollIntoView({block:'center'})});return}if(d.rm==='shot'){rmShot();return}
   if(d.rm==='clear'){if(b.dataset.sure){JR.st.items=[];rmSave();rmBar()}else{b.dataset.sure=1;b.textContent='정말 다 치울까요?';b.classList.add('warn')}return}
   if(d.rmtab){JR.tab=d.rmtab;rmBar();rmResize();return}
   if(d.rmout){store.set('jc_outfit',d.rmout);JR.me.dir='down';JR.me.idle=200;rmBar();SFX.blip&&SFX.blip();return}
@@ -5123,6 +5131,12 @@ document.addEventListener('click',async e=>{const sbd=$('#sheetBody');if(!sbd||!
 {const f=rpRefresh;rpRefresh=function(){if(rpOpen&&rpView==='room')return;return f.apply(this,arguments)}}
 {const f=closeReport;closeReport=function(){rmStop();return f.apply(this,arguments)}}
 {const f=deleteAllMine;deleteAllMine=async function(){JR.st=JSON.parse(JSON.stringify(RM_DEF));JR.room=null;try{localStorage.removeItem('jc_room');localStorage.removeItem('jc_deco')}catch(e){}return f.apply(this,arguments)}}
+/* ---------- 생일파티(목록) 안의 쭈니방 칸 ---------- */
+function rmSection(){const cur=store.get('jc_outfit','party'),n=JR.st.items.length,w=Object.keys(JR.st.wl).length;
+  return`<section class="rp-sec" id="rmZone" style="padding-top:38px"><div class="rp-big"><div><div class="rp-kick" style="color:#ff9fcf">MY ROOM</div><h2>JUUN ROOM</h2><p>주은이 옷 입고, 주은이 사진으로 가득 찬 내 방 꾸미기</p></div></div>
+  <button class="rm-card" data-rm="go"><span class="rm-ava"><img src="${rmOutImg(cur)}" alt=""></span>
+    <span class="rm-txt"><b>🏠 쭈니방 꾸미기</b><small>${store.get('jc_room',null)?`굿즈 ${n}개 · 사진 ${w}장 · 이어서 꾸미기`:'주은이 옷 5벌 · 굿즈 12종 · 사진 벽'}</small></span><i>›</i></button></section>`}
+{const f=VIEWS.archive,K='<section class="rp-sec" id="rcZone"';VIEWS.archive=()=>{const h=f();return h.includes(K)?h.replace(K,()=>rmSection()+K):h+rmSection()}}
 if(/[?&]pztest/.test(location.search))window.__RM={JR,RM_SLOTS,rmWith,iS};
 /* =====================================================================
    휴대폰 · 브라우저 '뒤로가기'를 사이트 안에서 한 단계씩 처리해요
