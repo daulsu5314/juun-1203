@@ -5348,7 +5348,7 @@ function rmCam(snap){if(!JR.c||!JR.area)return;const W=JR.c.width,H=JR.c.height,
   const ah=H-top-bot,cl=(v,a,b)=>a>b?(a+b)/2:Math.max(a,Math.min(b,v)),tx=cl(W/2-JR.fx*s,W-JR.BW*s-10*s,10*s),ty=cl(top+ah/2-JR.fy*s,top+ah-JR.BH*s-10*s,top+10*s);
   if(snap||JR.camX==null){JR.camX=tx;JR.camY=ty}else{JR.camX+=(tx-JR.camX)*.18;JR.camY+=(ty-JR.camY)*.18}JR.offX=Math.round(JR.camX);JR.offY=Math.round(JR.camY)}
 function rmBufs(){JR.buf=JR.buf||document.createElement('canvas');JR.buf.width=JR.BW;JR.buf.height=JR.BH;JR.b=JR.buf.getContext('2d');JR.fbuf=JR.fbuf||document.createElement('canvas');JR.fbuf.width=JR.BW*4;JR.fbuf.height=JR.BH*4;JR.f=JR.fbuf.getContext('2d')}
-function rmStart(){JR.c=$('#rmCv');if(!JR.c)return;JR.x=JR.c.getContext('2d');rmBufs();rmPvStop();
+function rmStart(){JR.c=$('#rmCv');if(!JR.c)return;if(!JR.visit&&Array.isArray(JR.st.items)){const n=JR.st.items.length;JR.st.items=JR.st.items.filter(o=>o&&RM_T[o.t]);if(JR.st.items.length!==n){JR.selI=null;rmSave()}}JR.x=JR.c.getContext('2d');rmBufs();rmPvStop();
   rmBar();rmResize();cancelAnimationFrame(JR.raf);JR.last=performance.now();JR.raf=requestAnimationFrame(rmFrame)}
 function rmStop(){cancelAnimationFrame(JR.raf);JR.raf=0}
 addEventListener('resize',()=>{if(rpOpen&&rpView==='room')rmResize()});
@@ -5407,7 +5407,7 @@ rp.addEventListener('pointerdown',e=>{if(rpView!=='room'||e.target.id!=='rmCv')r
     else{const used=Object.values(JR.st.wl).map(v=>v.p||0);JR.st.wl[sl[0]]={t:JR.wsel,p:cur?cur.p||0:(Math.max(-1,...used)+1)};JR.pick=JR.wsel==='neon'?null:sl[0];SFX.blip&&SFX.blip()}rmSave();rmBar();rmResize();return}
   if(JR.tab==='goods'){const hit=rmItemHit(bx,by);if(hit!=null){rmHold(e,hit);return}if(JR.selI!=null){JR.selI=null;rmBar();rmResize();return}}
   if(JR.tab==='goods'&&JR.sel){
-    const[gx,gy]=fl(),T=RM_T[JR.sel],ok=gx>=.5&&gy>=.5&&gx<=JR.G-.5&&gy<=JR.G-.5&&JR.st.items.length<40&&(T.flat||!JR.st.items.some(o=>!RM_T[o.t].flat&&Math.hypot(o.gx-gx,o.gy-gy)<.5));
+    const[gx,gy]=fl(),T=RM_T[JR.sel],ok=gx>=.5&&gy>=.5&&gx<=JR.G-.5&&gy<=JR.G-.5&&JR.st.items.length<40&&(T.flat||!JR.st.items.some(o=>RM_T[o.t]&&!RM_T[o.t].flat&&Math.hypot(o.gx-gx,o.gy-gy)<.5));
     if(!ok){JR.flash={p:[gx,gy],until:performance.now()+500};SFX.buzz&&SFX.buzz();return}
     JR.st.items.push({t:JR.sel,gx,gy,c:RM_COL[JR.col]});if(JR.sel==='tv'){JR.selI=JR.st.items.length-1;JR.sel=null}rmSave();rmBar();rmResize();SFX.blip&&SFX.blip();return}
   const[gx,gy]=fl();if(gx>=.5&&gy>=.5&&gx<=JR.G-.5&&gy<=JR.G-.5){JR.me.tx=gx;JR.me.ty=gy;JR.me.idle=300;JR.follow=true;RM_GO.forEach(fn=>fn())}});
