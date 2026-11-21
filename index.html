@@ -727,6 +727,8 @@ img{max-width:100%}
 /* 가로 줄이 위아래로 밀리지 않게 (TOP 10 큰 숫자가 줄 밖으로 삐져나와 세로 스크롤이 생기던 문제) */
 .rp-row{overflow-y:hidden}
 .rp-row:has(.rp-top){padding-top:22px;margin-top:-14px}
+/* 처음 열 때 게이트가 뜨기 전까지 다른 창이 비치지 않게 */
+html.booting body::after{content:"";position:fixed;inset:0;z-index:9999;background:radial-gradient(120% 70% at 50% 30%,#4a2a86 0%,#2a1458 45%,#150b30 100%)}
 /* ===== JUUN GALLERY 전체 보기 ===== */
 .gl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:22px 12px;padding:18px 18px 40px}
 .gl-card{width:auto!important}
@@ -1277,6 +1279,7 @@ a.sp-go{display:inline-flex;align-items:center;justify-content:center;text-decor
 </style>
 </head>
 <body>
+<script>(function(){if(!/[?&#]admin\b/.test(location.search+location.hash)){var d=document.documentElement;d.classList.add('booting');setTimeout(function(){d.classList.remove('booting')},6000)}})()</script>
 
 <div class="gate" id="gate" hidden role="dialog" aria-modal="true" aria-label="탑승 게이트">
   <div class="gate-stars" id="gateStars" aria-hidden="true"></div>
@@ -2894,7 +2897,7 @@ const SFX={ctx:null,mute:store.get('jc_mute',false),
   ok(){this.tone(1200,.08,0,'square',.05);this.tone(1600,.12,.11,'square',.05);[523,659,784,1047].forEach((f,i)=>this.tone(f,.22,.32+i*.09,'triangle',.06))}};
 const sndIcon=()=>SFX.mute?'<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>':'<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 8.5a5 5 0 0 1 0 7M19.5 6a8.5 8.5 0 0 1 0 12"/></svg>';
 gate.addEventListener('pointerdown',()=>SFX.on(),{capture:true});
-function openGate(){gateOpen=true;gate.hidden=false;const sb2=$('#gateSnd');sb2.innerHTML=sndIcon();sb2.setAttribute('aria-label',SFX.mute?'소리 켜기':'소리 끄기');
+function openGate(){gateOpen=true;gate.hidden=false;document.documentElement.classList.remove('booting');const sb2=$('#gateSnd');sb2.innerHTML=sndIcon();sb2.setAttribute('aria-label',SFX.mute?'소리 켜기':'소리 끄기');
   sb2.onclick=e=>{e.stopPropagation();SFX.mute=!SFX.mute;store.set('jc_mute',SFX.mute);try{sndUi()}catch(_){}sb2.innerHTML=sndIcon();sb2.setAttribute('aria-label',SFX.mute?'소리 켜기':'소리 끄기');if(!SFX.mute)SFX.chirp()};
   $('#gateUfo').src=ART.ufo;$('#tkUfo').src=ART.ufo;$('#tkNo').textContent='1203-'+store.get('jc_no','0000');
   $('#tkSeat').textContent=(1+Math.floor(Math.random()*24))+'ABCDEF'[Math.floor(Math.random()*6)];
