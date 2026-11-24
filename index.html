@@ -1455,6 +1455,92 @@ a.sp-go{display:inline-flex;align-items:center;justify-content:center;text-decor
 .rp .lx-head h1{font-size:36px}
 .rp .lx-feed{align-items:stretch}.rp .lx-card{width:auto;align-self:stretch}@media(min-width:560px){.rp .lx-feed{align-items:start}}
 .rp .lx .lx-feed{width:100%;box-sizing:border-box;align-self:stretch}
+/* ===== 제목은 다시 굵은 도트(갈무리 Bold) · 설명과 살짝 띄우기 ===== */
+.rp h1,.rp .rp-big h2,.rp .rp-sh h2,.rp .rp-logo,.rp .cn-sign h1,.rp .mg-head h1,.rp-hin h1,.rp .lx-head h1{font-weight:700!important;text-shadow:none!important}
+.rp .rp-big h2+p,.rp .rp-big h2~p,.rp .rp-sh h2~p,.rp .mg-head h1+p,.rp .lx-head h1+p{margin-top:7px!important}
+.rp .rp-big .rp-kick+h2{margin-top:2px}
+/* ===== 편지지: 깔끔한 연보라 단색 ===== */
+.rp .rp-lyr{background:#ece5ff!important;outline:none!important;box-shadow:0 8px 20px rgba(0,0,0,.25)!important;transform:none!important}
+.rp .rp-lyr .rp-lyr-t:before{color:#b9a3ef}
+.rp-lyr-al,.rp-lyr-al.r{width:24px;animation:none!important;transform:none;bottom:12px;left:16px}
+.rp-lyr-al.r{left:auto;right:16px;transform:scaleX(-1)}
+.rp .lx-card{background:#ece5ff!important;box-shadow:0 8px 20px rgba(0,0,0,.28)!important;transform:none!important}
+.rp .lx-card::after{display:none!important}
+.rp .lx-al{width:28px!important;animation:none!important}
+.rp .lx-x::before{color:#b9a3ef}
+.rp .lx-why{background:rgba(255,255,255,.7)}
+/* 책자: 테마별 챕터 */
+.gb-pg.gb-ch{padding:18px 16px 12px 24px;align-items:stretch}
+.gb-chh{display:flex;flex-direction:column;gap:2px;padding-bottom:10px;margin-bottom:10px;border-bottom:2px dotted rgba(176,122,46,.35)}
+.gb-chk{font-family:"Galmuri11",sans-serif;font-size:10.5px;letter-spacing:.18em;color:#b07a2e}
+.gb-chh b{font-family:"Galmuri11",sans-serif;font-weight:700;font-size:21px;color:#3b2a1a}
+.gb-chh small{font-size:11.5px;color:#8a7458}
+.gb-chh.cont b{font-size:16px}
+.gb-grid{flex:1;min-height:0;display:grid;gap:10px}
+.gb-grid.n1{grid-template:1fr/1fr}.gb-grid.n2{grid-template:1fr 1fr/1fr}
+.gb-grid.n3{grid-template:1.3fr 1fr/1fr 1fr}.gb-grid.n3 .gb-w:first-child{grid-column:1/3}
+.gb-grid.n4{grid-template:1fr 1fr/1fr 1fr}
+.gb-w{min-height:0;display:flex;flex-direction:column;gap:4px;padding:6px 6px 5px;border:0;background:#fff;box-shadow:0 2px 0 #e7dcc6,0 5px 12px rgba(80,50,20,.16);cursor:zoom-in;text-align:left}
+.gb-w:nth-child(odd){transform:rotate(-1.2deg)}.gb-w:nth-child(even){transform:rotate(1deg)}
+.gb-wi{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;background:#f6f1e6;overflow:hidden}
+.gb-wi img{width:100%;height:100%;object-fit:cover;display:block}
+.gb-grid.n1 .gb-wi img,.gb-grid.n2 .gb-wi img{object-fit:contain}
+.gb-wc{display:flex;justify-content:space-between;align-items:baseline;gap:6px;min-width:0}
+.gb-wc b{font-family:"Jua",sans-serif;font-weight:400;font-size:12.5px;color:#3b2a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gb-wc small{flex:none;font-size:10px;color:#8a7458}
+.gb-ch .gb-pn{align-self:center;margin-top:8px}
+.gb-toc{align-items:stretch;padding:28px 22px 18px 30px}
+.gb-toct{font-family:"Galmuri11",sans-serif;font-weight:700;font-size:26px;color:#3b2a1a;margin:4px 0 16px}
+.gb-toc ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.gb-toc li button{width:100%;display:flex;align-items:center;gap:8px;padding:9px 6px;border:0;background:none;border-radius:8px;cursor:pointer;color:#3b2a1a;text-align:left}
+.gb-toc li button:hover{background:rgba(232,196,106,.18)}
+.gb-toc li b{font-family:"Jua",sans-serif;font-weight:400;font-size:16px;white-space:nowrap}
+.gb-toc li i{flex:1;border-bottom:2px dotted rgba(138,116,88,.4);margin:0 4px;transform:translateY(-3px)}
+.gb-toc li small{font-family:"Galmuri11",sans-serif;font-size:11px;color:#8a7458;white-space:nowrap}
+.gb-tip{margin-top:auto;text-align:center;font-size:11px;color:#b9a587}
+/* ===== JUUN ARCADE 오락실 ===== */
+.arc-door{display:block;width:calc(100% - 36px);margin:14px 18px 0;padding:18px 12px 0;border:0;border-radius:0;cursor:pointer;position:relative;
+  background:linear-gradient(#1a0f3a,#241455 70%,#2c1660);box-shadow:0 -4px 0 #ff5fa8,0 4px 0 #ff5fa8,-4px 0 0 #ff5fa8,4px 0 0 #ff5fa8,0 0 26px rgba(255,95,168,.35)}
+.arc-neon{display:inline-flex;flex-direction:column;align-items:center;font-family:"Galmuri11",sans-serif;font-weight:700;font-size:26px;color:#fff;letter-spacing:2px;
+  text-shadow:0 0 4px #ff8fd0,0 0 12px #ff3fa0,0 0 24px #ff3fa0;animation:arcFlick 4s infinite}
+.arc-neon small{font-size:11px;letter-spacing:4px;color:#7ff0ff;text-shadow:0 0 6px #2ee6ff;margin-top:4px}
+.arc-door .arc-neon{display:flex;margin-bottom:12px}
+.arc-neon.big{font-size:30px}
+@keyframes arcFlick{0%,92%,96%,100%{opacity:1}94%{opacity:.55}}
+.arc-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:0 4px;position:relative;z-index:1}
+.arc .arc-row{padding:0 22px}
+.arc-cab{display:flex;flex-direction:column;align-items:center;gap:8px;padding:0 10px 10px;border:0;background:linear-gradient(#5b3bd1,#3e24a3);cursor:pointer;position:relative;color:#fff;
+  clip-path:polygon(8px 0,calc(100% - 8px) 0,calc(100% - 8px) 4px,calc(100% - 4px) 4px,calc(100% - 4px) 8px,100% 8px,100% 100%,0 100%,0 8px,4px 8px,4px 4px,8px 4px);
+  box-shadow:inset -6px 0 0 rgba(0,0,0,.22),inset 6px 0 0 rgba(255,255,255,.12)}
+.arc-k-claw{background:linear-gradient(#ff6fae,#c93f86)}
+.arc-cab:active{transform:translateY(2px)}
+.arc-mq{width:calc(100% + 20px);padding:8px 4px 7px;font-family:"Galmuri11",sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;background:#ffd166;color:#3a1d00;text-align:center;box-shadow:inset 0 -3px 0 #e0a83a}
+.arc-k-claw .arc-mq{background:#7ff0ff;color:#0e2a44;box-shadow:inset 0 -3px 0 #3cc2d8}
+.arc-scr{position:relative;width:100%;aspect-ratio:1/1;background:radial-gradient(circle at 50% 30%,#2b2170,#120b33);box-shadow:inset 0 0 0 4px #120b33,inset 0 0 0 6px rgba(255,255,255,.2);overflow:hidden;image-rendering:pixelated}
+.arc-caps{position:absolute;inset:auto 10% 8% 10%;height:55%;display:flex;flex-wrap:wrap;justify-content:center;align-content:flex-end;gap:3px}
+.arc-caps i{width:30%;aspect-ratio:1;border-radius:50%;background:linear-gradient(#ff8fab 50%,#fff7f0 50%);box-shadow:inset -3px -3px 0 rgba(0,0,0,.15)}
+.arc-caps i:nth-child(2){background:linear-gradient(#8ff0d2 50%,#fff7f0 50%)}.arc-caps i:nth-child(3){background:linear-gradient(#ffd166 50%,#fff7f0 50%)}
+.arc-caps i:nth-child(4){background:linear-gradient(#c4b0ff 50%,#fff7f0 50%)}.arc-caps i:nth-child(5){background:linear-gradient(#7fa8ff 50%,#fff7f0 50%)}
+.arc-claw{position:absolute;left:50%;top:0;width:4px;height:34%;margin-left:-2px;background:#cfd6e6;animation:arcDrop 3s ease-in-out infinite}
+.arc-claw i{position:absolute;left:50%;bottom:-10px;width:26px;height:12px;margin-left:-13px;border:4px solid #cfd6e6;border-top:0;border-radius:0}
+@keyframes arcDrop{0%,100%{height:22%}50%{height:40%}}
+.arc-juil{position:absolute;left:50%;bottom:6%;width:46%;transform:translateX(-50%);image-rendering:pixelated}
+.arc-pad{display:flex;align-items:center;gap:8px;height:18px}
+.arc-pad i{width:14px;height:14px;background:#1b1240;box-shadow:0 -6px 0 -2px #ff5f6d}
+.arc-pad b{width:10px;height:10px;border-radius:50%;background:#ff5f6d;box-shadow:0 2px 0 #9b2033}.arc-pad b+b{background:#36f5b0;box-shadow:0 2px 0 #138a5e}
+.arc-sub{font-family:"Galmuri11",sans-serif;font-size:11px;color:#fff;opacity:.92}
+.arc-floor{display:block;height:24px;margin-top:-6px;background:repeating-linear-gradient(90deg,#1a0f3a 0 16px,#2a1a5c 16px 32px);box-shadow:inset 0 6px 8px rgba(0,0,0,.4)}
+.arc-door .arc-floor{margin:0 -12px}
+.arc .arc-floor{margin:-6px 0 0}
+.arc{background:radial-gradient(120% 50% at 50% 0%,#3a1d6e,#140a2e 60%,#0d0820)}
+.arc-head{text-align:center;padding:18px 18px 20px}.arc-head p{margin:10px 0 0;font-size:13px;color:#cfc4ea}
+.arc-gc{margin-top:8px}.arc-gc #gcZone{padding-top:26px!important}
+.arc-fs{position:fixed;inset:0;z-index:99999;background:#24174f;display:flex;flex-direction:column}
+.arc-fs-bar{flex:none;display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top) + 8px) 12px 8px;background:#140a2e;color:#fff;font-family:"Galmuri11",sans-serif}
+.arc-fs-bar b{flex:1;font-weight:700;font-size:14px}
+.arc-fs-bar a{font-size:12px;color:#7ff0ff;text-decoration:none}
+.arc-fs-bar button{width:34px;height:34px;border:0;background:#ff5fa8;color:#fff;font-size:15px;cursor:pointer}
+.arc-fs iframe{flex:1;width:100%;border:0;background:#24174f}
 </style>
 </head>
 <body>
@@ -2939,7 +3025,7 @@ function adSiteRender(upd){const S=AD.site,lk=S.lastAt?kst(S.lastAt):null,lv=lk?
   <label class="ad-file">${AD.bgmUp?'올리는 중…':'+ 음악 파일 올리기'}<input type="file" accept="audio/mpeg,audio/mp4,audio/x-m4a,audio/aac,.mp3,.m4a" data-up="bgm" hidden></label>
   <h3>커미션 (JUUN GALLERY) <small>작가님 웹 게시 허락 필수</small></h3>
   ${S.commissions.map((c,i)=>`<div class="ad-item">${c.img?`<img src="${escH(c.img)}" alt="" class="ad-th">`:''}<label class="ad-file sm">이미지 올리기<input type="file" accept="image/*" data-up="comm" data-i="${i}" hidden></label>
-    <input data-l="commissions" data-i="${i}" data-k="title" value="${escH(c.title||'')}" placeholder="작품 제목"><input data-l="commissions" data-i="${i}" data-k="artist" value="${escH(c.artist||'')}" placeholder="작가명">
+    <input data-l="commissions" data-i="${i}" data-k="title" value="${escH(c.title||'')}" placeholder="작품 제목"><input data-l="commissions" data-i="${i}" data-k="artist" value="${escH(c.artist||'')}" placeholder="작가명"><input data-l="commissions" data-i="${i}" data-k="theme" value="${escH(c.theme||'')}" placeholder="테마 (예: 무대 · 일상 · 생일) · 책자에서 같은 테마끼리 묶여요">
     <div class="ad-mv"><button type="button" data-ad="up" data-l="commissions" data-i="${i}" aria-label="위로">↑</button><button type="button" data-ad="rm" data-l="commissions" data-i="${i}">빼기</button></div></div>`).join('')}
   <button type="button" class="ad-add" data-ad="add" data-l="commissions">+ 커미션 추가</button>
   <h3>보급품 (굿즈) <small>하나도 없으면 예시 굿즈가 보여요</small></h3>
@@ -2978,7 +3064,7 @@ function adSiteRender(upd){const S=AD.site,lk=S.lastAt?kst(S.lastAt):null,lv=lk?
   f.onsubmit=async e=>{e.preventDefault();const b=f.querySelector('.ad-pri');b.disabled=true;$('#adSaveMsg').textContent='저장 중…';
     const data={heroType:S.heroType||'img',heroPoster:S.heroPoster||null,heroKicker:S.heroKicker,heroHeadline:S.heroHeadline,heroSub:S.heroSub,heroBy:S.heroBy,heroVideo:S.heroVideo||null,heroThumb:S.heroThumb||null,heroYt:ytId(S.heroYt),heroLen:S.heroLen||'',heroVol:Math.max(0,Math.min(100,+(S.heroVol!=null?S.heroVol:100))),heroPos:S.heroPos,refImg:S.refImg||null,heroImg:S.heroImg||null,heroCredit:S.heroCredit,tag:S.tag,lastAt:S.lastAt,lastMsg:S.lastMsg,
       edits:S.edits.map(x=>({title:x.title||'',by:x.by||'',yt:ytId(x.yt),len:x.len||'',video:x.video||null,thumb:x.thumb||null,vol:Math.max(0,Math.min(100,+(x.vol!=null?x.vol:100)))})),
-      commissions:S.commissions.map(x=>({img:x.img||null,title:x.title||'',artist:x.artist||''})),
+      commissions:S.commissions.map(x=>({img:x.img||null,title:x.title||'',artist:x.artist||'',theme:(x.theme||'').trim()})),
       lyrics:S.lyrics.filter(x=>(x.text||'').trim()||(x.title||'').trim()).map(x=>({title:(x.title||'').slice(0,60),text:(x.text||'').slice(0,4000),note:(x.note||'').slice(0,600)})),
       bgm:(S.bgm||[]).filter(x=>x.url).map(x=>({url:x.url,name:(x.name||'').slice(0,60)})),
       goods:S.goods.map(x=>({img:x.img||null,name:x.name||'',price:x.price||'',desc:x.desc||'',link:/^https?:\/\//i.test(x.link||'')?x.link:''}))};
@@ -5921,30 +6007,64 @@ if(/pztest/.test(location.search))window.__LX={A:()=>ARCHIVE,open:i=>lyrOpen(i)}
 const GB={i:0};
 function gbMode(){return store.get('jc_galmode','hall')}
 function gbTabs(m){return`<div class="gb-tabs" role="tablist"><button data-gbm="hall" class="${m==='hall'?'on':''}">🏛 미술관</button><button data-gbm="book" class="${m==='book'?'on':''}">📖 책자</button></div>`}
-function vGBook(){const C=ARCHIVE.commissions||[],n=C.length;GB.i=Math.max(0,Math.min(GB.i,n));
-  const pages=[`<div class="gb-pg gb-cover"><span class="gb-cv-k">PLANET #1203</span><b>JUUN<br>GALLERY</b><span class="gb-cv-s">작가님들의 쭈니 작품집</span><img class="gb-cv-a" src="${mgVis(1)}" alt="" aria-hidden="true"><span class="gb-cv-n">${n} WORKS · 넘겨서 보기 ›</span></div>`]
-    .concat(C.map((c,i)=>`<div class="gb-pg"><span class="gb-no">No.${p2(i+1)}</span>
-      <button class="gb-art" data-act="comm" data-i="${i}" aria-label="${escH(c.title||'작품')} 크게 보기">${c.img?`<img src="${escH(c.img)}" alt="" loading="lazy">`:'<span class="mg-empty">작품 준비 중</span>'}</button>
-      <div class="gb-cap"><b>${escH(c.title||'무제')}</b><small>illust. ${escH(c.artist||'')}</small></div><span class="gb-pn">— ${i+1} —</span></div>`))
-    .concat([`<div class="gb-pg gb-end"><b>THE END</b><span>쭈니야 생일 축하해 ♡</span><small>각 작품의 저작권은 작가에게 있습니다</small></div>`]);
+const GB_EMO=['🎤','🌸','🎂','🌙','💜','⭐','🎀','🫧'];
+function gbThemes(){const C=ARCHIVE.commissions||[],M=new Map();C.forEach((c,i)=>{if(!c)return;const t=(c.theme||'').trim()||'더 많은 쭈니';if(!M.has(t))M.set(t,[]);M.get(t).push(i)});
+  const L=[...M.entries()].map(([t,ix])=>({t,ix}));const k=L.findIndex(x=>x.t==='더 많은 쭈니');if(k>=0&&L.length>1)L.push(L.splice(k,1)[0]);return L}
+function gbWork(i){const c=ARCHIVE.commissions[i]||{};return`<button class="gb-w" data-act="comm" data-i="${i}" aria-label="${escH(c.title||'작품')} 크게 보기"><span class="gb-wi">${c.img?`<img src="${escH(c.img)}" alt="" loading="lazy">`:'<span class="mg-empty">준비 중</span>'}</span><span class="gb-wc"><b>${escH(c.title||'무제')}</b><small>${escH(c.artist||'')}</small></span></button>`}
+function vGBook(){const C=ARCHIVE.commissions||[],n=C.length,T=gbThemes(),pages=[],toc=[];
+  pages.push(`<div class="gb-pg gb-cover"><span class="gb-cv-k">PLANET #1203</span><b>JUUN<br>GALLERY</b><span class="gb-cv-s">작가님들의 쭈니 작품집</span><img class="gb-cv-a" src="${mgVis(1)}" alt="" aria-hidden="true"><span class="gb-cv-n">${T.length} CHAPTERS · ${n} WORKS</span></div>`);
+  pages.push('');/* 목차 자리 */
+  T.forEach((th,ci)=>{toc.push({t:th.t,n:th.ix.length,p:pages.length,e:GB_EMO[ci%GB_EMO.length]});
+    for(let s=0;s<th.ix.length;s+=4){const part=th.ix.slice(s,s+4),first=s===0;
+      pages.push(`<div class="gb-pg gb-ch"><div class="gb-chh${first?'':' cont'}"><span class="gb-chk">CHAPTER ${p2(ci+1)}</span><b>${GB_EMO[ci%GB_EMO.length]} ${escH(th.t)}</b>${first?`<small>${th.ix.length}개의 작품</small>`:'<small>이어서</small>'}</div>
+        <div class="gb-grid n${part.length}">${part.map(gbWork).join('')}</div><span class="gb-pn">— ${pages.length-1} —</span></div>`)}});
+  pages[1]=`<div class="gb-pg gb-toc"><span class="gb-chk">CONTENTS</span><b class="gb-toct">목차</b><ol>${toc.map((x,k)=>`<li><button data-gbj="${x.p}"><span>${x.e}</span><b>${escH(x.t)}</b><i></i><small>${x.n}점 · p.${x.p-1}</small></button></li>`).join('')}</ol><span class="gb-tip">챕터를 누르면 바로 넘어가요</span></div>`;
+  pages.push(`<div class="gb-pg gb-end"><b>THE END</b><span>쭈니야 생일 축하해 ♡</span><small>각 작품의 저작권은 작가에게 있습니다</small></div>`);
+  GB.i=Math.max(0,Math.min(GB.i,pages.length-1));
   return`<div class="rpv rp-msgs mg gb">
   <div class="rp-mtop"><button class="rp-ib" data-go="archive" aria-label="뒤로">${SVG.back}</button><div class="rp-logo" style="font-size:20px">PLANET <span>#1203</span></div></div>
-  <div class="mg-head"><small>SPECIAL EXHIBITION</small><h1>JUUN GALLERY</h1><p>책장을 넘기며 감상해요</p></div>${gbTabs('book')}
+  <div class="mg-head"><small>SPECIAL EXHIBITION</small><h1>JUUN GALLERY</h1><p>테마별로 묶인 작품집을 넘겨 봐요</p></div>${gbTabs('book')}
   <div class="gb-stage"><div class="gb-book" id="gbBook">${pages.map((p,k)=>`<div class="gb-leaf${k<GB.i?' turned':''}" style="z-index:${pages.length-k}">${p}</div>`).join('')}<span class="gb-spine" aria-hidden="true"></span></div></div>
   <div class="gb-ctl"><button data-gb="-1" aria-label="이전 장">◀</button><span id="gbCnt"></span><button data-gb="1" aria-label="다음 장">▶</button></div>
   <p class="gl-note" style="margin:10px 18px 40px;text-align:center">각 작품의 저작권은 작가에게 있습니다. 사진을 상업적으로 이용하지 마세요</p></div>`}
 function gbSet(i){const L=[...document.querySelectorAll('#gbBook .gb-leaf')];if(!L.length)return;GB.i=Math.max(0,Math.min(L.length-1,i));
-  L.forEach((l,k)=>l.classList.toggle('turned',k<GB.i));const c=$('#gbCnt');if(c)c.textContent=GB.i===0?'표지':GB.i===L.length-1?'끝':`${GB.i} / ${L.length-2}`;
+  L.forEach((l,k)=>l.classList.toggle('turned',k<GB.i));const c=$('#gbCnt');if(c)c.textContent=GB.i===0?'표지':GB.i===1?'목차':GB.i===L.length-1?'끝':`p.${GB.i-1}`;
   try{SFX.page?SFX.page():SFX.tick&&SFX.tick()}catch(e){}}
 function gbStart(){const bk=$('#gbBook');if(!bk)return;gbSet(GB.i);let sx=null,sy=0;
   bk.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
   bk.addEventListener('touchend',e=>{if(sx==null)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;sx=null;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy))gbSet(GB.i+(dx<0?1:-1))},{passive:true});
-  bk.addEventListener('click',e=>{if(e.target.closest('.gb-art'))return;const r=bk.getBoundingClientRect();gbSet(GB.i+(e.clientX-r.left<r.width*.35?-1:1))})}
+  bk.addEventListener('click',e=>{const j=e.target.closest('[data-gbj]');if(j){gbSet(+j.dataset.gbj);return}if(e.target.closest('.gb-w'))return;const r=bk.getBoundingClientRect();gbSet(GB.i+(e.clientX-r.left<r.width*.35?-1:1))})}
 rp.addEventListener('click',e=>{const m=e.target.closest('[data-gbm]');if(m&&rpView==='gallery'){store.set('jc_galmode',m.dataset.gbm);GB.i=0;rpShow('gallery');return}
   const b=e.target.closest('[data-gb]');if(b&&rpView==='gallery')gbSet(GB.i+ +b.dataset.gb)});
 {const g=vGallery;VIEWS.gallery=function(){return gbMode()==='book'?vGBook():g().replace('</p></div>\n  <div class="mg-hall"','</p></div>'+gbTabs('hall')+'\n  <div class="mg-hall"')}}
 {const f=rpShow;rpShow=function(v){const r=f.apply(this,arguments);if(v==='gallery'&&gbMode()==='book')requestAnimationFrame(gbStart);return r}}
 if(/pztest/.test(location.search))window.__GB={A:()=>ARCHIVE,set:gbSet,show:v=>rpShow(v)};
+/* =====================================================================
+   JUUN ARCADE · 오락실 (1203 GACHA + 쭈일리언 뽑기)
+   ===================================================================== */
+const ARC={claw:'https://zuilien-claw.vercel.app/'};
+const gcSectionRaw=gcSection;
+function arcCab(k,label,screen,sub){return`<button class="arc-cab arc-k-${k}" data-arc="${k}" aria-label="${label}"><span class="arc-mq">${label}</span><span class="arc-scr">${screen}</span><span class="arc-pad" aria-hidden="true"><i></i><b></b><b></b></span><span class="arc-sub">${sub}</span></button>`}
+function arcCabs(){const juil=(typeof RM_IMG!=='undefined'&&(RM_IMG.juilL||RM_IMG.juil))||'';
+  return`<div class="arc-row">${arcCab('gacha','1203 GACHA','<span class="arc-caps" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>',`🎟 교환권 ${GC.tickets|0}장`)}
+  ${arcCab('claw','쭈일리언 뽑기',`<span class="arc-claw" aria-hidden="true"><i></i></span>${juil?`<img class="arc-juil" src="${juil}" alt="">`:''}`,'🕹 하루 30판')}</div>`}
+/* 생일파티 목록: 가챠 대신 오락실 입구 */
+gcSection=function(){if(GC.missing&&!ARC.claw)return'';
+  return`<section class="rp-sec" id="gcZone" style="padding-top:40px"><div class="rp-big"><div><div class="rp-kick" style="color:#7ff0ff">ARCADE</div><h2>JUUN ARCADE</h2><p>오락실에서 가챠랑 쭈일리언 뽑기 한 판!</p></div><button class="rp-link" data-go="arcade">입장 &gt;</button></div>
+  <button class="arc-door" data-go="arcade" aria-label="오락실 들어가기"><span class="arc-neon">오락실<small>OPEN</small></span>${arcCabs().replace(/<button class="arc-cab/g,'<span class="arc-cab').replace(/<\/button>/g,'</span>').replace(/ data-arc="[a-z]+"/g,'')}<span class="arc-floor" aria-hidden="true"></span></button></section>`};
+VIEWS.arcade=function(){if(!GC.loaded&&!GC.loading&&!GC.missing){GC.loading=true;gcLoad().catch(()=>{GC.loaded=true}).finally(()=>{GC.loading=false;if(rpOpen&&rpView==='arcade')rpRefresh()})}
+  return`<div class="rpv rp-msgs arc">
+  <div class="rp-mtop"><button class="rp-ib" data-go="archive" aria-label="뒤로">${SVG.back}</button><div class="rp-logo" style="font-size:20px">PLANET <span>#1203</span></div></div>
+  <div class="arc-head"><span class="arc-neon big">JUUN ARCADE<small>오락실</small></span><p>기계를 골라서 한 판 해 봐요</p></div>
+  ${arcCabs()}<span class="arc-floor" aria-hidden="true"></span>
+  ${GC.missing?'':`<div class="arc-gc">${gcSectionRaw()}</div>`}
+  <div style="height:40px"></div></div>`};
+function arcClaw(){if($('#arcFs'))return;const d=document.createElement('div');d.id='arcFs';d.className='arc-fs';
+  d.innerHTML=`<div class="arc-fs-bar"><b>🕹 쭈일리언 뽑기</b><a href="${ARC.claw}" target="_blank" rel="noopener">새 창으로 ↗</a><button aria-label="닫기">✕</button></div><iframe src="${ARC.claw}" title="쭈일리언 뽑기" allow="autoplay; fullscreen; vibrate" allowfullscreen></iframe>`;
+  d.querySelector('button').onclick=()=>{d.remove();try{if(BGM&&BGM.want)bgmPlay()}catch(e){}};document.body.appendChild(d);try{SFX.go&&SFX.go()}catch(e){}}
+rp.addEventListener('click',e=>{const b=e.target.closest('[data-arc]');if(!b||!rp.contains(b))return;
+  if(b.dataset.arc==='claw')arcClaw();else{const z=rp.querySelector('.arc-gc #gcZone');if(z)z.scrollIntoView({behavior:'smooth',block:'start'})}});
+if(/pztest/.test(location.search))window.__ARC={show:v=>rpShow(v),claw:arcClaw};
 /* =====================================================================
    휴대폰 · 브라우저 '뒤로가기'를 사이트 안에서 한 단계씩 처리해요
    창이 떠 있으면 창 닫기 → 가사 · 교신 · 직캠 · 라운지 · 레코드샵 전체 보기면 생일파티로 → 생일파티면 행성 맵으로
