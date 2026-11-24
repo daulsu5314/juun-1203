@@ -1389,6 +1389,72 @@ a.sp-go{display:inline-flex;align-items:center;justify-content:center;text-decor
 .lx-why{align-self:stretch;background:rgba(255,255,255,.72);border-radius:18px;padding:12px 14px;font-size:13.5px;line-height:1.6;color:#3a2459;white-space:pre-line}
 .lx-why small{display:block;font-size:11px;font-weight:800;color:#a3245a;margin-bottom:3px}
 .lx-end{text-align:center;font-family:"Galmuri11",sans-serif!important;font-size:11px;letter-spacing:3px;color:#6f62a0;padding:10px 0 50px}
+/* 앞에서는 4개만 · 나머지는 더 보기 카드 */
+.rp .rp-more .rp-more-b{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border-radius:12px;border:2px dashed rgba(200,180,255,.45);background:repeating-linear-gradient(45deg,rgba(255,255,255,.04) 0 6px,transparent 6px 12px),rgba(120,90,200,.12);color:#e8dcff;transition:background .2s,border-color .2s}
+.rp .rp-more:hover .rp-more-b{border-color:#ff8fc4;background:rgba(255,143,196,.12)}
+.rp .rp-more b{font-family:"Galmuri11",sans-serif;font-weight:400;font-size:30px;color:#ff8fc4;text-shadow:1px 0 currentColor}
+.rp .rp-more small{font-family:"Galmuri11",sans-serif;font-size:11px;letter-spacing:.12em;color:#b9a8e8}
+.rp .rp-more .rp-ct{font-family:"Galmuri11",sans-serif!important;font-weight:400;font-size:13px;color:#ffd1e6}
+/* ===== JUUN GALLERY 책자 보기 ===== */
+.rp .gb-tabs{display:flex;justify-content:center;gap:6px;margin:4px auto 14px;padding:4px;width:max-content;border-radius:999px;background:rgba(255,243,214,.08);border:1px solid rgba(232,196,106,.3)}
+.rp .gb-tabs button{font-family:"Galmuri11",sans-serif;font-size:13px;color:#cbbf9f;padding:7px 16px;border-radius:999px;background:none;border:0;cursor:pointer}
+.rp .gb-tabs button.on{background:#e8c46a;color:#2a1d10;text-shadow:.6px 0 currentColor}
+.gb-stage{perspective:1600px;padding:4px 22px 0;display:flex;justify-content:center}
+.gb-book{position:relative;width:min(100%,360px);aspect-ratio:3/4.15;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.gb-book:before{content:"";position:absolute;inset:6px -6px -8px 4px;border-radius:4px 14px 14px 4px;background:#d9cbb0;box-shadow:0 18px 40px rgba(0,0,0,.5),inset -3px 0 0 #c4b393,inset -6px 0 0 #e8dcc4}
+.gb-spine{position:absolute;left:-10px;top:-2px;bottom:-4px;width:14px;border-radius:6px 0 0 6px;background:linear-gradient(90deg,#7a3a55,#b85c84 60%,#8d4565);box-shadow:inset -2px 0 4px rgba(0,0,0,.3);z-index:999}
+.gb-leaf{position:absolute;inset:0;transform-origin:left center;transition:transform .75s cubic-bezier(.45,.05,.25,1),box-shadow .75s;transform-style:preserve-3d;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.gb-leaf.turned{transform:rotateY(-178deg);pointer-events:none}
+.gb-pg{position:absolute;inset:0;border-radius:3px 12px 12px 3px;background:#fffaf0;background-image:linear-gradient(90deg,rgba(120,90,50,.16),transparent 7%),radial-gradient(circle at 80% 10%,#fff,transparent 60%);box-shadow:inset 0 0 0 1px rgba(150,120,80,.18);display:flex;flex-direction:column;align-items:center;padding:22px 22px 16px 28px;color:#3b2a1a;overflow:hidden}
+.gb-no{align-self:flex-start;font-family:"Galmuri11",sans-serif;font-size:12px;color:#b07a2e;letter-spacing:.1em}
+.gb-art{flex:1;min-height:0;width:100%;margin:10px 0 12px;padding:8px;border:0;background:#fff;box-shadow:0 2px 0 #e7dcc6,0 6px 14px rgba(80,50,20,.18);display:flex;align-items:center;justify-content:center;cursor:zoom-in;transform:rotate(-.6deg)}
+.gb-art img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+.gb-cap{text-align:center}.gb-cap b{display:block;font-family:"Jua",sans-serif;font-weight:400;font-size:18px;color:#3b2a1a}.gb-cap small{font-size:12px;color:#8a7458}
+.gb-pn{margin-top:8px;font-family:"Galmuri11",sans-serif;font-size:11px;color:#b9a587}
+.gb-cover{background:linear-gradient(160deg,#ffd6e7,#e3d4ff 60%,#c9e4ff);justify-content:center;gap:10px;text-align:center;box-shadow:inset 0 0 0 10px rgba(255,255,255,.45),inset 0 0 0 12px rgba(184,92,132,.35)}
+.gb-cv-k{font-family:"Galmuri11",sans-serif;font-size:12px;letter-spacing:.2em;color:#b85c84}
+.gb-cover b{font-family:"Galmuri11",sans-serif;font-weight:400;font-size:44px;line-height:1.05;color:#3a2350;text-shadow:1px 0 currentColor,0 3px 0 #fff}
+.gb-cv-s{font-size:13px;color:#5d4880}.gb-cv-a{width:76px;image-rendering:pixelated;margin:8px 0;animation:gbBob 2.4s ease-in-out infinite}
+.gb-cv-n{font-family:"Galmuri11",sans-serif;font-size:11px;color:#7a5f9a;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.6)}
+.gb-end{justify-content:center;gap:10px;text-align:center}.gb-end b{font-family:"Galmuri11",sans-serif;font-weight:400;font-size:28px;color:#b85c84;text-shadow:1px 0 currentColor}.gb-end span{font-family:"Gaegu",cursive;font-weight:700;font-size:20px}.gb-end small{font-size:11px;color:#a08d70;margin-top:20px}
+@keyframes gbBob{50%{transform:translateY(-6px)}}
+.gb-ctl{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:22px}
+.gb-ctl button{width:42px;height:42px;border:0;border-radius:10px;background:#e8c46a;color:#2a1d10;font-size:14px;cursor:pointer;box-shadow:0 3px 0 #a8853a}
+.gb-ctl button:active{transform:translateY(2px);box-shadow:0 1px 0 #a8853a}
+.gb-ctl span{font-family:"Galmuri11",sans-serif;font-size:13px;color:#fff3d6;min-width:64px;text-align:center}
+/* ===== JUUN UNIVERSE 도트 행성 ===== */
+.rp .un-sp.un-px{background:none!important;box-shadow:none!important;border-radius:0!important;overflow:visible}
+.rp .un-sp.un-px img{max-width:none!important;max-height:none!important;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);image-rendering:pixelated;image-rendering:crisp-edges;filter:drop-shadow(0 0 10px color-mix(in srgb,var(--c) 55%,transparent));pointer-events:none}
+.rp .un-moon.un-mpx{background:none!important;box-shadow:none!important;border-radius:0!important}
+.rp .un-moon.un-mpx img{width:100%;height:100%;display:block;image-rendering:pixelated;filter:drop-shadow(0 0 5px color-mix(in srgb,var(--c) 70%,transparent))}
+.rp .un-lb b{font-family:"Galmuri11",sans-serif!important;font-weight:400;font-size:16px;text-shadow:1px 0 currentColor}
+.rp .un-lb span{font-family:"Galmuri11",sans-serif!important;font-size:11px}
+.rp .un-orb{border-style:dotted!important}
+/* ===== 가사 편지지 · 외계인 친구 ===== */
+.rp .rp-lyr{padding-bottom:44px!important}
+.rp-lyr-al{position:absolute;left:18px;bottom:10px;width:34px;height:auto;image-rendering:pixelated;transform:rotate(-8deg);animation:lyrBob 2.6s ease-in-out infinite;pointer-events:none;order:9}
+.rp-lyr-al.r{left:auto;right:18px;transform:rotate(8deg) scaleX(-1);animation-delay:-1.3s}
+.rp .rp-lyr .rp-lyr-b{margin-bottom:-6px}
+@keyframes lyrBob{50%{translate:0 -4px}}
+/* 전체 보기: 작고 귀여운 편지지 */
+.rp .lx-feed{gap:16px;padding:20px 16px 16px;max-width:640px}
+@media(min-width:560px){.rp .lx-feed{display:grid;grid-template-columns:1fr 1fr;align-items:start}}
+.rp .lx-card{min-height:0!important;justify-content:flex-start;gap:12px;padding:16px 18px 18px;border-radius:24px;box-shadow:0 8px 20px rgba(0,0,0,.3),inset 0 0 0 5px rgba(255,255,255,.55)}
+.rp .lx-card::after{inset:9px;border-radius:17px}
+.rp .lx-card:nth-child(odd){transform:rotate(-.6deg)}.rp .lx-card:nth-child(even){transform:rotate(.6deg)}
+.rp .lx-top{position:relative;left:auto;right:auto;top:auto;display:flex;align-items:center;gap:10px;justify-content:flex-start}
+.rp .lx-al{width:40px;height:auto;flex:none;image-rendering:pixelated;animation:lyrBob 2.6s ease-in-out infinite}
+.rp .lx-tt{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;line-height:1.25}
+.rp .lx-tt .lx-no{align-self:flex-start;font-size:9.5px;padding:2px 8px;margin-bottom:3px}
+.rp .lx-tt b{font-family:"Jua",sans-serif;font-weight:400;font-size:15.5px;color:#a3245a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rp .lx-tt>span:last-child:not(.lx-no){font-size:11.5px;color:#7a6a96}
+.rp .lx-vinyl{width:30px;height:30px;flex:none}.rp .lx-vinyl i{width:10px;height:10px}
+.rp .lx-x{margin:0;font-size:20px;line-height:1.45;padding:4px 4px 0}
+.rp .lx-x::before{font-size:34px;margin-bottom:2px}
+.rp .lx-why{border-radius:14px;padding:9px 12px;font-size:12.5px;line-height:1.55}
+.rp .lx-head h1{font-size:36px}
+.rp .lx-feed{align-items:stretch}.rp .lx-card{width:auto;align-self:stretch}@media(min-width:560px){.rp .lx-feed{align-items:start}}
+.rp .lx .lx-feed{width:100%;box-sizing:border-box;align-self:stretch}
 </style>
 </head>
 <body>
@@ -2471,13 +2537,13 @@ function vArchive(){
       ${ARCHIVE.heroCredit?`<div class="rp-credit">${escH(ARCHIVE.heroCredit)}</div>`:''}</div></div>
 
   <section class="rp-sec" id="edSec" style="padding-top:12px"><div class="rp-big"><div><div class="rp-kick">FAN EDIT</div><h2>JUUN EDIT</h2><p>하츄들이 만든 팬 편집 영상</p></div>${E.length?'<button class="rp-link" data-go="edits">전체 보기 &gt;</button>':''}</div>
-    <div class="rp-row">${E.map((e,i)=>`<button class="rp-card" style="width:220px" data-act="play" data-i="${i}"><span class="rp-th" style="height:124px">${th(e)}${e.len?`<span class="rp-dur">${escH(e.len)}</span>`:''}</span><span class="rp-ct">${escH(e.title)}</span>${e.by?`<span class="rp-cs">edit by ${escH(e.by)}</span>`:''}</button>`).join('')}</div></section>
+    <div class="rp-row">${E.slice(0,4).map((e,i)=>`<button class="rp-card" style="width:220px" data-act="play" data-i="${i}"><span class="rp-th" style="height:124px">${th(e)}${e.len?`<span class="rp-dur">${escH(e.len)}</span>`:''}</span><span class="rp-ct">${escH(e.title)}</span>${e.by?`<span class="rp-cs">edit by ${escH(e.by)}</span>`:''}</button>`).join('')}${E.length>4?`<button class="rp-card rp-more" style="width:150px" data-go="edits"><span class="rp-more-b" style="height:124px"><b>+${E.length-4}</b><small>MORE EDITS</small></span><span class="rp-ct">더 많은 에딧 보기 ›</span></button>`:''}</div></section>
 
   <section class="rp-sec" style="padding-top:38px"><div class="rp-big"><div><div class="rp-kick">COMMISSION</div><h2>JUUN GALLERY</h2><p>작가님들의 쭈니 작품</p></div>${ARCHIVE.commissions.length?'<button class="rp-link" data-go="gallery">전체 보기 &gt;</button>':''}</div>
-    <div class="rp-row" style="gap:10px">${ARCHIVE.commissions.map((c,i)=>`<button class="rp-card" style="width:176px" data-act="comm" data-i="${i}"><span class="rp-th" style="height:252px;border-radius:8px;background:#f6f1fb;color:#5a4d80">${c.img?`<img src="${escH(c.img)}" alt="${escH(c.title)}" loading="lazy">`:'[커미션 작품]'}<span class="rp-no">No.${p2(i+1)}</span></span><span class="rp-ct" style="font-weight:800">${escH(c.title)}</span><span class="rp-cs">illust. ${escH(c.artist)}</span></button>`).join('')}</div><p class="gl-note">각 작품의 저작권은 작가에게 있습니다. 사진을 상업적으로 이용하지 마세요</p></section>
+    <div class="rp-row" style="gap:10px">${ARCHIVE.commissions.slice(0,4).map((c,i)=>`<button class="rp-card" style="width:176px" data-act="comm" data-i="${i}"><span class="rp-th" style="height:252px;border-radius:8px;background:#f6f1fb;color:#5a4d80">${c.img?`<img src="${escH(c.img)}" alt="${escH(c.title)}" loading="lazy">`:'[커미션 작품]'}<span class="rp-no">No.${p2(i+1)}</span></span><span class="rp-ct" style="font-weight:800">${escH(c.title)}</span><span class="rp-cs">illust. ${escH(c.artist)}</span></button>`).join('')}${ARCHIVE.commissions.length>4?`<button class="rp-card rp-more" style="width:140px" data-go="gallery"><span class="rp-more-b" style="height:252px"><b>+${ARCHIVE.commissions.length-4}</b><small>MORE WORKS</small></span><span class="rp-ct">더 많은 작품 보기 ›</span></button>`:''}</div><p class="gl-note">각 작품의 저작권은 작가에게 있습니다. 사진을 상업적으로 이용하지 마세요</p></section>
 
 ${(()=>{const LY=lyrList(),l=LY[0];return`<section class="rp-sec" style="padding-top:38px"><div class="rp-big"><div><div class="rp-kick">TO. JUUN</div><h2>LYRICS FOR JUUN</h2><p>가사로 전하는 마음${LY.length>1?` · ${LY.length}곡`:''}</p></div>${LY.length?`<button class="rp-link" data-act="lyrgo" data-i="0">전체 보기 &gt;</button>`:''}</div>
-    <div class="rp-row" style="gap:14px;padding-top:12px;padding-bottom:10px">${l?LY.slice(0,8).map((x,i)=>lyrCard(x,i,'lyrgo')).join(''):`<div class="rp-lyr rp-lyr-ph"><span class="rp-lyr-t">가사로 전하는 마음이\n여기에 걸려요</span><span class="rp-lyr-n">♪ [제목]</span><span class="rp-lyr-b">곧 공개돼요</span></div>`}</div></section>`})()}
+    <div class="rp-row" style="gap:14px;padding-top:12px;padding-bottom:10px">${l?LY.slice(0,8).map((x,i)=>lyrCard(x,i,'lyrgo')).join(''):`<div class="rp-lyr rp-lyr-ph"><img class="rp-lyr-al" src="${lyrAl(0)}" alt="" aria-hidden="true"><span class="rp-lyr-t">가사로 전하는 마음이\n여기에 걸려요</span><span class="rp-lyr-n">♪ [제목]</span><span class="rp-lyr-b">곧 공개돼요</span></div>`}</div></section>`})()}
 
   <section class="rp-sec" style="padding-top:40px"><div class="rp-big"><div><div class="rp-live"><i></i>LIVE · ${notes.length}개 수신</div><h2>TRANSMISSIONS</h2><p>하츄대원들이 주은이에게 보낸 교신</p></div><button class="rp-link" data-go="msgs">전체 보기 &gt;</button></div>
     <div class="rp-mq" aria-hidden="true"><div class="rp-mqi">${tk}${tk}</div></div>
@@ -4431,6 +4497,41 @@ adm.addEventListener('click',async e=>{if(AD.tab!=='uni'||!AD.uniP)return;const 
     const r=a==='mdel'?await sb.from('uni_meteors').delete().eq('id',id):await sb.from('uni_meteors').update({approved:!m.approved}).eq('id',id);if(r.error)return alert(r.error.message);
     if(a==='mdel')AU.mets=AU.mets.filter(x=>x.id!==id);else m.approved=!m.approved;done()}});
 /* =====================================================================
+   JUUN UNIVERSE · 도트 행성
+   ===================================================================== */
+const UNP={c:{}};
+function unRGB(c){const x=document.createElement('canvas').getContext('2d');x.fillStyle='#888';x.fillStyle=c;const s=x.fillStyle;
+  if(s[0]==='#')return[1,3,5].map(i=>parseInt(s.slice(i,i+2),16));const m=s.match(/[\d.]+/g)||[136,136,136];return m.slice(0,3).map(Number)}
+function unMix(a,b,t){return a.map((v,i)=>Math.round(v+(b[i]-v)*t))}
+/* N: 행성 지름(도트), ring: 고리 · moon: 작은 위성 */
+function unPxPlanet(c,ring,moon){const k=c+'|'+(ring?1:0)+(moon?1:0);if(UNP.c[k])return UNP.c[k];
+  const N=moon?9:20,PW=ring?Math.round(N*1.7):N+2,PH=N+2,cv=document.createElement('canvas');cv.width=PW;cv.height=PH;const g=cv.getContext('2d');
+  const B=unRGB(c),W=[255,255,255],D=[20,10,46],T=[unMix(B,W,.75),unMix(B,W,.35),B,unMix(B,D,.35),unMix(B,D,.62)],OL=unMix(B,D,.78);
+  const BY=[[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]],cx=PW/2,cy=PH/2,r=N/2;
+  let h=0;for(const ch of c)h=(h*31+ch.charCodeAt(0))>>>0;const bands=!moon&&h%3!==0,bo=h%5;
+  const px=(x,y,col)=>{g.fillStyle=`rgb(${col})`;g.fillRect(x,y,1,1)};
+  const ringPts=(front)=>{if(!ring)return;const rx=PW/2-.5,ry=N*.2,RC=unMix(B,W,.55),RD=unMix(B,D,.2);
+    for(let x=0;x<PW;x++){const dx=(x+.5-cx)/rx;if(Math.abs(dx)>1)continue;const tilt=(x+.5-cx)*-.22;
+      for(const s of[1,-1]){const y=Math.floor(cy+tilt+s*ry*Math.sqrt(1-dx*dx));const isFront=s>0;if(isFront!==front)continue;
+        if(!front){const ddx=x+.5-cx,ddy=y+.5-cy;if(ddx*ddx+ddy*ddy<r*r)continue}
+        px(x,y,x%3===0?RD:RC)}}};
+  ringPts(false);
+  for(let y=0;y<PH;y++)for(let x=0;x<PW;x++){const dx=x+.5-cx,dy=y+.5-cy,d2=dx*dx+dy*dy;if(d2>r*r)continue;
+    if(d2>(r-1)*(r-1)){px(x,y,OL);continue}
+    const nx=dx/r,ny=dy/r,nz=Math.sqrt(Math.max(0,1-nx*nx-ny*ny));let l=(-nx*.55-ny*.6+nz*.6);
+    if(bands){const bnd=Math.floor((y+bo)/3)%3;if(bnd===1)l-=.18}
+    l+=(BY[y&3][x&3]/16-.5)*.22;
+    const t=l>.85?0:l>.55?1:l>.2?2:l>-.15?3:4;px(x,y,T[t])}
+  if(!moon){px(Math.round(cx-r*.42),Math.round(cy-r*.5),W);px(Math.round(cx-r*.42)+1,Math.round(cy-r*.5),unMix(B,W,.85))}
+  ringPts(true);
+  return UNP.c[k]={u:cv.toDataURL(),w:PW,h:PH,n:N}}
+unSphere=function(c,sz,ring){let P;try{P=unPxPlanet(c,ring,false)}catch(e){return`<span class="un-sp" style="--c:${escH(c)};width:${sz}px;height:${sz}px"></span>`}
+  const s=sz/P.n;return`<span class="un-sp un-px" style="--c:${escH(c)};width:${sz}px;height:${sz}px"><img src="${P.u}" alt="" style="width:${Math.round(P.w*s)}px;height:${Math.round(P.h*s)}px"></span>`};
+/* 위성도 도트로 */
+{const f=unSection;unSection=function(){let h=f.apply(this,arguments);
+  return h.replace(/<button class="un-moon"([^>]*?)style="--c:([^"]*)"([^>]*)><\/button>/g,(m,a,c,b)=>{let u='';try{u=unPxPlanet(c.replace(/&#39;|&quot;/g,''),false,true).u}catch(e){}
+    return`<button class="un-moon un-mpx"${a}style="--c:${c}"${b}>${u?`<img src="${u}" alt="">`:''}</button>`})}}
+/* =====================================================================
    JUUN FORTUNE · 쭈니 포춘쿠키 (생일파티 맨 아래)
    쿠키를 깨면 쭈니가 한 말 · 댓글이 하나 나와요. 문장은 운영진이 넣어요
    ===================================================================== */
@@ -5799,19 +5900,51 @@ if(/[?&]pztest/.test(location.search))window.__GV={reveal:(r,f)=>gcReveal(r,f)};
 /* =====================================================================
    LYRICS FOR JUUN 전체 보기: 한 곡씩 화면 가득 넘겨 보는 가사 앨범
    ===================================================================== */
+const LX_AL=['#9fe3b0','#ffb3d9','#a9d4ff','#ffd98a','#c9b3ff','#ffc2a8'];
+function lyrAl(i){try{return alienSprite(LX_AL[i%LX_AL.length]).toDataURL()}catch(e){return''}}
+{const f=lyrCard;lyrCard=function(l,i,act){return f.apply(this,arguments).replace('<span class="rp-lyr-t">',`<img class="rp-lyr-al${i%2?' r':''}" src="${lyrAl(i)}" alt="" aria-hidden="true"><span class="rp-lyr-t">`)}}
 const LX_PAL=[['#ffd6e7','#e9d8ff'],['#d8ecff','#efe1ff'],['#fff0c9','#ffd8e6'],['#d7f6ea','#dfe6ff'],['#ffe1d2','#f3dcff'],['#e6e0ff','#ffd9ec']];
 VIEWS.lyrics=function(){const LY=lyrList(),B=bgmList();
   return`<div class="rpv rp-msgs rp-lyv lx">
   <div class="rp-mtop"><button class="rp-ib" data-act="lyrback" aria-label="뒤로">${SVG.back}</button><div class="rp-logo" style="font-size:20px">PLANET <span>#1203</span></div></div>
-  <div class="lx-head"><div class="rp-kick">TO. JUUN · ${LY.length} TRACKS</div><h1>LYRICS<br>FOR JUUN</h1><p>하츄대원들이 가사로 전하는 마음 · 아래로 넘겨 들어요</p></div>
+  <div class="lx-head"><div class="rp-kick">TO. JUUN · ${LY.length} TRACKS</div><h1>LYRICS<br>FOR JUUN</h1><p>하츄대원들이 가사로 전하는 마음 · 편지를 한 장씩 읽어 봐요</p></div>
   ${B.length?`<div class="lyv-bgm"><span class="lx-disc" aria-hidden="true"></span><span class="lyv-eq" aria-hidden="true"><i></i><i></i><i></i></span><span class="lyv-bt"><small>NOW PLAYING</small><span class="lyv-bn"></span></span><button data-act="bgmtog" aria-label="재생·일시정지">▶</button>${B.length>1?'<button data-act="bgmnext" aria-label="다음 곡">⏭</button>':''}</div>`:''}
   <div class="lx-feed">${LY.length?LY.map((l,i)=>{const[a,b]=LX_PAL[i%LX_PAL.length],t=String(l.title||'제목 없음'),k=t.lastIndexOf(' - ');
-    return`<article class="lx-card" id="lyv${i}" style="--la:${a};--lb:${b}"><div class="lx-top"><span class="lx-no">TRACK ${p2(i+1)}</span><span class="lx-vinyl" aria-hidden="true"><i></i></span></div>
+    return`<article class="lx-card" id="lyv${i}" style="--la:${a};--lb:${b}"><div class="lx-top"><img class="lx-al" src="${lyrAl(i)}" alt="" aria-hidden="true"><span class="lx-tt"><span class="lx-no">TRACK ${p2(i+1)}</span><b>♪ ${escH(k>0?t.slice(0,k):t)}</b>${k>0?`<span>${escH(t.slice(k+3))}</span>`:''}</span><span class="lx-vinyl" aria-hidden="true"><i></i></span></div>
     ${l.text?`<p class="lx-x">${escH(l.text)}</p>`:''}
-    <div class="lx-song"><b>♪ ${escH(k>0?t.slice(0,k):t)}</b>${k>0?`<span>${escH(t.slice(k+3))}</span>`:''}</div>
-    ${l.note?`<div class="lx-why"><small>이 가사를 고른 이유</small>${escH(l.note)}</div>`:''}</article>`}).join(''):'<p class="rp-empty">아직 걸린 가사가 없어요</p>'}</div>
+    ${l.note?`<div class="lx-why"><small>💌 이 가사를 고른 이유</small>${escH(l.note)}</div>`:''}</article>`}).join(''):'<p class="rp-empty">아직 걸린 가사가 없어요</p>'}</div>
   <p class="lx-end">— END OF ALBUM —</p></div>`};
 if(/pztest/.test(location.search))window.__LX={A:()=>ARCHIVE,open:i=>lyrOpen(i)};
+/* =====================================================================
+   JUUN GALLERY · 책자로 보기 (한 장씩 넘기는 작품집)
+   ===================================================================== */
+const GB={i:0};
+function gbMode(){return store.get('jc_galmode','hall')}
+function gbTabs(m){return`<div class="gb-tabs" role="tablist"><button data-gbm="hall" class="${m==='hall'?'on':''}">🏛 미술관</button><button data-gbm="book" class="${m==='book'?'on':''}">📖 책자</button></div>`}
+function vGBook(){const C=ARCHIVE.commissions||[],n=C.length;GB.i=Math.max(0,Math.min(GB.i,n));
+  const pages=[`<div class="gb-pg gb-cover"><span class="gb-cv-k">PLANET #1203</span><b>JUUN<br>GALLERY</b><span class="gb-cv-s">작가님들의 쭈니 작품집</span><img class="gb-cv-a" src="${mgVis(1)}" alt="" aria-hidden="true"><span class="gb-cv-n">${n} WORKS · 넘겨서 보기 ›</span></div>`]
+    .concat(C.map((c,i)=>`<div class="gb-pg"><span class="gb-no">No.${p2(i+1)}</span>
+      <button class="gb-art" data-act="comm" data-i="${i}" aria-label="${escH(c.title||'작품')} 크게 보기">${c.img?`<img src="${escH(c.img)}" alt="" loading="lazy">`:'<span class="mg-empty">작품 준비 중</span>'}</button>
+      <div class="gb-cap"><b>${escH(c.title||'무제')}</b><small>illust. ${escH(c.artist||'')}</small></div><span class="gb-pn">— ${i+1} —</span></div>`))
+    .concat([`<div class="gb-pg gb-end"><b>THE END</b><span>쭈니야 생일 축하해 ♡</span><small>각 작품의 저작권은 작가에게 있습니다</small></div>`]);
+  return`<div class="rpv rp-msgs mg gb">
+  <div class="rp-mtop"><button class="rp-ib" data-go="archive" aria-label="뒤로">${SVG.back}</button><div class="rp-logo" style="font-size:20px">PLANET <span>#1203</span></div></div>
+  <div class="mg-head"><small>SPECIAL EXHIBITION</small><h1>JUUN GALLERY</h1><p>책장을 넘기며 감상해요</p></div>${gbTabs('book')}
+  <div class="gb-stage"><div class="gb-book" id="gbBook">${pages.map((p,k)=>`<div class="gb-leaf${k<GB.i?' turned':''}" style="z-index:${pages.length-k}">${p}</div>`).join('')}<span class="gb-spine" aria-hidden="true"></span></div></div>
+  <div class="gb-ctl"><button data-gb="-1" aria-label="이전 장">◀</button><span id="gbCnt"></span><button data-gb="1" aria-label="다음 장">▶</button></div>
+  <p class="gl-note" style="margin:10px 18px 40px;text-align:center">각 작품의 저작권은 작가에게 있습니다. 사진을 상업적으로 이용하지 마세요</p></div>`}
+function gbSet(i){const L=[...document.querySelectorAll('#gbBook .gb-leaf')];if(!L.length)return;GB.i=Math.max(0,Math.min(L.length-1,i));
+  L.forEach((l,k)=>l.classList.toggle('turned',k<GB.i));const c=$('#gbCnt');if(c)c.textContent=GB.i===0?'표지':GB.i===L.length-1?'끝':`${GB.i} / ${L.length-2}`;
+  try{SFX.page?SFX.page():SFX.tick&&SFX.tick()}catch(e){}}
+function gbStart(){const bk=$('#gbBook');if(!bk)return;gbSet(GB.i);let sx=null,sy=0;
+  bk.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+  bk.addEventListener('touchend',e=>{if(sx==null)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;sx=null;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy))gbSet(GB.i+(dx<0?1:-1))},{passive:true});
+  bk.addEventListener('click',e=>{if(e.target.closest('.gb-art'))return;const r=bk.getBoundingClientRect();gbSet(GB.i+(e.clientX-r.left<r.width*.35?-1:1))})}
+rp.addEventListener('click',e=>{const m=e.target.closest('[data-gbm]');if(m&&rpView==='gallery'){store.set('jc_galmode',m.dataset.gbm);GB.i=0;rpShow('gallery');return}
+  const b=e.target.closest('[data-gb]');if(b&&rpView==='gallery')gbSet(GB.i+ +b.dataset.gb)});
+{const g=vGallery;VIEWS.gallery=function(){return gbMode()==='book'?vGBook():g().replace('</p></div>\n  <div class="mg-hall"','</p></div>'+gbTabs('hall')+'\n  <div class="mg-hall"')}}
+{const f=rpShow;rpShow=function(v){const r=f.apply(this,arguments);if(v==='gallery'&&gbMode()==='book')requestAnimationFrame(gbStart);return r}}
+if(/pztest/.test(location.search))window.__GB={A:()=>ARCHIVE,set:gbSet,show:v=>rpShow(v)};
 /* =====================================================================
    휴대폰 · 브라우저 '뒤로가기'를 사이트 안에서 한 단계씩 처리해요
    창이 떠 있으면 창 닫기 → 가사 · 교신 · 직캠 · 라운지 · 레코드샵 전체 보기면 생일파티로 → 생일파티면 행성 맵으로
