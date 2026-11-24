@@ -2866,9 +2866,9 @@ function rpRefresh(){if(!rpOpen||rpView==='lounge'||rpView==='lyrics')return;con
 function openReport(v){if(netCh){sb.removeChannel(netCh);netCh=null;netSend=null;remotes.clear();online=1}rpOpen=true;held.length=0;me.tgt=null;$('#enterBtn').hidden=true;$('#rpBtn').hidden=false;$('#startRp').hidden=false;rp.hidden=false;if(v==='print')SFX.print();rpShow(v||'archive');loungeLoad().then(()=>{if(rpView==='archive')rpRefresh()});pull().then(()=>{if(rpView==='archive'||rpView==='msgs')rpRefresh()})}
 function closeReport(){lyrStop();rpOpen=false;rp.hidden=true;rp.innerHTML='';$('#enterBtn').hidden=!near||modalOpen}
 
-function updLast(){const el=$('#rpLast');if(!el)return;const END=Date.UTC(2026,11,23,15,0),left=END-Date.now();
+function updLast(){const el=$('#rpLast');if(!el)return;const END=Date.UTC(2026,11,13,15,0),left=END-Date.now();
   if(left>0){const d=Math.floor(left/864e5),h=Math.floor(left/36e5)%24,m=Math.floor(left/6e4)%60,s=Math.floor(left/1e3)%60;
-    el.innerHTML=`<div><div class="rp-kick">PLANET #1203 · CLOSING</div><div class="t">12.23 24:00</div><div class="s">행성 #1203은 12월 23일 밤 12시에 문을 닫아요<br>남은 시간 ${d?`D-${d} `:''}${p2(h)}:${p2(m)}:${p2(s)}</div></div><img src="${ART.ufo}" alt="">`}
+    el.innerHTML=`<div><div class="rp-kick">PLANET #1203 · CLOSING</div><div class="t">12.13 24:00</div><div class="s">행성 #1203은 12월 13일 밤 12시에 문을 닫아요<br>남은 시간 ${d?`D-${d} `:''}${p2(h)}:${p2(m)}:${p2(s)}</div></div><img src="${ART.ufo}" alt="">`}
   else el.innerHTML=`<div><div class="rp-kick">PLANET #1203 · CLOSED</div><div class="t">탐사 종료</div><div class="s">행성 #1203의 문이 닫혔어요<br>함께해 준 하츄대원들, 고마워요!</div></div><img src="${ART.ufo}" alt="" style="opacity:1">`}
 
 /* 크게 보기 (게임의 넘겨 보기 창을 그대로 씀) */
@@ -6191,7 +6191,7 @@ const BGST=(()=>{let s=7;const r=()=>(s=(s*16807)%2147483647)/2147483647,C=['#ff
   {const f=openReport;openReport=function(){const r=f.apply(this,arguments);arm();return r}}}
 
 /* 디데이 */
-const OPEN=Date.UTC(2026,11,3,3,3),CLOSE=Date.UTC(2026,11,23,15,0);   // 착륙 12월 3일 12:03 ~ 12월 23일 24:00 (한국 시간)
+const OPEN=Date.UTC(2026,11,3,3,3),CLOSE=Date.UTC(2026,11,13,15,0);   // 착륙 12월 3일 12:03 ~ 12월 13일 24:00 (한국 시간)
 function tick(){const n=Date.now(),el=$('#dday');
   if(n<OPEN){const d=OPEN-n,dd=Math.floor(d/864e5),h=Math.floor(d/36e5)%24,m=Math.floor(d/6e4)%60,ss=Math.floor(d/1e3)%60;
     el.innerHTML=`착륙까지 <b>D-${dd}</b> ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`}
