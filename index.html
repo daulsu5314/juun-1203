@@ -6174,6 +6174,58 @@ const BGST=(()=>{let s=7;const r=()=>(s=(s*16807)%2147483647)/2147483647,C=['#ff
   return`<div class="bgst" aria-hidden="true">${h}</div>`})();
 {const f=VIEWS.archive;VIEWS.archive=function(){const h=f.apply(this,arguments);return h.replace('<div class="rpv rp-arc">',()=>'<div class="rpv rp-arc">'+BGST)}}
 /* =====================================================================
+   내 파티 자랑 카드: X(트위터) 타임라인에서 잘리지 않는 세로 3:4 한 장 (1080×1440)
+   위: HAPPY JUUN DAY · 가운데: 내가 꾸민 쭈니방 · 아래: 사진 한 줄 + 글 카드
+   ===================================================================== */
+const RC34={W:1080,H:1440};
+function rcNotes(x,T,y,cw,ch){T.forEach((t,i)=>{const full=T.length%2&&i===T.length-1,w=full?RCW:cw,cx=RM+(full?0:(i%2)*(cw+24)),cy=y+Math.floor(i/2)*(ch+18);
+  x.save();rcRR(x,cx,cy,w,ch,24);x.fillStyle={fc:'#fffaf0',gc:'#fff1c2',note:'#ffe4f1',met:'#e3f4ff',cam:'#ece4ff'}[t.k]||'#fff';x.fill();x.setLineDash([10,8]);x.lineWidth=3;
+  x.strokeStyle={fc:'#e8c98a',gc:'#f0c24f',note:'#ff9fc8',met:'#8fd0f5',cam:'#b49cff'}[t.k]||'#ccc';rcRR(x,cx+8,cy+8,w-16,ch-16,18);x.stroke();x.setLineDash([]);
+  x.textAlign='left';x.textBaseline='alphabetic';x.fillStyle='#8a6b9c';x.font='400 22px "Jua","Gothic A1",sans-serif';x.fillText(t.head,cx+24,cy+40);
+  x.fillStyle='#3a2560';x.font=t.k==='fc'?'700 30px "Gaegu","Gothic A1",sans-serif':'400 26px "Jua","Gothic A1",sans-serif';rcWrap(x,t.body,w-48,t.sub?1:2).forEach((l,j)=>x.fillText(l,cx+24,cy+80+j*32));
+  if(t.sub){x.fillStyle='#9a8aa8';x.font='600 18px "Gothic A1",sans-serif';x.fillText(rcFit(x,t.sub,w-48),cx+24,cy+ch-20)}x.restore()})}
+rcDraw=async function(){const D=rcData(),d=D.d,first=k=>RC.on[k]!==false&&d[k]&&d[k].length?d[k][0]:null;
+  const TX=['HAPPY JUUN DAY 12.03 BIRTHDAY 생일 축하해! 대원의 파티 기록 ✦ CREW NO. 0123456789 내가 자랑한 사진 내 CD 쭈일리언 네컷 최애 직캠 무대 깬 포춘쿠키 보낸 교신 포착한 유성 GACHA 당첨 꾸민 쭈니방',me.name||'하츄',
+    ...RC_SEC.flatMap(([k])=>(d[k]||[]).slice(0,1).flatMap(p=>[p.cap,p.src,p.v,p.label]))].filter(Boolean).join(' ');
+  try{if(document.fonts&&document.fonts.load)await Promise.all(['400 100px "Anton"','800 40px "Gothic A1"','700 40px "Gothic A1"','600 40px "Gothic A1"','700 40px "Gaegu"','400 40px "Jua"'].map(f=>document.fonts.load(f,TX).catch(()=>{})))}catch(e){}
+  const srcs=new Set();RC_SEC.forEach(([k])=>{if(RC.on[k]!==false)(d[k]||[]).slice(0,RC_MAX[k]||1).forEach(p=>p.img&&srcs.add(p.img))});
+  [ART.ufo,ART.ag,ART.ap].forEach(a=>srcs.add(a));const IM=new Map();await Promise.all([...srcs].map(async s=>IM.set(s,await cdLoad(s))));
+  const W=RC34.W,H=RC34.H,cv=document.createElement('canvas');cv.width=W;cv.height=H;const x=cv.getContext('2d');
+  /* 배경 · 별 */
+  x.fillStyle='#0d0820';x.fillRect(0,0,W,H);let s=1203;const rnd=()=>(s=(s*16807)%2147483647)/2147483647;
+  for(let i=0;i<H/14;i++){x.fillStyle=`rgba(255,255,255,${.12+rnd()*.3})`;const z=rnd()<.85?2:3;x.fillRect(Math.round(rnd()*W),Math.round(rnd()*H),z,z)}
+  /* 제목 (기존 머리 칸을 그대로) */
+  const B=rcBlocks(D,IM);x.save();x.translate(0,-24);B[0].draw(x,0);x.restore();
+  /* 재료 모으기 */
+  const cam=first('cam'),P=[['pic','내가 자랑한 사진','cover',1.25],['cd','내 CD','cover',1],['mon','내 쭈일리언','contain',1],['cut','내 네컷','contain',1.25]].map(([k,l,m,r])=>{const p=first(k);return p?{...p,lab:l,mode:m,r}:null}).filter(Boolean);
+  if(cam&&IM.get(cam.img))P.push({...cam,lab:'내 최애 직캠',mode:'cover',r:.75});
+  const T=[],fc=first('fc'),note=first('note'),met=first('met'),gc=first('gc');
+  if(fc)T.push({k:'fc',head:fc.rnd?'✦ 오늘의 쭈니 포춘쿠키':'✦ 내가 깬 포춘쿠키',body:fc.cap,sub:fc.src});
+  if(note)T.push({k:'note',head:'📡 내가 보낸 교신',body:note.cap});
+  if(cam&&!IM.get(cam.img))T.push({k:'cam',head:'📹 내 최애 직캠 · 무대',body:cam.cap||'최애 포인트',sub:cam.label});
+  if(met){const t=Math.max(0,met.t|0);T.push({k:'met',head:'🌠 내가 포착한 유성',body:`${Math.floor(t/60)}:${String(t%60).padStart(2,'0')}  ${met.cap}`,sub:met.v})}
+  if(gc)T.push({k:'gc',head:'🎁 1203 GACHA 당첨',body:gc.cap});
+  const TT=T.slice(0,4),room=RC.on.room!==false&&d.room&&d.room[0]&&IM.get(d.room[0].img);
+  /* 크기 정하기: 쭈니방이 남는 자리를 다 가져가요 */
+  const top=350,bottom=H-138,n=P.length,pw=n?Math.min(room?180:240,(RCW-(n-1)*26)/n-28):0,pr=n?Math.max(...P.map(p=>p.r)):0,ph=n?pw*pr+14+56+22:0;
+  const rows=Math.ceil(TT.length/2),ch=room?140:170,th=rows?rows*ch+(rows-1)*18:0,cw=(RCW-24)/2;
+  const gap=28,rest=bottom-top-(n?ph+gap:0)-(rows?th+gap:0);
+  let y=top;
+  if(room){const lab=40,mh=Math.max(240,rest-lab-20),mw=RCW-60,k=Math.min(mw/room.width,mh/room.height),w=Math.round(room.width*k),h=Math.round(room.height*k),ox=Math.round((W-w)/2),oy=y+14;
+    x.save();x.shadowColor='rgba(0,0,0,.45)';x.shadowBlur=24;x.shadowOffsetY=10;x.fillStyle='#fff';x.fillRect(ox-16,oy-16,w+32,h+32);x.restore();
+    x.save();x.imageSmoothingEnabled=false;x.drawImage(room,ox,oy,w,h);x.restore();
+    x.save();x.translate(W/2,oy-18);x.rotate(-.03);x.fillStyle='rgba(255,179,217,.9)';x.fillRect(-64,-15,128,30);x.restore();
+    x.textAlign='right';x.textBaseline='alphabetic';x.fillStyle='#ffd1f0';x.font='400 28px "Jua","Gothic A1",sans-serif';x.fillText('내가 꾸민 쭈니방',ox+w+10,oy+h+16+38);
+    y=oy+h+16+lab+gap-6}
+  else{const used=(n?ph:0)+(rows?th:0)+(n&&rows?gap:0);y=top+Math.max(0,(bottom-top-used)/2)}
+  if(n){const tot=n*(pw+28)+(n-1)*26;P.forEach((p,i)=>{const cx=(W-tot)/2+(pw+28)/2+i*(pw+28+26);rcPola(x,IM.get(p.img),cx,y+(pw*pr-pw*p.r)/2+(i%2?12:0),pw,pw*p.r,[-2.5,2,-1.5,2.5,-2][i],p.lab,p.mode)});y+=ph+gap}
+  if(rows)rcNotes(x,TT,y,cw,ch);
+  if(!n&&!rows&&!room){x.textAlign='center';x.fillStyle='#ffb3d9';x.font='700 48px "Gaegu","Gothic A1",sans-serif';x.fillText('12.03 생일 축하해 주은아 💗',W/2,H/2+80)}
+  /* 맨 아래 */
+  x.save();B[B.length-1].draw(x,H-118);x.restore();
+  return cv};
+if(/pztest/.test(location.search)){const f=rcData;rcData=function(){return window.__RCF||f.apply(this,arguments)};window.__RC={draw:async()=>(await rcDraw()).toDataURL('image/png'),on:RC.on}}
+/* =====================================================================
    휴대폰 · 브라우저 '뒤로가기'를 사이트 안에서 한 단계씩 처리해요
    창이 떠 있으면 창 닫기 → 가사 · 교신 · 직캠 · 라운지 · 레코드샵 전체 보기면 생일파티로 → 생일파티면 행성 맵으로
    (맵에서 한 번 더 누르면 원래처럼 사이트를 나가요)
