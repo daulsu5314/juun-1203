@@ -1356,6 +1356,39 @@ a.sp-go{display:inline-flex;align-items:center;justify-content:center;text-decor
 .cn-stub::before{left:-4px!important}.cn-stub::after{right:-4px!important}
 .cn-now{border-radius:0!important}
 .rp .rp-logo,.rp .cn-list-h span,.rp .rp-ht,.rp .cn-info b,.rp .mu-t{font-weight:700!important}
+/* 도트 글씨 두께: 보통과 굵게의 중간 */
+.rp h1,.rp .rp-big h2,.rp .cn-sign h1,.rp .mg-head h1{text-shadow:1px 0 currentColor}
+.rp-hin h1{text-shadow:2px 0 currentColor!important}
+.rp .rp-sh h2,.rp .rp-logo,.rp .rp-link,.rp .rp-hbtn button,.rp .rp-map,.rp .rp-ht,.rp .cn-list-h span,.sheet h2,#sheetTitle{text-shadow:.6px 0 currentColor}
+
+/* 메인 가사 카드: 동글동글 편지지 */
+.rp .rp-lyr{border-radius:30px!important;clip-path:none!important;padding:34px 22px 20px!important;box-shadow:0 10px 24px rgba(0,0,0,.28),inset 0 0 0 7px rgba(255,255,255,.55)!important;outline:2px dashed rgba(232,165,196,.55);outline-offset:-14px}
+.rp .rp-lyr:before{border-radius:999px!important;width:62px!important;margin-left:-31px!important;height:18px!important;background:rgba(255,209,102,.9)!important}
+.rp .rp-lyr .rp-lyr-t{font-size:18px}
+
+/* ===== 가사 전체 보기: 가사 앨범 ===== */
+.lx{background:radial-gradient(120% 60% at 50% 0%,#3a2470 0%,#1a1036 55%,#0d0820 100%)}
+.lx-head{padding:22px 22px 6px}
+.lx-head h1{margin:8px 0 8px;font-size:44px;line-height:1.02;color:#fff3fb}
+.lx-head p{margin:0;font-size:13px;color:#cfc4ea}
+.lx .lyv-bgm{margin:14px 18px 0;padding:8px 10px 8px 8px}
+.lx-disc{flex:none;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle,#ff9fcf 0 4px,#1a1036 4.5px 6px,#2b2147 6.5px 9px,#3b2d62 9.5px 11px,#2b2147 11.5px);animation:lxSpin 3s linear infinite}
+@keyframes lxSpin{to{transform:rotate(360deg)}}
+.lx-feed{display:flex;flex-direction:column;gap:26px;padding:26px 18px 20px;max-width:560px;margin:0 auto}
+.lx-card{position:relative;min-height:62vh;display:flex;flex-direction:column;justify-content:center;gap:18px;padding:26px 24px 24px;border-radius:32px;background:linear-gradient(160deg,var(--la) 0%,#fffaf6 55%,var(--lb) 100%);color:#2a1f3d;box-shadow:0 18px 40px rgba(0,0,0,.35),inset 0 0 0 8px rgba(255,255,255,.45);overflow:hidden;scroll-margin-top:90px}
+.lx-card::after{content:"";position:absolute;inset:14px;border-radius:22px;border:2px dashed rgba(163,36,90,.18);pointer-events:none}
+.lx-top{position:absolute;left:24px;right:20px;top:20px;display:flex;justify-content:space-between;align-items:center}
+.lx-no{font-family:"Galmuri11",sans-serif!important;font-size:11px;letter-spacing:2px;color:#a3245a;background:rgba(255,255,255,.7);padding:4px 10px;border-radius:999px}
+.lx-vinyl{width:46px;height:46px;border-radius:50%;background:repeating-radial-gradient(circle,#2a1f3d 0 2px,#3a2d55 2px 3px);box-shadow:0 4px 10px rgba(42,31,61,.3);display:flex;align-items:center;justify-content:center;animation:lxSpin 4s linear infinite}
+.lx-vinyl i{width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,var(--la),var(--lb));box-shadow:0 0 0 2px #2a1f3d}
+.lx-x{margin:34px 0 0;font-family:"Gaegu",cursive;font-weight:700;font-size:27px;line-height:1.5;white-space:pre-line;word-break:keep-all;text-align:center;position:relative}
+.lx-x::before{content:"“";display:block;font-family:Georgia,serif;font-size:56px;line-height:.6;color:#e8a5c4;margin-bottom:8px}
+.lx-song{display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center}
+.lx-song b{font-family:"Jua",sans-serif;font-weight:400;font-size:18px;color:#a3245a}
+.lx-song span{font-size:13px;color:#7a6a96}
+.lx-why{align-self:stretch;background:rgba(255,255,255,.72);border-radius:18px;padding:12px 14px;font-size:13.5px;line-height:1.6;color:#3a2459;white-space:pre-line}
+.lx-why small{display:block;font-size:11px;font-weight:800;color:#a3245a;margin-bottom:3px}
+.lx-end{text-align:center;font-family:"Galmuri11",sans-serif!important;font-size:11px;letter-spacing:3px;color:#6f62a0;padding:10px 0 50px}
 </style>
 </head>
 <body>
@@ -5763,6 +5796,22 @@ AD_TABS.splice(Math.max(0,AD_TABS.findIndex(t=>t[0]==='site')),0,['voucher','상
 adm.addEventListener('click',async e=>{if(AD.tab!=='voucher')return;const b=e.target.closest('[data-gvdel]');if(!b)return;if(!b.dataset.sure){b.dataset.sure=1;b.textContent='정말 삭제?';return}b.disabled=true;
   const r=await sb.rpc('gacha_del_code',{p_id:b.dataset.gvdel});if(r.error){alert(/code_used/.test(r.error.message||'')?'이미 나간 번호는 지울 수 없어요':errMsg(r.error));b.disabled=false;return}adGo('voucher')});
 if(/[?&]pztest/.test(location.search))window.__GV={reveal:(r,f)=>gcReveal(r,f)};
+/* =====================================================================
+   LYRICS FOR JUUN 전체 보기: 한 곡씩 화면 가득 넘겨 보는 가사 앨범
+   ===================================================================== */
+const LX_PAL=[['#ffd6e7','#e9d8ff'],['#d8ecff','#efe1ff'],['#fff0c9','#ffd8e6'],['#d7f6ea','#dfe6ff'],['#ffe1d2','#f3dcff'],['#e6e0ff','#ffd9ec']];
+VIEWS.lyrics=function(){const LY=lyrList(),B=bgmList();
+  return`<div class="rpv rp-msgs rp-lyv lx">
+  <div class="rp-mtop"><button class="rp-ib" data-act="lyrback" aria-label="뒤로">${SVG.back}</button><div class="rp-logo" style="font-size:20px">PLANET <span>#1203</span></div></div>
+  <div class="lx-head"><div class="rp-kick">TO. JUUN · ${LY.length} TRACKS</div><h1>LYRICS<br>FOR JUUN</h1><p>하츄대원들이 가사로 전하는 마음 · 아래로 넘겨 들어요</p></div>
+  ${B.length?`<div class="lyv-bgm"><span class="lx-disc" aria-hidden="true"></span><span class="lyv-eq" aria-hidden="true"><i></i><i></i><i></i></span><span class="lyv-bt"><small>NOW PLAYING</small><span class="lyv-bn"></span></span><button data-act="bgmtog" aria-label="재생·일시정지">▶</button>${B.length>1?'<button data-act="bgmnext" aria-label="다음 곡">⏭</button>':''}</div>`:''}
+  <div class="lx-feed">${LY.length?LY.map((l,i)=>{const[a,b]=LX_PAL[i%LX_PAL.length],t=String(l.title||'제목 없음'),k=t.lastIndexOf(' - ');
+    return`<article class="lx-card" id="lyv${i}" style="--la:${a};--lb:${b}"><div class="lx-top"><span class="lx-no">TRACK ${p2(i+1)}</span><span class="lx-vinyl" aria-hidden="true"><i></i></span></div>
+    ${l.text?`<p class="lx-x">${escH(l.text)}</p>`:''}
+    <div class="lx-song"><b>♪ ${escH(k>0?t.slice(0,k):t)}</b>${k>0?`<span>${escH(t.slice(k+3))}</span>`:''}</div>
+    ${l.note?`<div class="lx-why"><small>이 가사를 고른 이유</small>${escH(l.note)}</div>`:''}</article>`}).join(''):'<p class="rp-empty">아직 걸린 가사가 없어요</p>'}</div>
+  <p class="lx-end">— END OF ALBUM —</p></div>`};
+if(/pztest/.test(location.search))window.__LX={A:()=>ARCHIVE,open:i=>lyrOpen(i)};
 /* =====================================================================
    휴대폰 · 브라우저 '뒤로가기'를 사이트 안에서 한 단계씩 처리해요
    창이 떠 있으면 창 닫기 → 가사 · 교신 · 직캠 · 라운지 · 레코드샵 전체 보기면 생일파티로 → 생일파티면 행성 맵으로
