@@ -6150,7 +6150,7 @@ VIEWS.arcade=function(){if(!GC.loaded&&!GC.loading&&!GC.missing){GC.loading=true
   <div style="height:40px"></div></div>`};
 function arcClaw(){if($('#arcFs'))return;const d=document.createElement('div');d.id='arcFs';d.className='arc-fs';
   d.innerHTML=`<div class="arc-fs-bar"><b>🕹 쭈일리언 뽑기</b><a href="${ARC.claw}" target="_blank" rel="noopener">새 창으로 ↗</a><button aria-label="닫기">✕</button></div><iframe src="${ARC.claw}" title="쭈일리언 뽑기" allow="autoplay; fullscreen; vibrate" allowfullscreen></iframe>`;
-  d.querySelector('button').onclick=()=>{d.remove();try{if(BGM&&BGM.want)bgmPlay()}catch(e){}};document.body.appendChild(d);try{SFX.go&&SFX.go()}catch(e){}}
+  d.querySelector('button').onclick=()=>{d.remove();try{if(BGM&&BGM.want)bgmPlay()}catch(e){}};document.body.appendChild(d);try{history.pushState({jc:2},'')}catch(e){}try{SFX.go&&SFX.go()}catch(e){}}
 rp.addEventListener('click',e=>{const b=e.target.closest('[data-arc]');if(!b||!rp.contains(b))return;
   if(b.dataset.arc==='claw')arcClaw();else{ARC.gc=true;const w=rp.querySelector('.arc-gc');if(w){w.hidden=false;w.classList.add('arc-pop');const z=w.querySelector('#gcZone')||w;setTimeout(()=>z.scrollIntoView({behavior:'smooth',block:'start'}),60)}}});
 if(/pztest/.test(location.search))window.__ARC={show:v=>rpShow(v),claw:arcClaw};
@@ -6231,11 +6231,13 @@ if(/pztest/.test(location.search)){const f=rcData;rcData=function(){return windo
    (맵에서 한 번 더 누르면 원래처럼 사이트를 나가요)
    ===================================================================== */
 {let guard=false;const SUB=new Set(['lyrics','msgs','cams','lounge','cds','gallery','uni','unall','edits','booth','room']);
-  const deep=()=>modalOpen||rpOpen;
+  const deep=()=>modalOpen||rpOpen||!!document.getElementById('arcFs');
   const arm=()=>{if(!guard&&deep()){try{history.pushState({jc:1},'')}catch(e){}guard=true}};
   addEventListener('popstate',()=>{guard=false;
-    if(modalOpen)closeSheet();
-    else if(rpOpen&&SUB.has(rpView)){if(rpView==='lyrics')lyrStop();rpShow(rpView==='uni'&&typeof UNI!=='undefined'&&UNI.from==='unall'?'unall':'archive')}
+    const fs=document.getElementById('arcFs');
+    if(fs){fs.querySelector('button').click()}
+    else if(modalOpen)closeSheet();
+    else if(rpOpen&&(SUB.has(rpView)||rpView!=='archive')){if(rpView==='lyrics')lyrStop();rpShow(rpView==='uni'&&typeof UNI!=='undefined'&&UNI.from==='unall'?'unall':'archive')}
     else if(rpOpen)closeReport();
     setTimeout(arm,0)});
   {const f=openSheet;openSheet=function(){const r=f.apply(this,arguments);arm();return r}}
